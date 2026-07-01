@@ -269,3 +269,51 @@
   <script src="script.js"></script>
 </body>
 </html>
+// Work image lightbox preview
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.querySelector(".image-lightbox")) return;
+
+  const lightbox = document.createElement("div");
+  lightbox.className = "image-lightbox";
+  lightbox.innerHTML = `
+    <button class="lightbox-close" type="button" aria-label="Close image preview">×</button>
+    <img src="" alt="Portfolio image preview">
+  `;
+
+  document.body.appendChild(lightbox);
+
+  const lightboxImage = lightbox.querySelector("img");
+  const closeButton = lightbox.querySelector(".lightbox-close");
+
+  document.addEventListener("click", (event) => {
+    const clickedImage = event.target.closest("#work img");
+
+    if (!clickedImage) return;
+
+    lightboxImage.src = clickedImage.currentSrc || clickedImage.src;
+    lightboxImage.alt = clickedImage.alt || "Portfolio image preview";
+
+    lightbox.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove("is-open");
+    lightboxImage.src = "";
+    document.body.style.overflow = "";
+  }
+
+  closeButton.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+      closeLightbox();
+    }
+  });
+});
