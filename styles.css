@@ -1111,3 +1111,98 @@ section,
     max-height: 620px;
   }
 }
+/* Compact video reels cards */
+.video-projects-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 320px)) !important;
+  gap: 26px !important;
+  justify-content: center !important;
+  align-items: start !important;
+}
+
+.video-project-card {
+  max-width: 320px !important;
+  width: 100% !important;
+  padding: 14px !important;
+  border-radius: 24px !important;
+  gap: 14px !important;
+}
+
+.video-thumb {
+  width: 100% !important;
+  aspect-ratio: 9 / 16 !important;
+  min-height: unset !important;
+  height: auto !important;
+  max-height: 470px !important;
+  border-radius: 20px !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.video-project-content {
+  padding: 4px 2px 2px !important;
+}
+
+.video-project-content .project-category {
+  font-size: .68rem !important;
+  letter-spacing: .12em !important;
+  margin-bottom: 8px !important;
+}
+
+.video-project-content h3 {
+  font-size: 1.45rem !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.04em !important;
+  margin-bottom: 10px !important;
+}
+
+.video-project-content p {
+  font-size: .82rem !important;
+  line-height: 1.55 !important;
+}
+
+.video-project-content .project-meta-list {
+  margin-top: 14px !important;
+  gap: 7px !important;
+}
+
+.video-project-content .project-meta-list span {
+  padding: 7px 10px !important;
+  font-size: .68rem !important;
+}
+
+.play-button {
+  width: 58px !important;
+  height: 58px !important;
+  font-size: 22px !important;
+}
+
+@media (max-width: 760px) {
+  .video-projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .video-project-card {
+    max-width: none !important;
+    padding: 10px !important;
+    border-radius: 18px !important;
+  }
+
+  .video-thumb {
+    max-height: none !important;
+    border-radius: 16px !important;
+  }
+
+  .video-project-content h3 {
+    font-size: 1rem !important;
+  }
+
+  .video-project-content p {
+    display: none !important;
+  }
+
+  .video-project-content .project-meta-list {
+    display: none !important;
+  }
+}
