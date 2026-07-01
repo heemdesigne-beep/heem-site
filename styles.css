@@ -798,3 +798,73 @@ img { display: block; max-width: 100%; }
     font-size: .82rem;
   }
 }
+/* Work section cinematic background */
+.work-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(45,168,255,.18), transparent 32%),
+    radial-gradient(circle at 86% 16%, rgba(45,168,255,.12), transparent 30%),
+    linear-gradient(180deg, #07111f 0%, #050914 48%, #07111f 100%);
+}
+
+.work-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 78%, transparent);
+}
+
+.work-section > * {
+  position: relative;
+  z-index: 1;
+}
+/* Global infinity background */
+html,
+body {
+  background: #030814 !important;
+}
+
+body {
+  background-image:
+    linear-gradient(rgba(2, 8, 18, .28), rgba(2, 8, 18, .55)),
+    url("assets/infinity-bg.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Remove old grid / square overlays */
+.site-bg,
+.site-bg::before,
+.site-bg::after,
+.hero-overlay,
+.work-section::before {
+  display: none !important;
+}
+
+/* Let the global background show through sections */
+.hero-section,
+.about-section,
+.work-section,
+.services-section,
+.contact-section,
+.site-footer {
+  background: transparent !important;
+}
+
+/* Keep content above background */
+.topbar,
+main,
+section,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
