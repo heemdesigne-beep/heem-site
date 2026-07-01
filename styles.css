@@ -1206,3 +1206,138 @@ section,
     display: none !important;
   }
 }
+/* Compact branding cards layout */
+.work-panel[data-work-panel="branding"] {
+  display: none;
+}
+
+.work-panel[data-work-panel="branding"].is-active {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 360px)) !important;
+  gap: 26px !important;
+  justify-content: center !important;
+  align-items: start !important;
+}
+
+/* Make branding projects compact cards */
+.work-panel[data-work-panel="branding"] .project-showcase {
+  display: flex !important;
+  flex-direction: column !important;
+  max-width: 360px !important;
+  width: 100% !important;
+  gap: 16px !important;
+  padding: 14px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+}
+
+/* Put visuals on top */
+.work-panel[data-work-panel="branding"] .project-visuals,
+.work-panel[data-work-panel="branding"] .kollagena-visuals,
+.work-panel[data-work-panel="branding"] .rakayez-visuals {
+  order: 1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Text under visuals */
+.work-panel[data-work-panel="branding"] .project-info {
+  order: 2 !important;
+  padding: 6px 4px 4px !important;
+}
+
+/* Main image thumbnail */
+.work-panel[data-work-panel="branding"] .main-logo,
+.work-panel[data-work-panel="branding"] .kollagena-main-visual,
+.work-panel[data-work-panel="branding"] .rakayez-main-visual {
+  min-height: unset !important;
+  height: auto !important;
+  aspect-ratio: 4 / 3 !important;
+  padding: 14px !important;
+  border-radius: 20px !important;
+}
+
+.work-panel[data-work-panel="branding"] .main-logo img,
+.work-panel[data-work-panel="branding"] .kollagena-main-visual img,
+.work-panel[data-work-panel="branding"] .rakayez-main-visual img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* Small gallery preview under main image */
+.work-panel[data-work-panel="branding"] .project-gallery,
+.work-panel[data-work-panel="branding"] .kollagena-gallery,
+.work-panel[data-work-panel="branding"] .rakayez-gallery {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+/* Only show first 2 gallery images to keep card clean */
+.work-panel[data-work-panel="branding"] .project-gallery img:nth-child(n+3),
+.work-panel[data-work-panel="branding"] .kollagena-gallery img:nth-child(n+3),
+.work-panel[data-work-panel="branding"] .rakayez-gallery img:nth-child(n+3) {
+  display: none !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-gallery img,
+.work-panel[data-work-panel="branding"] .kollagena-gallery img,
+.work-panel[data-work-panel="branding"] .rakayez-gallery img {
+  min-height: unset !important;
+  height: 125px !important;
+  border-radius: 16px !important;
+  object-fit: cover !important;
+}
+
+/* Compact text */
+.work-panel[data-work-panel="branding"] .project-category {
+  font-size: .68rem !important;
+  letter-spacing: .12em !important;
+  margin-bottom: 8px !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-info h3 {
+  font-size: 1.55rem !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.04em !important;
+  margin-bottom: 10px !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-info p {
+  font-size: .84rem !important;
+  line-height: 1.6 !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-meta-list {
+  margin-top: 14px !important;
+  gap: 7px !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-meta-list span {
+  padding: 7px 10px !important;
+  font-size: .68rem !important;
+}
+
+/* Mobile branding cards */
+@media (max-width: 760px) {
+  .work-panel[data-work-panel="branding"].is-active {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .work-panel[data-work-panel="branding"] .project-showcase {
+    max-width: none !important;
+  }
+
+  .work-panel[data-work-panel="branding"] .project-info p {
+    display: none !important;
+  }
+
+  .work-panel[data-work-panel="branding"] .project-meta-list {
+    display: none !important;
+  }
+}
