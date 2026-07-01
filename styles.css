@@ -359,3 +359,141 @@ img { display: block; max-width: 100%; }
   .services-grid { grid-template-columns: 1fr; }
   .site-footer { flex-direction: column; align-items: flex-start; }
 }
+.work-section {
+  width: 100%;
+  padding: 88px var(--pad);
+}
+
+.project-showcase {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 28px;
+  align-items: stretch;
+  border: 1px solid var(--stroke);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(45,168,255,.18), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.035));
+  overflow: hidden;
+}
+
+.project-info {
+  padding: clamp(24px, 4vw, 42px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-category {
+  margin: 0 0 14px;
+  color: var(--blue-soft);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.project-info h3 {
+  margin: 0 0 18px;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+
+.project-info p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.85;
+  font-size: 1.02rem;
+}
+
+.project-meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.project-meta-list span {
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.88);
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--stroke);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.project-visuals {
+  padding: clamp(22px, 3vw, 34px);
+  display: grid;
+  grid-template-columns: 1fr .9fr;
+  gap: 18px;
+  align-items: stretch;
+  background: rgba(255,255,255,.025);
+}
+
+.project-logo-card,
+.project-gallery img {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 26px 70px rgba(0,0,0,.22);
+}
+
+.main-logo {
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  padding: 34px;
+}
+
+.main-logo img {
+  width: min(100%, 430px);
+  height: auto;
+}
+
+.project-gallery {
+  display: grid;
+  gap: 18px;
+}
+
+.project-gallery img {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  object-fit: cover;
+}
+
+@media (max-width: 1180px) {
+  .project-showcase,
+  .project-visuals {
+    grid-template-columns: 1fr;
+  }
+
+  .main-logo {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 760px) {
+  .work-section {
+    padding: 64px 18px;
+  }
+
+  .project-info {
+    padding: 24px;
+  }
+
+  .project-visuals {
+    padding: 18px;
+  }
+
+  .main-logo {
+    min-height: 300px;
+  }
+
+  .project-gallery img {
+    min-height: 220px;
+  }
+}
