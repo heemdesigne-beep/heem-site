@@ -1045,3 +1045,69 @@ section,
     right: 14px;
   }
 }
+/* Video tab - reels layout */
+.video-projects-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 28px !important;
+  align-items: start;
+}
+
+.video-project-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  padding: 18px !important;
+  border-radius: 28px !important;
+}
+
+.video-thumb {
+  width: 100% !important;
+  min-height: unset !important;
+  aspect-ratio: 9 / 16 !important;
+  border-radius: 24px !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.video-project-content {
+  padding: 8px 4px 4px !important;
+}
+
+.video-project-content h3 {
+  font-size: clamp(1.55rem, 3vw, 2.4rem) !important;
+  line-height: 1.05 !important;
+  margin-bottom: 12px !important;
+}
+
+.video-project-content p {
+  font-size: .95rem !important;
+  line-height: 1.7 !important;
+}
+
+.video-project-content .project-meta-list {
+  margin-top: 18px;
+}
+
+/* Make YouTube popup vertical for Shorts/Reels */
+.video-modal-frame {
+  width: min(92vw, 430px) !important;
+  height: min(88vh, 760px) !important;
+  aspect-ratio: 9 / 16 !important;
+  border-radius: 22px !important;
+}
+
+.video-modal-frame iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 900px) {
+  .video-projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .video-thumb {
+    max-height: 620px;
+  }
+}
