@@ -1983,3 +1983,147 @@ section,
     padding: 20px;
   }
 }
+/* Partners / Clients section */
+.partners-section,
+.feedback-section {
+  width: 100%;
+  padding: 88px var(--pad);
+  position: relative;
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.partner-card {
+  min-height: 112px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 24px;
+  color: rgba(255,255,255,.9);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(45,168,255,.14), transparent 36%),
+    rgba(255,255,255,.045);
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: .02em;
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+.partner-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(45,168,255,.38);
+}
+
+/* Feedback placeholder area */
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+.feedback-upload-card {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px dashed rgba(255,255,255,.22);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(45,168,255,.16), transparent 34%),
+    rgba(255,255,255,.035);
+}
+
+.feedback-upload-card span {
+  width: fit-content;
+  margin-bottom: auto;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(45,168,255,.18);
+  border: 1px solid rgba(45,168,255,.28);
+  font-size: .76rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.feedback-upload-card h4 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.05;
+  letter-spacing: -.04em;
+}
+
+.feedback-upload-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* Real feedback cards for later */
+.real-feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+  gap: 22px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.real-feedback-card {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 24px;
+  background: rgba(255,255,255,.045);
+}
+
+.real-feedback-card img {
+  width: 100%;
+  display: block;
+  border-radius: 24px 24px 0 0;
+}
+
+.real-feedback-card p,
+.audio-feedback-card h4 {
+  margin: 0;
+  padding: 16px;
+  color: #fff;
+  font-weight: 800;
+}
+
+.audio-feedback-card {
+  padding: 20px;
+}
+
+.audio-feedback-card audio {
+  width: 100%;
+  margin-top: 14px;
+}
+
+@media (max-width: 760px) {
+  .partners-section,
+  .feedback-section {
+    padding: 64px 18px;
+  }
+
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .partner-card {
+    min-height: 92px;
+    border-radius: 18px;
+    font-size: .9rem;
+  }
+
+  .feedback-upload-card {
+    min-height: 220px;
+    border-radius: 22px;
+  }
+}
