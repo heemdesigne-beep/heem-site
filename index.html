@@ -512,35 +512,33 @@
 <section id="feedback" class="feedback-section">
   <div class="section-head">
     <p class="eyebrow">REAL CLIENT FEEDBACK</p>
-    <h3>Real messages, screenshots, and voice notes from clients.</h3>
+    <h3>Real messages and reactions from clients.</h3>
   </div>
-
-  <div class="feedback-grid">
-    <article class="feedback-upload-card">
-      <span>WhatsApp Screenshots</span>
-      <h4>Client messages will be added here.</h4>
-      <p>Real screenshots from client conversations and approvals.</p>
-    </article>
-
-    <article class="feedback-upload-card">
-      <span>Voice Notes</span>
-      <h4>Client voice feedback will be added here.</h4>
-      <p>Audio feedback, reviews, and project reactions.</p>
-    </article>
-
-    <article class="feedback-upload-card">
-      <span>Project Approvals</span>
-      <h4>Approved work reactions will be added here.</h4>
-      <p>Real confirmations, comments, and client responses.</p>
-    </article>
-  </div>
-
-  <!-- لما نضيف سكرينات حقيقية بعدين، هنضيف كروت بالشكل ده:
 
   <div class="real-feedback-grid">
     <article class="real-feedback-card">
-      <img src="assets/feedback/whatsapp-feedback-01.jpg" alt="Client WhatsApp feedback screenshot">
-      <p>WhatsApp feedback</p>
+      <img src="assets/feedback/whatsapp-feedback-01.png" alt="Client WhatsApp feedback screenshot">
+      <div class="real-feedback-info">
+        <span>WhatsApp Feedback</span>
+        <h4>Client appreciation message</h4>
+      </div>
+    </article>
+
+    <article class="real-feedback-card">
+      <img src="assets/feedback/whatsapp-feedback-02.png" alt="Client WhatsApp voice feedback screenshot">
+      <div class="real-feedback-info">
+        <span>WhatsApp Feedback</span>
+        <h4>Client voice note reaction</h4>
+      </div>
+    </article>
+
+    <article class="feedback-upload-card">
+      <span>More Feedback</span>
+      <h4>More real reviews will be added here.</h4>
+      <p>WhatsApp screenshots, voice notes, approvals, and client reactions.</p>
+    </article>
+  </div>
+</section>
     </article>
 
     <article class="real-feedback-card audio-feedback-card">
@@ -959,5 +957,51 @@
   openWorkTab("branding");
 })();
 </script>
+<script>
+(function () {
+  const feedbackImages = document.querySelectorAll(".real-feedback-card img");
+  if (!feedbackImages.length) return;
+
+  let lightbox = document.querySelector(".feedback-lightbox");
+
+  if (!lightbox) {
+    lightbox = document.createElement("div");
+    lightbox.className = "feedback-lightbox";
+    lightbox.innerHTML = '<button type="button" aria-label="Close feedback">×</button><img src="" alt="">';
+    document.body.appendChild(lightbox);
+  }
+
+  const lightboxImg = lightbox.querySelector("img");
+  const closeBtn = lightbox.querySelector("button");
+
+  feedbackImages.forEach((img) => {
+    img.addEventListener("click", function () {
+      lightboxImg.src = img.getAttribute("src");
+      lightboxImg.alt = img.getAttribute("alt") || "Client feedback";
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  closeBtn.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", function (event) {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && lightbox.classList.contains("open")) {
+      closeLightbox();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
