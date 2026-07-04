@@ -1781,3 +1781,26 @@ section,
     min-height: auto !important;
   }
 }
+/* Fix Kollagena branding card vertical alignment */
+.work-panel[data-work-panel="branding"] .kollagena-showcase {
+  margin-top: 0 !important;
+  align-self: stretch !important;
+  transform: none !important;
+}
+
+/* Keep Kollagena thumbnail clean */
+.work-panel[data-work-panel="branding"] .kollagena-showcase .kollagena-main-visual {
+  height: 220px !important;
+  min-height: 220px !important;
+  max-height: 220px !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+.work-panel[data-work-panel="branding"] .kollagena-showcase .kollagena-main-visual img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: none !important;
+}
