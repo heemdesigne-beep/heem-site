@@ -2199,3 +2199,25 @@ section,
     max-height: 56px;
   }
 }
+/* Center partners section */
+.partners-section .section-head {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.partners-section .section-head h3 {
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.partners-section .eyebrow {
+  text-align: center !important;
+}
+
+.partners-grid {
+  max-width: 1500px !important;
+  margin: 0 auto !important;
+  justify-content: center !important;
+}
