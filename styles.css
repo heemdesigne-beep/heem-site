@@ -2456,3 +2456,33 @@ section,
     min-height: 220px;
   }
 }
+/* Center branding project cards rows */
+.work-panel[data-work-panel="branding"].is-active {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 26px !important;
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-showcase {
+  width: 340px !important;
+  max-width: 340px !important;
+  flex: 0 0 340px !important;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .work-panel[data-work-panel="branding"].is-active {
+    gap: 18px !important;
+  }
+
+  .work-panel[data-work-panel="branding"] .project-showcase {
+    width: 100% !important;
+    max-width: none !important;
+    flex: 0 0 100% !important;
+  }
+}
