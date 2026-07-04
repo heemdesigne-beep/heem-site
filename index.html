@@ -1355,5 +1355,92 @@
   });
 })();
 </script>
+<script>
+(function () {
+  const videoMap = [
+    {
+      match: "Vertex Platform Video Enhancement",
+      id: "1wtut-tCtPI"
+    },
+    {
+      match: "Vertex Course Promo Transformation",
+      id: "ZlxMx7Wcyz0"
+    },
+    {
+      match: "Vertex RSPI Course Video Transformation",
+      id: "m1SmIIWahEA"
+    }
+  ];
+
+  let lightbox = document.querySelector(".video-lightbox");
+
+  if (!lightbox) {
+    lightbox = document.createElement("div");
+    lightbox.className = "video-lightbox";
+    lightbox.innerHTML = `
+      <button class="video-lightbox-close" type="button" aria-label="Close">×</button>
+      <div class="video-lightbox-frame"></div>
+    `;
+    document.body.appendChild(lightbox);
+  }
+
+  const frame = lightbox.querySelector(".video-lightbox-frame");
+  const closeBtn = lightbox.querySelector(".video-lightbox-close");
+
+  function openVideo(videoId) {
+    frame.innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+        title="Portfolio video"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    `;
+
+    lightbox.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeVideo() {
+    lightbox.classList.remove("is-open");
+    frame.innerHTML = "";
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("click", function (event) {
+    const videoPanel = event.target.closest('.work-panel[data-work-panel="video"]');
+    if (!videoPanel) return;
+
+    const card = event.target.closest("article, .video-card, .project-card, .work-card");
+    if (!card) return;
+
+    const cardText = card.textContent || "";
+    const foundVideo = videoMap.find(function (video) {
+      return cardText.includes(video.match);
+    });
+
+    if (!foundVideo) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    openVideo(foundVideo.id);
+  }, true);
+
+  closeBtn.addEventListener("click", closeVideo);
+
+  lightbox.addEventListener("click", function (event) {
+    if (event.target === lightbox) {
+      closeVideo();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+      closeVideo();
+    }
+  });
+})();
+</script>
 </body>
 </html>
