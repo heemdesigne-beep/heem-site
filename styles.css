@@ -2919,3 +2919,42 @@ section,
     min-height: 62px !important;
   }
 }
+/* ===== Social Media Lightbox ===== */
+.social-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.social-lightbox.is-open {
+  display: flex;
+}
+
+.social-lightbox img {
+  max-width: 96vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.social-lightbox-close {
+  position: fixed;
+  top: 20px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}

@@ -1302,6 +1302,60 @@
   });
 })();
 </script>
+<script>
+(function () {
+  const socialCards = document.querySelectorAll(".social-media-card");
+  if (!socialCards.length) return;
 
+  let lightbox = document.querySelector(".social-lightbox");
+
+  if (!lightbox) {
+    lightbox = document.createElement("div");
+    lightbox.className = "social-lightbox";
+    lightbox.innerHTML = `
+      <button class="social-lightbox-close" type="button" aria-label="Close">×</button>
+      <img src="" alt="">
+    `;
+    document.body.appendChild(lightbox);
+  }
+
+  const lightboxImg = lightbox.querySelector("img");
+  const closeBtn = lightbox.querySelector(".social-lightbox-close");
+
+  socialCards.forEach((card) => {
+    card.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      const img = card.querySelector("img");
+      if (!img) return;
+
+      lightboxImg.src = img.getAttribute("src");
+      lightboxImg.alt = img.getAttribute("alt") || "Social media design";
+      lightbox.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+    });
+  });
+
+  function closeSocialLightbox() {
+    lightbox.classList.remove("is-open");
+    lightboxImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  closeBtn.addEventListener("click", closeSocialLightbox);
+
+  lightbox.addEventListener("click", function (event) {
+    if (event.target === lightbox) {
+      closeSocialLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+      closeSocialLightbox();
+    }
+  });
+})();
+</script>
 </body>
 </html>
