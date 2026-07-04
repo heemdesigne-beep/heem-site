@@ -454,5 +454,316 @@
   </footer>
 
   <script src="script.js"></script>
+<script>
+(function () {
+  const oldModal = document.getElementById("heemProjectDetailsModal");
+  if (oldModal) oldModal.remove();
+
+  const modal = document.createElement("div");
+  modal.id = "heemProjectDetailsModal";
+  modal.innerHTML = `
+    <div class="heem-project-modal-box">
+      <button class="heem-project-close" type="button">×</button>
+
+      <div class="heem-project-image-area">
+        <img class="heem-project-image" src="" alt="">
+        <div class="heem-project-controls">
+          <button class="heem-project-prev" type="button">‹</button>
+          <span class="heem-project-count">1 / 1</span>
+          <button class="heem-project-next" type="button">›</button>
+        </div>
+      </div>
+
+      <div class="heem-project-info-area">
+        <p class="heem-project-category"></p>
+        <h3 class="heem-project-title"></h3>
+        <p class="heem-project-description"></p>
+        <div class="heem-project-tags"></div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const modalImage = modal.querySelector(".heem-project-image");
+  const modalTitle = modal.querySelector(".heem-project-title");
+  const modalCategory = modal.querySelector(".heem-project-category");
+  const modalDescription = modal.querySelector(".heem-project-description");
+  const modalTags = modal.querySelector(".heem-project-tags");
+  const modalCount = modal.querySelector(".heem-project-count");
+  const closeBtn = modal.querySelector(".heem-project-close");
+  const prevBtn = modal.querySelector(".heem-project-prev");
+  const nextBtn = modal.querySelector(".heem-project-next");
+
+  let images = [];
+  let currentIndex = 0;
+
+  function renderImage() {
+    if (!images.length) return;
+
+    modalImage.src = images[currentIndex].src;
+    modalImage.alt = images[currentIndex].alt || "Project image";
+    modalCount.textContent = `${currentIndex + 1} / ${images.length}`;
+
+    prevBtn.style.display = images.length > 1 ? "" : "none";
+    nextBtn.style.display = images.length > 1 ? "" : "none";
+  }
+
+  function openProject(card) {
+    const title = card.querySelector(".project-info h3")?.textContent?.trim() || "Project";
+    const category = card.querySelector(".project-category")?.textContent?.trim() || "";
+    const description = card.querySelector(".project-info p:not(.project-category)")?.textContent?.trim() || "";
+
+    const tags = Array.from(card.querySelectorAll(".project-meta-list span"))
+      .map((tag) => tag.textContent.trim())
+      .filter(Boolean);
+
+    const foundImages = Array.from(card.querySelectorAll("img"))
+      .map((img) => ({
+        src: img.getAttribute("src"),
+        alt: img.getAttribute("alt") || title
+      }))
+      .filter((img) => img.src);
+
+    const unique = [];
+    const used = new Set();
+
+    foundImages.forEach((img) => {
+      if (!used.has(img.src)) {
+        used.add(img.src);
+        unique.push(img);
+      }
+    });
+
+    if (!unique.length) return;
+
+    images = unique;
+    currentIndex = 0;
+
+    modalTitle.textContent = title;
+    modalCategory.textContent = category;
+    modalDescription.textContent = description;
+    modalTags.innerHTML = tags.map((tag) => `<span>${tag}</span>`).join("");
+
+    renderImage();
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProject() {
+    modal.classList.remove("open");
+    modalImage.src = "";
+    document.body.style.overflow = "";
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    renderImage();
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    renderImage();
+  }
+
+  document.addEventListener("click", function (event) {
+    const card = event.target.closest('.work-panel[data-work-panel="branding"] .project-showcase');
+
+    if (!card) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    openProject(card);
+  }, true);
+
+  closeBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    closeProject();
+  });
+
+  nextBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    nextImage();
+  });
+
+  prevBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    prevImage();
+  });
+
+  modal.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      closeProject();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (!modal.classList.contains("open")) return;
+
+    if (event.key === "Escape") closeProject();
+    if (event.key === "ArrowRight") nextImage();
+    if (event.key === "ArrowLeft") prevImage();
+  });
+})();
+</script>
+
+<style>
+#heemProjectDetailsModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0,0,0,.9);
+  backdrop-filter: blur(16px);
+}
+
+#heemProjectDetailsModal.open {
+  display: flex;
+}
+
+.heem-project-modal-box {
+  position: relative;
+  width: min(96vw, 1240px);
+  max-height: 92vh;
+  display: grid;
+  grid-template-columns: 1.35fr .85fr;
+  gap: 22px;
+  padding: 18px;
+  border-radius: 28px;
+  background: rgba(8,13,24,.96);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 30px 120px rgba(0,0,0,.65);
+}
+
+.heem-project-image-area {
+  min-height: 72vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+}
+
+.heem-project-image {
+  width: 100%;
+  height: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.heem-project-info-area {
+  padding: 30px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.10);
+  overflow: auto;
+}
+
+.heem-project-category {
+  margin: 0 0 14px;
+  color: var(--blue-soft);
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.heem-project-title {
+  margin: 0 0 18px;
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+
+.heem-project-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.heem-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 26px;
+}
+
+.heem-project-tags span {
+  padding: 9px 12px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.88);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.heem-project-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #fff;
+}
+
+.heem-project-prev,
+.heem-project-next {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(45,168,255,.8);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.heem-project-count {
+  color: rgba(255,255,255,.75);
+  font-weight: 900;
+}
+
+.heem-project-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .heem-project-modal-box {
+    grid-template-columns: 1fr;
+    max-height: 94vh;
+    overflow: auto;
+  }
+
+  .heem-project-image-area {
+    min-height: 50vh;
+  }
+
+  .heem-project-image {
+    max-height: 50vh;
+  }
+
+  .heem-project-info-area {
+    padding: 20px;
+  }
+}
+</style>
 </body>
 </html>
