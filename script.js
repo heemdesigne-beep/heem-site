@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "ArrowLeft") showPrevImage();
   });
 });
-// Simple branding project gallery - reliable version
+// Branding project details gallery
 (function () {
   const brandingCards = document.querySelectorAll(
     '.work-panel[data-work-panel="branding"] .project-showcase'
@@ -223,22 +223,35 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!modal) {
     modal = document.createElement("div");
     modal.id = "brandingSimpleGallery";
-    modal.innerHTML = `
-      <div class="branding-simple-box">
-        <button class="branding-simple-close" type="button">×</button>
-        <h3 class="branding-simple-title">Project Gallery</h3>
-        <img class="branding-simple-img" src="" alt="">
-        <div class="branding-simple-controls">
-          <button class="branding-simple-prev" type="button">Prev</button>
-          <span class="branding-simple-count">1 / 1</span>
-          <button class="branding-simple-next" type="button">Next</button>
-        </div>
-      </div>
-    `;
     document.body.appendChild(modal);
   }
 
+  modal.innerHTML = `
+    <div class="branding-details-box">
+      <button class="branding-simple-close" type="button" aria-label="Close project">×</button>
+
+      <div class="branding-details-media">
+        <img class="branding-simple-img" src="" alt="">
+        <div class="branding-simple-controls">
+          <button class="branding-simple-prev" type="button">‹</button>
+          <span class="branding-simple-count">1 / 1</span>
+          <button class="branding-simple-next" type="button">›</button>
+        </div>
+      </div>
+
+      <aside class="branding-details-info">
+        <p class="branding-details-category"></p>
+        <h3 class="branding-simple-title">Project Gallery</h3>
+        <p class="branding-details-description"></p>
+        <div class="branding-details-tags"></div>
+      </aside>
+    </div>
+  `;
+
   const title = modal.querySelector(".branding-simple-title");
+  const category = modal.querySelector(".branding-details-category");
+  const description = modal.querySelector(".branding-details-description");
+  const tagsBox = modal.querySelector(".branding-details-tags");
   const img = modal.querySelector(".branding-simple-img");
   const count = modal.querySelector(".branding-simple-count");
   const closeBtn = modal.querySelector(".branding-simple-close");
@@ -249,19 +262,112 @@ document.addEventListener("DOMContentLoaded", () => {
   let index = 0;
 
   function showImage() {
+    if (!images.length) return;
+
     img.src = images[index].src;
     img.alt = images[index].alt;
     count.textContent = `${index + 1} / ${images.length}`;
+
+    prevBtn.style.display = images.length > 1 ? "" : "none";
+    nextBtn.style.display = images.length > 1 ? "" : "none";
   }
 
   function openGallery(card) {
-    const projectTitle = card.querySelector("h3")?.textContent || "Project Gallery";
+    const projectTitle = card.querySelector(".project-info h3")?.textContent || "Project Gallery";
+    const projectCategory = card.querySelector(".project-category")?.textContent || "";
+    const projectDescription = card.querySelector(".project-info p:not(.project-category)")?.textContent || "";
 
-    images = Array.from(card.querySelectorAll("img")).map((image) => ({
-      src: image.getAttribute("src"),
-      alt: image.getAttribute("alt") || projectTitle,
-    }));
+    const projectTags = Array.from(card.querySelectorAll(".project-meta-list span"))
+      .map((tag) => tag.textContent.trim())
+      .filter(Boolean);
 
+    const projectImages = Array.from(card.querySelectorAll("img"))
+      .map((image) => ({
+        src: image.getAttribute("src"),
+        alt: image.getAttribute("alt") || projectTitle,
+      }))
+      .filter((image) => image.src);
+
+    const uniqueImages = [];
+    const usedSources = new Set();
+
+    projectImages.forEach((image) => {
+      if (!usedSources.has(image.src)) {
+        usedSources.add(image.src);
+        uniqueImages.push(image);
+      }
+    });
+
+    if (!uniqueImages.length) return;
+
+    images = uniqueImages;
+    index = 0;
+
+    title.textContent = projectTitle;
+    category.textContent = projectCategory;
+    description.textContent = projectDescription;
+
+    tagsBox.innerHTML = projectTags
+      .map((tag) => `<span>${tag}</span>`)
+      .join("");
+
+    showImage();
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeGallery() {
+    modal.classList.remove("open");
+    img.src = "";
+    document.body.style.overflow = "";
+  }
+
+  brandingCards.forEach((card) => {
+    card.addEventListener("click", function () {
+      openGallery(card);
+    });
+  });
+
+  nextBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    index = (index + 1) % images.length;
+    showImage();
+  });
+
+  prevBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    index = (index - 1 + images.length) % images.length;
+    showImage();
+  });
+
+  closeBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    closeGallery();
+  });
+
+  modal.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      closeGallery();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (!modal.classList.contains("open")) return;
+
+    if (event.key === "Escape") closeGallery();
+
+    if (event.key === "ArrowRight") {
+      index = (index + 1) % images.length;
+      showImage();
+    }
+
+    if (event.key === "ArrowLeft") {
+      index = (index - 1 + images.length) % images.length;
+      showImage();
+    }
+  });
+})();
     if (!images.length) return;
 
     title.textContent = projectTitle;
