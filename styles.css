@@ -2221,3 +2221,52 @@ section,
   margin: 0 auto !important;
   justify-content: center !important;
 }
+/* Force partners logos to center every row */
+.partners-section {
+  text-align: center !important;
+}
+
+.partners-section .section-head {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.partners-section .section-head h3 {
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.partners-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 18px !important;
+  max-width: 1500px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.partner-card {
+  width: 180px !important;
+  min-width: 180px !important;
+  max-width: 180px !important;
+  height: 118px !important;
+  min-height: 118px !important;
+}
+
+@media (max-width: 760px) {
+  .partners-grid {
+    gap: 14px !important;
+  }
+
+  .partner-card {
+    width: calc(50% - 7px) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 96px !important;
+    min-height: 96px !important;
+  }
+}
