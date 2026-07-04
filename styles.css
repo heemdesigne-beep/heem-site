@@ -2723,3 +2723,114 @@ section,
     height: 300px;
   }
 }
+/* Social Media Gallery */
+.work-panel[data-work-panel="social"].is-active {
+  display: block !important;
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.social-showcase-header {
+  max-width: 920px;
+  margin: 0 auto 36px;
+  text-align: center;
+}
+
+.social-showcase-header .project-category {
+  margin-bottom: 12px;
+  color: var(--blue-soft, #77c6ff);
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.social-showcase-header h3 {
+  margin: 0 0 14px;
+  color: #f4f7fb;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+
+.social-showcase-header p:last-child {
+  margin: 0 auto;
+  max-width: 760px;
+  color: var(--muted, rgba(226, 235, 255, .78));
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.social-media-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+  justify-content: center;
+}
+
+.social-media-card {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(45,168,255,.12), transparent 34%),
+    linear-gradient(180deg, rgba(15, 26, 48, .96), rgba(7, 14, 28, .96));
+  border: 1px solid rgba(132, 170, 255, .18);
+  box-shadow: 0 18px 50px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+
+.social-media-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(130, 197, 255, .45);
+  box-shadow: 0 26px 60px rgba(0,0,0,.3), 0 0 0 1px rgba(130,197,255,.14);
+}
+
+.social-media-card.is-wide {
+  grid-column: span 6;
+}
+
+.social-media-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #0b1220;
+}
+
+.social-media-card span {
+  display: block;
+  padding: 16px 18px 18px;
+  color: #f4f7fb;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+@media (max-width: 1100px) {
+  .social-media-card,
+  .social-media-card.is-wide {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 760px) {
+  .social-media-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .social-media-card,
+  .social-media-card.is-wide {
+    grid-column: span 1;
+  }
+
+  .social-showcase-header {
+    margin-bottom: 28px;
+  }
+}
