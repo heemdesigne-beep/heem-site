@@ -1717,3 +1717,67 @@ section,
   color: rgba(255,255,255,.75);
   font-weight: 800;
 }
+/* Equal branding cards height */
+.work-panel[data-work-panel="branding"].is-active {
+  align-items: stretch !important;
+}
+
+.work-panel[data-work-panel="branding"] .project-showcase {
+  height: 100% !important;
+  min-height: 560px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Same image height for all branding cards */
+.work-panel[data-work-panel="branding"] .main-logo,
+.work-panel[data-work-panel="branding"] .kollagena-main-visual,
+.work-panel[data-work-panel="branding"] .rakayez-main-visual,
+.work-panel[data-work-panel="branding"] .nawa-showcase .main-logo,
+.work-panel[data-work-panel="branding"] .pulse-showcase .main-logo {
+  height: 220px !important;
+  min-height: 220px !important;
+  max-height: 220px !important;
+}
+
+/* Text area takes same structure */
+.work-panel[data-work-panel="branding"] .project-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Make all titles closer in behavior */
+.work-panel[data-work-panel="branding"] .project-info h3 {
+  min-height: 46px !important;
+}
+
+/* Limit description lines so cards stay equal */
+.work-panel[data-work-panel="branding"] .project-info p {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* Push tags to bottom of every card */
+.work-panel[data-work-panel="branding"] .project-meta-list {
+  margin-top: auto !important;
+  padding-top: 14px !important;
+}
+
+/* Keep tags area consistent */
+.work-panel[data-work-panel="branding"] .project-meta-list span {
+  white-space: nowrap !important;
+}
+
+/* Mobile: don't force tall cards */
+@media (max-width: 760px) {
+  .work-panel[data-work-panel="branding"] .project-showcase {
+    min-height: auto !important;
+  }
+
+  .work-panel[data-work-panel="branding"] .project-info h3 {
+    min-height: auto !important;
+  }
+}
