@@ -800,5 +800,38 @@
   }
 }
 </style>
+<script>
+(function () {
+  const tabs = document.querySelectorAll("[data-work-tab]");
+  const panels = document.querySelectorAll("[data-work-panel]");
+
+  if (!tabs.length || !panels.length) return;
+
+  function openWorkTab(tabName) {
+    tabs.forEach((tab) => {
+      const isActive = tab.dataset.workTab === tabName;
+      tab.classList.toggle("is-active", isActive);
+    });
+
+    panels.forEach((panel) => {
+      const isActive = panel.dataset.workPanel === tabName;
+      panel.classList.toggle("is-active", isActive);
+      panel.style.display = isActive ? "grid" : "none";
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const tabName = tab.dataset.workTab;
+      openWorkTab(tabName);
+    });
+  });
+
+  openWorkTab("branding");
+})();
+</script>
 </body>
 </html>
