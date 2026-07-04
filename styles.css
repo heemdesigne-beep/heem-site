@@ -2486,3 +2486,101 @@ section,
     flex: 0 0 100% !important;
   }
 }
+/* Fix Bahri print card size */
+.work-panel[data-work-panel="print"].is-active {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 26px !important;
+  max-width: 1600px !important;
+  margin: 0 auto !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase {
+  width: 340px !important;
+  max-width: 340px !important;
+  flex: 0 0 340px !important;
+  min-height: 560px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+/* خلي الصورة فوق */
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-visuals {
+  order: -1 !important;
+  width: 100% !important;
+  padding: 14px !important;
+  display: block !important;
+  background: transparent !important;
+}
+
+/* خلي صورة الغلاف بس هي اللي تظهر في الكارت */
+.work-panel[data-work-panel="print"] .bahri-print-showcase .main-logo {
+  width: 100% !important;
+  height: 220px !important;
+  min-height: 220px !important;
+  max-height: 220px !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  background: #111 !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase .main-logo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+/* اخفي باقي الصور من الكارت، بس تفضل موجودة للجاليري */
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-gallery {
+  display: none !important;
+}
+
+/* تنسيق الكلام */
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-info {
+  flex: 1 !important;
+  padding: 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-category {
+  color: var(--blue-soft) !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-info h3 {
+  color: #fff !important;
+  font-size: 1.45rem !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.04em !important;
+  min-height: 52px !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-info p:not(.project-category) {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.work-panel[data-work-panel="print"] .bahri-print-showcase .project-meta-list {
+  margin-top: auto !important;
+  padding-top: 14px !important;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .work-panel[data-work-panel="print"] .bahri-print-showcase {
+    width: 100% !important;
+    max-width: none !important;
+    flex: 0 0 100% !important;
+    min-height: auto !important;
+  }
+}
