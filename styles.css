@@ -2834,3 +2834,88 @@ section,
     margin-bottom: 28px;
   }
 }
+/* ===== Fix Social Media gallery sizing ===== */
+
+.work-panel[data-work-panel="social"].is-active {
+  display: block !important;
+  max-width: 1500px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.social-media-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 300px)) !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 24px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* إلغاء إن في كارت ياخد عرض أكبر من التاني */
+.social-media-card,
+.social-media-card.is-wide,
+.social-media-card.is-tall {
+  grid-column: auto !important;
+  width: 100% !important;
+  max-width: 300px !important;
+  height: 410px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+}
+
+/* منطقة الصورة ثابتة */
+.social-media-card img {
+  width: 100% !important;
+  height: 340px !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  padding: 10px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+/* الكابشن ثابت */
+.social-media-card span {
+  height: 70px !important;
+  padding: 14px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  color: #fff !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+  background: rgba(8, 14, 28, 0.96) !important;
+}
+
+/* لو الصورة عرضية جدًا زي بانر، متبوظش الكارت */
+.social-media-card.is-wide img {
+  object-fit: contain !important;
+}
+
+/* موبايل */
+@media (max-width: 760px) {
+  .social-media-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .social-media-card,
+  .social-media-card.is-wide,
+  .social-media-card.is-tall {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .social-media-card img {
+    height: 360px !important;
+  }
+
+  .social-media-card span {
+    height: auto !important;
+    min-height: 62px !important;
+  }
+}
