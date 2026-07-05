@@ -3387,3 +3387,183 @@ section,
   padding: 8px 10px !important;
   font-size: 0.72rem !important;
 }
+/* ===== HEEM Final Video Fix - Top Capture Modal ===== */
+
+.work-panel[data-work-panel="video"] .video-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 245px)) !important;
+  justify-content: center !important;
+  gap: 22px !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+}
+
+.work-panel[data-work-panel="video"] .video-card {
+  max-width: 245px !important;
+  width: 100% !important;
+  border-radius: 24px !important;
+  cursor: pointer !important;
+}
+
+.work-panel[data-work-panel="video"] .video-thumb {
+  height: 300px !important;
+  aspect-ratio: auto !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.work-panel[data-work-panel="video"] .video-thumb img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+.work-panel[data-work-panel="video"] .video-card-content {
+  padding: 16px !important;
+}
+
+.work-panel[data-work-panel="video"] .video-card h3 {
+  font-size: 1.14rem !important;
+  line-height: 1.05 !important;
+}
+
+.work-panel[data-work-panel="video"] .video-card p:not(.project-category) {
+  font-size: 0.82rem !important;
+  line-height: 1.55 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 4 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.video-lightbox.heem-video-master {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999999 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 28px !important;
+  background: rgba(0, 0, 0, 0.92) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.video-lightbox.heem-video-master.is-open {
+  display: flex !important;
+}
+
+.heem-video-modal {
+  width: min(94vw, 1180px) !important;
+  max-height: 86vh !important;
+  display: grid !important;
+  grid-template-columns: 0.9fr 1.1fr !important;
+  gap: 24px !important;
+  padding: 22px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(45,168,255,.16), transparent 34%),
+    rgba(12, 18, 32, 0.98) !important;
+  border: 1px solid rgba(132, 170, 255, 0.24) !important;
+  box-shadow: 0 30px 90px rgba(0,0,0,.55) !important;
+}
+
+.heem-video-left {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.heem-video-frame {
+  width: min(100%, 390px) !important;
+  height: min(74vh, 690px) !important;
+  aspect-ratio: 9 / 16 !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+}
+
+.heem-video-frame iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  display: block !important;
+}
+
+.heem-video-right {
+  border-radius: 24px !important;
+  padding: clamp(22px, 3vw, 38px) !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  overflow-y: auto !important;
+}
+
+.heem-video-category {
+  margin: 0 0 16px !important;
+  color: #77c6ff !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+}
+
+.heem-video-title {
+  margin: 0 0 20px !important;
+  color: #fff !important;
+  font-size: clamp(2.1rem, 4.5vw, 3.8rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.06em !important;
+}
+
+.heem-video-description {
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: 1rem !important;
+  line-height: 1.85 !important;
+}
+
+.heem-video-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 26px !important;
+}
+
+.heem-video-tags span {
+  padding: 10px 14px !important;
+  border-radius: 999px !important;
+  color: rgba(255,255,255,.88) !important;
+  background: rgba(255,255,255,.06) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  font-size: .82rem !important;
+  font-weight: 800 !important;
+}
+
+.heem-video-master .video-lightbox-close {
+  position: fixed !important;
+  top: 22px !important;
+  right: 24px !important;
+  width: 46px !important;
+  height: 46px !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.12) !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  z-index: 1000000000 !important;
+}
+
+@media (max-width: 900px) {
+  .heem-video-modal {
+    grid-template-columns: 1fr !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+  }
+
+  .heem-video-frame {
+    height: min(62vh, 620px) !important;
+  }
+}

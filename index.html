@@ -1774,4 +1774,108 @@
 })();
 </script>
 </body>
+<script>
+(function () {
+  if (window.__heemVideoMasterFix) return;
+  window.__heemVideoMasterFix = true;
+
+  function ensureVideoModal() {
+    let modal = document.querySelector(".heem-video-master");
+
+    if (!modal) {
+      document.querySelectorAll(".video-lightbox").forEach(function (oldModal) {
+        oldModal.remove();
+      });
+
+      modal = document.createElement("div");
+      modal.className = "video-lightbox heem-video-master";
+      modal.innerHTML = `
+        <button class="video-lightbox-close" type="button" aria-label="Close video">×</button>
+
+        <div class="heem-video-modal">
+          <div class="heem-video-left">
+            <div class="heem-video-frame"></div>
+          </div>
+
+          <div class="heem-video-right">
+            <p class="heem-video-category"></p>
+            <h3 class="heem-video-title"></h3>
+            <p class="heem-video-description"></p>
+            <div class="heem-video-tags"></div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      modal.querySelector(".video-lightbox-close").addEventListener("click", closeVideoModal);
+
+      modal.addEventListener("click", function (event) {
+        if (event.target === modal) closeVideoModal();
+      });
+    }
+
+    return modal;
+  }
+
+  function closeVideoModal() {
+    const modal = document.querySelector(".heem-video-master");
+    if (!modal) return;
+
+    const frame = modal.querySelector(".heem-video-frame");
+    modal.classList.remove("is-open");
+    if (frame) frame.innerHTML = "";
+    document.body.style.overflow = "";
+  }
+
+  function openVideoModal(card) {
+    const videoId = card.getAttribute("data-youtube-id");
+    if (!videoId) return;
+
+    const modal = ensureVideoModal();
+
+    const category = card.querySelector(".project-category")?.textContent?.trim() || "";
+    const title = card.querySelector("h3")?.textContent?.trim() || "";
+    const description = card.querySelector(".video-card-content p:not(.project-category)")?.textContent?.trim() || "";
+    const tags = Array.from(card.querySelectorAll(".project-meta-list span")).map(function (tag) {
+      return tag.textContent.trim();
+    });
+
+    modal.querySelector(".heem-video-frame").innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+        title="${title}"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    `;
+
+    modal.querySelector(".heem-video-category").textContent = category;
+    modal.querySelector(".heem-video-title").textContent = title;
+    modal.querySelector(".heem-video-description").textContent = description;
+
+    modal.querySelector(".heem-video-tags").innerHTML = tags.map(function (tag) {
+      return `<span>${tag}</span>`;
+    }).join("");
+
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+
+  window.addEventListener("click", function (event) {
+    const card = event.target.closest(".video-card[data-youtube-id]");
+    if (!card) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    openVideoModal(card);
+  }, true);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeVideoModal();
+  });
+})();
+</script>
 </html>
