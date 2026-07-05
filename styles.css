@@ -3322,3 +3322,68 @@ section,
     max-width: 100% !important;
   }
 }
+/* ===== Make Video Cards Smaller ===== */
+
+.video-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 245px)) !important;
+  gap: 20px !important;
+  max-width: 1350px !important;
+}
+
+.video-card {
+  max-width: 245px !important;
+  border-radius: 24px !important;
+}
+
+.video-thumb {
+  height: 310px !important;
+  aspect-ratio: auto !important;
+  border-radius: 18px !important;
+}
+
+.video-thumb img {
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.video-play,
+.play-button {
+  width: 54px !important;
+  height: 54px !important;
+  font-size: 18px !important;
+}
+
+.video-card-content {
+  padding: 16px 16px 18px !important;
+}
+
+.video-card .project-category {
+  font-size: 0.68rem !important;
+  letter-spacing: 0.13em !important;
+  margin-bottom: 10px !important;
+}
+
+.video-card h3 {
+  font-size: 1.18rem !important;
+  line-height: 1.05 !important;
+  margin-bottom: 10px !important;
+}
+
+.video-card p:not(.project-category) {
+  font-size: 0.84rem !important;
+  line-height: 1.55 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.video-card .project-meta-list {
+  margin-top: 14px !important;
+  gap: 8px !important;
+}
+
+.video-card .project-meta-list span {
+  padding: 8px 10px !important;
+  font-size: 0.72rem !important;
+}
