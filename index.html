@@ -684,8 +684,7 @@
     </div>
   </div>
 </article>
-<article class="video-card">
-  <div class="video-thumb">
+<article class="video-card" data-video-id="1wtut-tCtPI">  <div class="video-thumb">
     <img src="https://img.youtube.com/vi/Uf2_4fYVYBQ/maxresdefault.jpg" alt="AI ad transformation reel thumbnail">
     <span class="play-button">▶</span>
   </div>
@@ -1471,6 +1470,119 @@
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+      closeVideo();
+    }
+  });
+})();
+</script>
+<!-- ===== Force Video Lightbox Fix - No Card Editing ===== -->
+<script>
+(function () {
+  if (window.__heemVideoLightboxFixed) return;
+  window.__heemVideoLightboxFixed = true;
+
+  const videoIds = [
+    "1wtut-tCtPI",
+    "ZlxMx7Wcyz0",
+    "m1SmIIWahEA",
+    "Uf2_4fYVYBQ"
+  ];
+
+  function getVideoCards() {
+    const panel = document.querySelector('[data-work-panel="video"]');
+    if (!panel) return [];
+
+    return Array.from(panel.querySelectorAll("article, .video-card, .project-card"))
+      .filter(function (card) {
+        return card.querySelector("img") && card.textContent.trim().length > 0;
+      })
+      .filter(function (card, index, cards) {
+        return !cards.some(function (other) {
+          return other !== card && other.contains(card);
+        });
+      });
+  }
+
+  function getLightbox() {
+    let lightbox = document.querySelector(".video-lightbox");
+
+    if (!lightbox) {
+      lightbox = document.createElement("div");
+      lightbox.className = "video-lightbox";
+      lightbox.innerHTML = `
+        <button class="video-lightbox-close" type="button" aria-label="Close video">×</button>
+        <div class="video-lightbox-frame"></div>
+      `;
+      document.body.appendChild(lightbox);
+    }
+
+    return lightbox;
+  }
+
+  function openVideo(videoId) {
+    if (!videoId) return;
+
+    const lightbox = getLightbox();
+    const frame = lightbox.querySelector(".video-lightbox-frame");
+
+    frame.innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+        title="Portfolio video"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    `;
+
+    lightbox.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeVideo() {
+    const lightbox = document.querySelector(".video-lightbox");
+    if (!lightbox) return;
+
+    const frame = lightbox.querySelector(".video-lightbox-frame");
+    lightbox.classList.remove("is-open");
+    if (frame) frame.innerHTML = "";
+    document.body.style.overflow = "";
+  }
+
+  window.addEventListener("click", function (event) {
+    const panel = event.target.closest('[data-work-panel="video"]');
+    if (!panel) return;
+
+    const cards = getVideoCards();
+    const clickedCard = cards.find(function (card) {
+      return card.contains(event.target);
+    });
+
+    if (!clickedCard) return;
+
+    const cardIndex = cards.indexOf(clickedCard);
+    const videoId = videoIds[cardIndex];
+
+    if (!videoId) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    openVideo(videoId);
+  }, true);
+
+  window.addEventListener("click", function (event) {
+    if (event.target.classList.contains("video-lightbox-close")) {
+      closeVideo();
+    }
+
+    if (event.target.classList.contains("video-lightbox")) {
+      closeVideo();
+    }
+  }, true);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
       closeVideo();
     }
   });
