@@ -1669,6 +1669,109 @@
   });
 })();
 </script>
+<script>
+(function () {
+  if (window.__finalVideoDetailModal) return;
+  window.__finalVideoDetailModal = true;
 
+  let videoLightbox = document.querySelector(".video-detail-lightbox");
+
+  if (!videoLightbox) {
+    videoLightbox = document.createElement("div");
+    videoLightbox.className = "video-lightbox video-detail-lightbox";
+    videoLightbox.innerHTML = `
+      <button class="video-lightbox-close" type="button" aria-label="Close video">×</button>
+
+      <div class="video-detail-modal">
+        <div class="video-detail-left">
+          <div class="video-lightbox-frame"></div>
+        </div>
+
+        <div class="video-detail-right">
+          <p class="video-modal-category"></p>
+          <h3 class="video-modal-title"></h3>
+          <p class="video-modal-description"></p>
+          <div class="video-modal-tags"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(videoLightbox);
+  }
+
+  const frame = videoLightbox.querySelector(".video-lightbox-frame");
+  const closeBtn = videoLightbox.querySelector(".video-lightbox-close");
+  const modalCategory = videoLightbox.querySelector(".video-modal-category");
+  const modalTitle = videoLightbox.querySelector(".video-modal-title");
+  const modalDescription = videoLightbox.querySelector(".video-modal-description");
+  const modalTags = videoLightbox.querySelector(".video-modal-tags");
+
+  function openVideo(videoCard) {
+    const videoId = videoCard.getAttribute("data-youtube-id");
+    if (!videoId) return;
+
+    const category = videoCard.querySelector(".project-category")?.textContent?.trim() || "";
+    const title = videoCard.querySelector("h3")?.textContent?.trim() || "";
+    const description = videoCard.querySelector(".video-card-content p:not(.project-category)")?.textContent?.trim() || "";
+    const tags = Array.from(videoCard.querySelectorAll(".project-meta-list span")).map(function (tag) {
+      return tag.textContent.trim();
+    });
+
+    frame.innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+        title="${title}"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    `;
+
+    modalCategory.textContent = category;
+    modalTitle.textContent = title;
+    modalDescription.textContent = description;
+
+    modalTags.innerHTML = tags.map(function (tag) {
+      return `<span>${tag}</span>`;
+    }).join("");
+
+    videoLightbox.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeVideo() {
+    videoLightbox.classList.remove("is-open");
+    frame.innerHTML = "";
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("click", function (event) {
+    const videoCard = event.target.closest(".video-card[data-youtube-id]");
+    if (!videoCard) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    openVideo(videoCard);
+  }, true);
+
+  closeBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    closeVideo();
+  });
+
+  videoLightbox.addEventListener("click", function (event) {
+    if (event.target === videoLightbox) {
+      closeVideo();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && videoLightbox.classList.contains("is-open")) {
+      closeVideo();
+    }
+  });
+})();
+</script>
 </body>
 </html>
