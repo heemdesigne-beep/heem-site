@@ -1,429 +1,240 @@
-document.getElementById('year').textContent = new Date().getFullYear();
-// Work category tabs
-document.addEventListener("DOMContentLoaded", () => {
-  const workTabs = document.querySelectorAll("[data-work-tab]");
-  const workPanels = document.querySelectorAll("[data-work-panel]");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  workTabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.dataset.workTab;
+const year = document.getElementById("year");
+if (year) year.textContent = new Date().getFullYear();
 
-      workTabs.forEach((item) => item.classList.remove("is-active"));
-      workPanels.forEach((panel) => panel.classList.remove("is-active"));
+const progress = document.querySelector(".scroll-progress");
+const header = document.querySelector(".site-header");
 
-      tab.classList.add("is-active");
+function updateScrollUI() {
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+  if (progress) progress.style.width = `${Math.min(ratio * 100, 100)}%`;
+  if (header) header.classList.toggle("scrolled", window.scrollY > 60);
+}
 
-      const activePanel = document.querySelector(`[data-work-panel="${target}"]`);
-      if (activePanel) {
-        activePanel.classList.add("is-active");
-      }
+window.addEventListener("scroll", updateScrollUI, { passive: true });
+updateScrollUI();
+
+const glow = document.querySelector(".cursor-glow");
+if (glow && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
+  window.addEventListener("pointermove", (event) => {
+    glow.style.left = `${event.clientX}px`;
+    glow.style.top = `${event.clientY}px`;
+  }, { passive: true });
+}
+
+const revealItems = document.querySelectorAll("[data-reveal]");
+if (reducedMotion || !("IntersectionObserver" in window)) {
+  revealItems.forEach((item) => item.classList.add("revealed"));
+} else {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("revealed");
+      observer.unobserve(entry.target);
     });
+  }, { threshold: .12, rootMargin: "0px 0px -7%" });
+
+  revealItems.forEach((item, index) => {
+    item.style.transitionDelay = `${Math.min((index % 4) * 55, 165)}ms`;
+    revealObserver.observe(item);
+  });
+}
+
+const statRow = document.querySelector(".stat-row");
+if (statRow && !reducedMotion && "IntersectionObserver" in window) {
+  const countObserver = new IntersectionObserver((entries, observer) => {
+    if (!entries[0].isIntersecting) return;
+
+    statRow.querySelectorAll("[data-count]").forEach((item) => {
+      const target = Number(item.dataset.count || 0);
+      const start = performance.now();
+      const duration = 900;
+
+      function tick(now) {
+        const elapsed = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - elapsed, 3);
+        item.textContent = Math.round(target * eased);
+        if (elapsed < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    });
+
+    observer.disconnect();
+  }, { threshold: .45 });
+
+  countObserver.observe(statRow);
+}
+
+document.querySelectorAll(".slider-controls").forEach((controls) => {
+  const track = document.getElementById(controls.dataset.controls);
+  if (!track) return;
+
+  controls.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-direction]");
+    if (!button) return;
+    const card = track.firstElementChild;
+    const gap = parseFloat(getComputedStyle(track).gap) || 24;
+    const distance = card ? card.getBoundingClientRect().width + gap : track.clientWidth * .8;
+    track.scrollBy({ left: button.dataset.direction === "next" ? distance : -distance, behavior: reducedMotion ? "auto" : "smooth" });
   });
 });
-// Video project modal
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.querySelector(".video-modal")) return;
 
-  const videoModal = document.createElement("div");
-  videoModal.className = "video-modal";
-  videoModal.innerHTML = `
-    <button class="video-modal-close" type="button" aria-label="Close video">×</button>
-    <div class="video-modal-frame">
-    <iframe
-  src=""
-  title="Portfolio video player"
-  referrerpolicy="strict-origin-when-cross-origin"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen>
-</iframe>
-    </div>
-  `;
+document.querySelectorAll(".drag-track").forEach((track) => {
+  let pointerDown = false;
+  let startX = 0;
+  let startScroll = 0;
+  let moved = false;
 
-  document.body.appendChild(videoModal);
-
-  const iframe = videoModal.querySelector("iframe");
-  const closeButton = videoModal.querySelector(".video-modal-close");
-
-  document.addEventListener("click", (event) => {
-    const videoCard = event.target.closest("[data-video-src]");
-
-    if (!videoCard) return;
-
-    const videoSrc = videoCard.dataset.videoSrc;
-
-    if (!videoSrc) return;
-
-    iframe.src = videoSrc;
-    videoModal.classList.add("is-open");
-    document.body.style.overflow = "hidden";
+  track.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    pointerDown = true;
+    moved = false;
+    startX = event.clientX;
+    startScroll = track.scrollLeft;
+    track.classList.add("is-dragging");
+    track.setPointerCapture(event.pointerId);
   });
 
-  function closeVideoModal() {
-    videoModal.classList.remove("is-open");
-    iframe.src = "";
-    document.body.style.overflow = "";
+  track.addEventListener("pointermove", (event) => {
+    if (!pointerDown) return;
+    const delta = event.clientX - startX;
+    if (Math.abs(delta) > 7) moved = true;
+    track.scrollLeft = startScroll - delta * 1.15;
+  });
+
+  function stopDragging(event) {
+    if (!pointerDown) return;
+    pointerDown = false;
+    track.classList.remove("is-dragging");
+    track.dataset.dragged = moved ? "true" : "false";
+    if (event.pointerId !== undefined && track.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+    window.setTimeout(() => { track.dataset.dragged = "false"; }, 50);
   }
 
-  closeButton.addEventListener("click", closeVideoModal);
+  track.addEventListener("pointerup", stopDragging);
+  track.addEventListener("pointercancel", stopDragging);
+  track.addEventListener("dragstart", (event) => event.preventDefault());
+});
 
-  videoModal.addEventListener("click", (event) => {
-    if (event.target === videoModal) {
-      closeVideoModal();
-    }
+const portraitWrap = document.querySelector(".hero-portrait-wrap");
+const portrait = document.querySelector(".hero-portrait");
+if (portraitWrap && portrait && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
+  portraitWrap.addEventListener("pointermove", (event) => {
+    const box = portraitWrap.getBoundingClientRect();
+    const x = (event.clientX - box.left) / box.width - .5;
+    const y = (event.clientY - box.top) / box.height - .5;
+    portrait.style.transform = `translate(${x * 10}px, ${y * 7}px) rotateY(${x * 3}deg)`;
   });
+  portraitWrap.addEventListener("pointerleave", () => { portrait.style.transform = ""; });
+}
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && videoModal.classList.contains("is-open")) {
-      closeVideoModal();
-    }
+const modal = document.getElementById("media-modal");
+const modalImage = modal?.querySelector(".modal-stage img");
+const modalIframe = modal?.querySelector(".modal-stage iframe");
+const modalTitle = modal?.querySelector(".modal-title");
+const modalCategory = modal?.querySelector(".modal-category");
+const modalCount = modal?.querySelector(".modal-count");
+const modalNav = modal?.querySelector(".modal-nav");
+let activeImages = [];
+let activeIndex = 0;
+
+function renderModalImage() {
+  if (!modalImage || !activeImages.length) return;
+  const current = activeImages[activeIndex];
+  modalImage.src = current.src;
+  modalImage.alt = current.alt || "Portfolio project";
+  if (modalCount) modalCount.textContent = `${activeIndex + 1} / ${activeImages.length}`;
+  if (modalNav) modalNav.hidden = activeImages.length < 2;
+}
+
+function openImageModal(images, title, category = "Selected work") {
+  if (!modal || !images.length) return;
+  activeImages = images;
+  activeIndex = 0;
+  modal.classList.remove("video-mode");
+  if (modalIframe) modalIframe.src = "";
+  if (modalTitle) modalTitle.textContent = title;
+  if (modalCategory) modalCategory.textContent = category;
+  renderModalImage();
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function openVideoModal(videoId, title) {
+  if (!modal || !modalIframe || !videoId) return;
+  activeImages = [];
+  modal.classList.add("video-mode");
+  if (modalImage) modalImage.src = "";
+  if (modalTitle) modalTitle.textContent = title;
+  if (modalCategory) modalCategory.textContent = "Video & Motion";
+  if (modalNav) modalNav.hidden = true;
+  const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
+  modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1${origin}`;
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function closeModal() {
+  if (!modal) return;
+  modal.classList.remove("open", "video-mode");
+  modal.setAttribute("aria-hidden", "true");
+  if (modalIframe) modalIframe.src = "";
+  if (modalImage) modalImage.src = "";
+  document.body.classList.remove("modal-open");
+}
+
+function changeModalImage(direction) {
+  if (activeImages.length < 2) return;
+  activeIndex = (activeIndex + direction + activeImages.length) % activeImages.length;
+  renderModalImage();
+}
+
+document.querySelectorAll(".identity-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    if (card.closest(".drag-track")?.dataset.dragged === "true") return;
+    const images = Array.from(card.querySelectorAll(".gallery-source img")).map((image) => ({ src: image.getAttribute("src"), alt: image.getAttribute("alt") }));
+    openImageModal(images, card.dataset.projectTitle || "Visual identity", card.dataset.projectCategory);
   });
 });
-// Branding cards project gallery
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.querySelector(".branding-gallery-modal")) return;
 
-  const galleryModal = document.createElement("div");
-  galleryModal.className = "branding-gallery-modal";
-  galleryModal.innerHTML = `
-    <div class="branding-gallery-box">
-      <div class="branding-gallery-head">
-        <div>
-          <h4 class="branding-gallery-title">Project Gallery</h4>
-          <span class="branding-gallery-count">1 / 1</span>
-        </div>
-        <button class="branding-gallery-close" type="button" aria-label="Close gallery">×</button>
-      </div>
-
-      <div class="branding-gallery-stage">
-        <button class="branding-gallery-prev" type="button" aria-label="Previous image">‹</button>
-        <img src="" alt="Project image">
-        <button class="branding-gallery-next" type="button" aria-label="Next image">›</button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(galleryModal);
-
-  const galleryImage = galleryModal.querySelector(".branding-gallery-stage img");
-  const galleryTitle = galleryModal.querySelector(".branding-gallery-title");
-  const galleryCount = galleryModal.querySelector(".branding-gallery-count");
-  const closeButton = galleryModal.querySelector(".branding-gallery-close");
-  const prevButton = galleryModal.querySelector(".branding-gallery-prev");
-  const nextButton = galleryModal.querySelector(".branding-gallery-next");
-
-  let galleryImages = [];
-  let currentImageIndex = 0;
-
-  function renderGalleryImage() {
-    const currentImage = galleryImages[currentImageIndex];
-
-    if (!currentImage) return;
-
-    galleryImage.src = currentImage.src;
-    galleryImage.alt = currentImage.alt || "Project image";
-    galleryCount.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
-
-    prevButton.style.display = galleryImages.length > 1 ? "" : "none";
-    nextButton.style.display = galleryImages.length > 1 ? "" : "none";
-  }
-
-  function openProjectGallery(projectCard) {
-    const projectTitle = projectCard.querySelector("h3")?.textContent || "Project Gallery";
-
-    const images = Array.from(projectCard.querySelectorAll("img"))
-      .map((image) => ({
-        src: image.getAttribute("src"),
-        alt: image.getAttribute("alt") || projectTitle,
-      }))
-      .filter((image) => image.src);
-
-    const uniqueImages = [];
-    const usedSources = new Set();
-
-    images.forEach((image) => {
-      if (!usedSources.has(image.src)) {
-        usedSources.add(image.src);
-        uniqueImages.push(image);
-      }
-    });
-
-    if (!uniqueImages.length) return;
-
-    galleryImages = uniqueImages;
-    currentImageIndex = 0;
-    galleryTitle.textContent = projectTitle;
-
-    renderGalleryImage();
-
-    galleryModal.classList.add("is-open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeProjectGallery() {
-    galleryModal.classList.remove("is-open");
-    galleryImage.src = "";
-    document.body.style.overflow = "";
-  }
-
-  function showNextImage() {
-    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-    renderGalleryImage();
-  }
-
-  function showPrevImage() {
-    currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
-    renderGalleryImage();
-  }
-
-  document.addEventListener(
-    "click",
-    (event) => {
-      const projectCard = event.target.closest(
-        '.work-panel[data-work-panel="branding"] .project-showcase'
-      );
-
-      if (!projectCard) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      openProjectGallery(projectCard);
-    },
-    true
-  );
-
-  closeButton.addEventListener("click", closeProjectGallery);
-  nextButton.addEventListener("click", showNextImage);
-  prevButton.addEventListener("click", showPrevImage);
-
-  galleryModal.addEventListener("click", (event) => {
-    if (event.target === galleryModal) {
-      closeProjectGallery();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (!galleryModal.classList.contains("is-open")) return;
-
-    if (event.key === "Escape") closeProjectGallery();
-    if (event.key === "ArrowRight") showNextImage();
-    if (event.key === "ArrowLeft") showPrevImage();
+document.querySelectorAll(".social-card, .print-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    if (card.closest(".drag-track")?.dataset.dragged === "true") return;
+    const image = card.querySelector("img");
+    if (!image) return;
+    openImageModal([{ src: image.getAttribute("src"), alt: image.getAttribute("alt") }], card.querySelector("span")?.textContent || "Selected work");
   });
 });
-// Branding project details gallery
-(function () {
-  const brandingCards = document.querySelectorAll(
-    '.work-panel[data-work-panel="branding"] .project-showcase'
-  );
 
-  if (!brandingCards.length) return;
-
-  let modal = document.getElementById("brandingSimpleGallery");
-
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "brandingSimpleGallery";
-    document.body.appendChild(modal);
-  }
-
-  modal.innerHTML = `
-    <div class="branding-details-box">
-      <button class="branding-simple-close" type="button" aria-label="Close project">×</button>
-
-      <div class="branding-details-media">
-        <img class="branding-simple-img" src="" alt="">
-        <div class="branding-simple-controls">
-          <button class="branding-simple-prev" type="button">‹</button>
-          <span class="branding-simple-count">1 / 1</span>
-          <button class="branding-simple-next" type="button">›</button>
-        </div>
-      </div>
-
-      <aside class="branding-details-info">
-        <p class="branding-details-category"></p>
-        <h3 class="branding-simple-title">Project Gallery</h3>
-        <p class="branding-details-description"></p>
-        <div class="branding-details-tags"></div>
-      </aside>
-    </div>
-  `;
-
-  const title = modal.querySelector(".branding-simple-title");
-  const category = modal.querySelector(".branding-details-category");
-  const description = modal.querySelector(".branding-details-description");
-  const tagsBox = modal.querySelector(".branding-details-tags");
-  const img = modal.querySelector(".branding-simple-img");
-  const count = modal.querySelector(".branding-simple-count");
-  const closeBtn = modal.querySelector(".branding-simple-close");
-  const prevBtn = modal.querySelector(".branding-simple-prev");
-  const nextBtn = modal.querySelector(".branding-simple-next");
-
-  let images = [];
-  let index = 0;
-
-  function showImage() {
-    if (!images.length) return;
-
-    img.src = images[index].src;
-    img.alt = images[index].alt;
-    count.textContent = `${index + 1} / ${images.length}`;
-
-    prevBtn.style.display = images.length > 1 ? "" : "none";
-    nextBtn.style.display = images.length > 1 ? "" : "none";
-  }
-
-  function openGallery(card) {
-    const projectTitle = card.querySelector(".project-info h3")?.textContent || "Project Gallery";
-    const projectCategory = card.querySelector(".project-category")?.textContent || "";
-    const projectDescription = card.querySelector(".project-info p:not(.project-category)")?.textContent || "";
-
-    const projectTags = Array.from(card.querySelectorAll(".project-meta-list span"))
-      .map((tag) => tag.textContent.trim())
-      .filter(Boolean);
-
-    const projectImages = Array.from(card.querySelectorAll("img"))
-      .map((image) => ({
-        src: image.getAttribute("src"),
-        alt: image.getAttribute("alt") || projectTitle,
-      }))
-      .filter((image) => image.src);
-
-    const uniqueImages = [];
-    const usedSources = new Set();
-
-    projectImages.forEach((image) => {
-      if (!usedSources.has(image.src)) {
-        usedSources.add(image.src);
-        uniqueImages.push(image);
-      }
-    });
-
-    if (!uniqueImages.length) return;
-
-    images = uniqueImages;
-    index = 0;
-
-    title.textContent = projectTitle;
-    category.textContent = projectCategory;
-    description.textContent = projectDescription;
-
-    tagsBox.innerHTML = projectTags
-      .map((tag) => `<span>${tag}</span>`)
-      .join("");
-
-    showImage();
-
-    modal.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeGallery() {
-    modal.classList.remove("open");
-    img.src = "";
-    document.body.style.overflow = "";
-  }
-
-  brandingCards.forEach((card) => {
-    card.addEventListener("click", function () {
-      openGallery(card);
-    });
+document.querySelectorAll(".video-card[data-youtube-id]").forEach((card) => {
+  card.addEventListener("click", () => {
+    if (card.closest(".drag-track")?.dataset.dragged === "true") return;
+    openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project");
   });
+});
 
-  nextBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    index = (index + 1) % images.length;
-    showImage();
+document.querySelectorAll("[data-lightbox]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const image = button.querySelector("img");
+    openImageModal([{ src: button.dataset.lightbox, alt: image?.alt || "Client feedback" }], "Client feedback", "Real WhatsApp message");
   });
+});
 
-  prevBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    index = (index - 1 + images.length) % images.length;
-    showImage();
-  });
+modal?.querySelector(".modal-close")?.addEventListener("click", closeModal);
+modal?.querySelector("[data-modal-next]")?.addEventListener("click", () => changeModalImage(1));
+modal?.querySelector("[data-modal-prev]")?.addEventListener("click", () => changeModalImage(-1));
+modal?.addEventListener("click", (event) => { if (event.target === modal) closeModal(); });
 
-  closeBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    closeGallery();
-  });
-
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) {
-      closeGallery();
-    }
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (!modal.classList.contains("open")) return;
-
-    if (event.key === "Escape") closeGallery();
-
-    if (event.key === "ArrowRight") {
-      index = (index + 1) % images.length;
-      showImage();
-    }
-
-    if (event.key === "ArrowLeft") {
-      index = (index - 1 + images.length) % images.length;
-      showImage();
-    }
-  });
-})();
-    if (!images.length) return;
-
-    title.textContent = projectTitle;
-    index = 0;
-    showImage();
-
-    modal.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeGallery() {
-    modal.classList.remove("open");
-    img.src = "";
-    document.body.style.overflow = "";
-  }
-
-  brandingCards.forEach((card) => {
-    card.addEventListener("click", function () {
-      openGallery(card);
-    });
-  });
-
-  nextBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    index = (index + 1) % images.length;
-    showImage();
-  });
-
-  prevBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    index = (index - 1 + images.length) % images.length;
-    showImage();
-  });
-
-  closeBtn.addEventListener("click", function (event) {
-    event.stopPropagation();
-    closeGallery();
-  });
-
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) {
-      closeGallery();
-    }
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (!modal.classList.contains("open")) return;
-
-    if (event.key === "Escape") closeGallery();
-    if (event.key === "ArrowRight") {
-      index = (index + 1) % images.length;
-      showImage();
-    }
-    if (event.key === "ArrowLeft") {
-      index = (index - 1 + images.length) % images.length;
-      showImage();
-    }
-  });
-})();
+document.addEventListener("keydown", (event) => {
+  if (!modal?.classList.contains("open")) return;
+  if (event.key === "Escape") closeModal();
+  if (event.key === "ArrowRight") changeModalImage(1);
+  if (event.key === "ArrowLeft") changeModalImage(-1);
+});
