@@ -138,6 +138,7 @@ const modalImage = modal?.querySelector(".modal-stage img");
 const modalIframe = modal?.querySelector(".modal-stage iframe");
 const modalTitle = modal?.querySelector(".modal-title");
 const modalCategory = modal?.querySelector(".modal-category");
+const modalDescription = modal?.querySelector(".modal-description");
 const modalCount = modal?.querySelector(".modal-count");
 const modalNav = modal?.querySelector(".modal-nav");
 let activeImages = [];
@@ -152,7 +153,7 @@ function renderModalImage() {
   if (modalNav) modalNav.hidden = activeImages.length < 2;
 }
 
-function openImageModal(images, title, category = "Selected work") {
+function openImageModal(images, title, category = "Selected work", description = "") {
   if (!modal || !images.length) return;
   activeImages = images;
   activeIndex = 0;
@@ -160,19 +161,21 @@ function openImageModal(images, title, category = "Selected work") {
   if (modalIframe) modalIframe.src = "";
   if (modalTitle) modalTitle.textContent = title;
   if (modalCategory) modalCategory.textContent = category;
+  if (modalDescription) modalDescription.textContent = description;
   renderModalImage();
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
 }
 
-function openVideoModal(videoId, title) {
+function openVideoModal(videoId, title, description = "") {
   if (!modal || !modalIframe || !videoId) return;
   activeImages = [];
   modal.classList.add("video-mode");
   if (modalImage) modalImage.src = "";
   if (modalTitle) modalTitle.textContent = title;
   if (modalCategory) modalCategory.textContent = "Video & Motion";
+  if (modalDescription) modalDescription.textContent = description;
   if (modalNav) modalNav.hidden = true;
   const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
   modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1${origin}`;
@@ -200,7 +203,7 @@ document.querySelectorAll(".identity-card").forEach((card) => {
   card.addEventListener("click", () => {
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     const images = Array.from(card.querySelectorAll(".gallery-source img")).map((image) => ({ src: image.getAttribute("src"), alt: image.getAttribute("alt") }));
-    openImageModal(images, card.dataset.projectTitle || "Visual identity", card.dataset.projectCategory);
+    openImageModal(images, card.dataset.projectTitle || "Visual identity", card.dataset.projectCategory, card.dataset.projectDescription || "");
   });
 });
 
@@ -216,7 +219,7 @@ document.querySelectorAll(".social-card, .print-card").forEach((card) => {
 document.querySelectorAll(".video-card[data-youtube-id]").forEach((card) => {
   card.addEventListener("click", () => {
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
-    openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project");
+    openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project", card.dataset.videoDescription || "");
   });
 });
 
