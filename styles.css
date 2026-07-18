@@ -33,6 +33,9 @@ a { color: inherit; text-decoration: none; }
 
 .site-header { position: fixed; z-index: 1000; top: 0; left: 50%; width: min(100%, var(--max)); height: 78px; padding: 0 var(--pad); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(9,26,59,.72); backdrop-filter: blur(18px); transform: translateX(-50%); transition: background .3s ease, height .3s ease; }
 .site-header.scrolled { height: 66px; background: rgba(9,26,59,.94); }
+
+/* Header belongs to the hero only */
+.site-header,.site-header.scrolled { position: absolute; height: 78px; background: transparent; backdrop-filter: none; border-bottom-color: rgba(255,255,255,.13); box-shadow: none; }
 .brand img { width: 72px; max-height: 42px; object-fit: contain; filter: brightness(0) invert(1); }
 .main-nav { display: flex; gap: clamp(22px, 3vw, 48px); }
 .main-nav a { position: relative; color: #b9c2ce; font-size: .76rem; font-weight: 700; }
@@ -254,7 +257,12 @@ main > * { position: relative; z-index: 1; }
 @keyframes cardBreathe { 50% { border-color: rgba(105,174,255,.3); box-shadow: 0 14px 45px rgba(7,26,65,.28),inset 0 0 25px rgba(40,120,255,.035); } }
 
 /* Cinematic hero — one immersive scene instead of a split layout */
-.hero { min-height: 100svh; display: flex; align-items: center; padding-top: 105px; padding-bottom: 105px; background: #071a3d; }
+.hero { min-height: 100svh; display: flex; align-items: center; padding-top: 105px; padding-bottom: 105px; background-color: #071a3d; animation: heroBackgroundDrift 14s cubic-bezier(.45,0,.2,1) infinite alternate; will-change: background-position,background-size; }
+@keyframes heroBackgroundDrift {
+  0% { background-position: 0 0,50% 50%; background-size: auto,104%; }
+  50% { background-position: 0 0,52% 48%; background-size: auto,108%; }
+  100% { background-position: 0 0,48% 51%; background-size: auto,112%; }
+}
 .hero::after { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg,rgba(4,15,38,.3) 0%,rgba(4,15,38,.06) 48%,rgba(4,15,38,.05) 100%),linear-gradient(0deg,rgba(5,18,43,.7),transparent 30%); pointer-events: none; }
 .hero-grid,.hero-orbit,.hero-word { z-index: 2; }
 .hero-copy { z-index: 5; width: min(52%,760px); text-shadow: 0 4px 28px rgba(3,12,31,.35); }
@@ -415,6 +423,8 @@ main > * { position: relative; z-index: 1; }
 
 @media (max-width: 980px) {
   .hero { min-height: 100svh; display: flex; align-items: flex-end; padding: 125px var(--pad) 125px; text-align: left; }
+  .hero { background-size: auto,cover !important; animation-name: heroBackgroundMobile; }
+  @keyframes heroBackgroundMobile { from { background-position: 0 0,63% 50%; } to { background-position: 0 0,68% 48%; } }
   .hero::after { background: linear-gradient(0deg,rgba(5,18,43,.98) 0%,rgba(5,18,43,.66) 46%,rgba(5,18,43,.04) 76%); }
   .hero-copy { width: 100%; max-width: 760px; margin: 0; }
   .kicker,.hero-actions { justify-content: flex-start; }
