@@ -260,7 +260,7 @@ main > * { position: relative; z-index: 1; }
 .hero-copy { z-index: 5; width: min(52%,760px); text-shadow: 0 4px 28px rgba(3,12,31,.35); }
 .hero h1 { font-size: clamp(5rem,9.4vw,10.8rem); }
 .hero-intro { max-width: 610px; color: #c2d2ea; }
-.hero-visual { position: absolute !important; z-index: 3 !important; inset: 0 !important; width: 100% !important; margin: 0 !important; display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; clip-path: none !important; }
+.hero-visual { display: none !important; }
 .hero-cinematic-scene { position: absolute !important; inset: 0 !important; display: block !important; overflow: hidden; opacity: 1 !important; visibility: visible !important; background: #08205a; }
 .hero-cinematic-image { position: absolute !important; z-index: 1 !important; inset: 0 !important; width: 100% !important; height: 100% !important; display: block !important; opacity: 1 !important; visibility: visible !important; object-fit: cover; object-position: center; transform: scale(1.035); animation: cinematicPush 14s ease-in-out infinite alternate; will-change: transform; }
 @keyframes cinematicPush { to { transform: scale(1.09); } }
