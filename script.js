@@ -95,6 +95,52 @@ if (statRow && !reducedMotion && "IntersectionObserver" in window) {
   countObserver.observe(statRow);
 }
 
+function deckCards(track) {
+  return Array.from(track?.children || []).filter((item) => item.matches(".identity-card,.social-card,.video-card,.print-card"));
+}
+
+function renderDeck(track) {
+  const cards = deckCards(track);
+  if (!cards.length) return;
+  const active = Number(track.dataset.activeIndex || 0);
+  const step = Math.min(window.innerWidth * .105, 155);
+
+  cards.forEach((card, index) => {
+    let offset = index - active;
+    if (offset > cards.length / 2) offset -= cards.length;
+    if (offset < -cards.length / 2) offset += cards.length;
+    const distance = Math.abs(offset);
+    const visible = distance <= 2;
+    const scale = Math.max(.72, 1 - distance * .105);
+    const x = offset * step;
+    const y = distance * 16;
+    const rotate = offset * -6;
+
+    card.style.transform = `translate3d(calc(-50% + ${x}px), ${y}px, ${distance * -85}px) rotateY(${rotate}deg) scale(${scale})`;
+    card.style.zIndex = String(20 - distance);
+    card.style.opacity = visible ? String(1 - distance * .2) : "0";
+    card.style.pointerEvents = visible ? "auto" : "none";
+    card.classList.toggle("deck-active", index === active);
+    card.setAttribute("aria-hidden", index === active ? "false" : "true");
+  });
+
+  const meter = track.closest(".slider-shell")?.querySelector(".slider-progress");
+  meter?.style.setProperty("--slider-progress", `${((active + 1) / cards.length) * 100}%`);
+}
+
+function moveDeck(track, direction) {
+  const cards = deckCards(track);
+  if (!cards.length) return;
+  const active = Number(track.dataset.activeIndex || 0);
+  track.dataset.activeIndex = String((active + direction + cards.length) % cards.length);
+  renderDeck(track);
+}
+
+function activateDeckCard(track, index) {
+  track.dataset.activeIndex = String(index);
+  renderDeck(track);
+}
+
 document.querySelectorAll(".slider-controls").forEach((controls) => {
   const track = document.getElementById(controls.dataset.controls);
   if (!track) return;
@@ -102,6 +148,10 @@ document.querySelectorAll(".slider-controls").forEach((controls) => {
   controls.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-direction]");
     if (!button) return;
+    if (track.classList.contains("deck-track")) {
+      moveDeck(track, button.dataset.direction === "next" ? 1 : -1);
+      return;
+    }
     const card = track.firstElementChild;
     const gap = parseFloat(getComputedStyle(track).gap) || 24;
     const distance = card ? card.getBoundingClientRect().width + gap : track.clientWidth * .8;
@@ -129,6 +179,7 @@ document.querySelectorAll(".drag-track").forEach((track) => {
     if (!pointerDown) return;
     const delta = event.clientX - startX;
     if (Math.abs(delta) > 7) moved = true;
+    if (track.classList.contains("deck-track")) return;
     track.scrollLeft = startScroll - delta * 1.15;
   });
 
@@ -137,6 +188,9 @@ document.querySelectorAll(".drag-track").forEach((track) => {
     pointerDown = false;
     track.classList.remove("is-dragging");
     track.dataset.dragged = moved ? "true" : "false";
+    if (moved && track.classList.contains("deck-track") && event.type === "pointerup") {
+      moveDeck(track, event.clientX < startX ? 1 : -1);
+    }
     if (event.pointerId !== undefined && track.hasPointerCapture(event.pointerId)) {
       track.releasePointerCapture(event.pointerId);
     }
@@ -166,10 +220,35 @@ document.querySelectorAll(".drag-track").forEach((track) => {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     event.preventDefault();
     const direction = event.key === "ArrowRight" ? 1 : -1;
+    if (track.classList.contains("deck-track")) {
+      moveDeck(track, direction);
+      return;
+    }
     track.scrollBy({ left: direction * track.clientWidth * .65, behavior: reducedMotion ? "auto" : "smooth" });
   });
   requestAnimationFrame(updateSliderProgress);
 });
+
+document.querySelectorAll("#identity-track,#social-track,#video-track,#print-track").forEach((track) => {
+  track.classList.add("deck-track");
+  track.dataset.activeIndex = "0";
+  track.addEventListener("click", (event) => {
+    if (track.dataset.dragged === "true") return;
+    const card = event.target.closest(".identity-card,.social-card,.video-card,.print-card");
+    if (!card || card.parentElement !== track) return;
+    const cards = deckCards(track);
+    const index = cards.indexOf(card);
+    if (index === Number(track.dataset.activeIndex || 0)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    activateDeckCard(track, index);
+  }, true);
+  requestAnimationFrame(() => renderDeck(track));
+});
+
+window.addEventListener("resize", () => {
+  document.querySelectorAll(".deck-track").forEach(renderDeck);
+}, { passive: true });
 
 const portraitWrap = document.querySelector(".hero-portrait-wrap");
 const portrait = document.querySelector(".hero-portrait");
