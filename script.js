@@ -45,7 +45,7 @@ if (glow && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
     glow.style.top = `${event.clientY}px`;
   }, { passive: true });
 
-  document.querySelectorAll(".identity-card,.social-card,.print-card,.video-card,.feedback-card,.hero-showreel").forEach((item) => {
+  document.querySelectorAll(".identity-card,.social-card,.print-card,.video-card,.feedback-card").forEach((item) => {
     item.addEventListener("pointerenter", () => glow.classList.add("is-viewing"));
     item.addEventListener("pointerleave", () => glow.classList.remove("is-viewing"));
   });
@@ -146,6 +146,29 @@ document.querySelectorAll(".drag-track").forEach((track) => {
   track.addEventListener("pointerup", stopDragging);
   track.addEventListener("pointercancel", stopDragging);
   track.addEventListener("dragstart", (event) => event.preventDefault());
+
+  const shell = track.closest(".slider-shell");
+  const meter = document.createElement("div");
+  meter.className = "slider-progress";
+  meter.setAttribute("aria-hidden", "true");
+  meter.innerHTML = "<i></i>";
+  shell?.appendChild(meter);
+
+  function updateSliderProgress() {
+    const max = track.scrollWidth - track.clientWidth;
+    const ratio = max > 0 ? track.scrollLeft / max : 1;
+    meter.style.setProperty("--slider-progress", `${Math.max(12, Math.min(100, ratio * 88 + 12))}%`);
+  }
+
+  track.addEventListener("scroll", updateSliderProgress, { passive: true });
+  track.setAttribute("tabindex", "0");
+  track.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    track.scrollBy({ left: direction * track.clientWidth * .65, behavior: reducedMotion ? "auto" : "smooth" });
+  });
+  requestAnimationFrame(updateSliderProgress);
 });
 
 const portraitWrap = document.querySelector(".hero-portrait-wrap");
@@ -271,11 +294,6 @@ document.querySelectorAll(".video-card[data-youtube-id]").forEach((card) => {
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project", card.dataset.videoDescription || "");
   });
-});
-
-document.querySelector(".hero-showreel[data-youtube-id]")?.addEventListener("click", (event) => {
-  const button = event.currentTarget;
-  openVideoModal(button.dataset.youtubeId, button.dataset.videoTitle || "Heem Showreel", "A selection of video editing and motion work by Mohamed Ibrahim — Heem.");
 });
 
 document.querySelectorAll("[data-lightbox]").forEach((button) => {
