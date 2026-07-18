@@ -141,6 +141,24 @@ function activateDeckCard(track, index) {
   renderDeck(track);
 }
 
+function openDeckPreview(card) {
+  if (card.matches(".identity-card")) {
+    const images = Array.from(card.querySelectorAll(".gallery-source img")).map((image) => ({ src: image.getAttribute("src"), alt: image.getAttribute("alt") }));
+    openImageModal(images, card.dataset.projectTitle || "Visual identity", card.dataset.projectCategory, card.dataset.projectDescription || "");
+    return;
+  }
+
+  if (card.matches(".video-card[data-youtube-id]")) {
+    openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project", card.dataset.videoDescription || "");
+    return;
+  }
+
+  const image = card.querySelector("img");
+  if (image) {
+    openImageModal([{ src: image.getAttribute("src"), alt: image.getAttribute("alt") }], card.querySelector("span")?.textContent || "Selected work");
+  }
+}
+
 document.querySelectorAll(".slider-controls").forEach((controls) => {
   const track = document.getElementById(controls.dataset.controls);
   if (!track) return;
@@ -178,7 +196,8 @@ document.querySelectorAll(".drag-track").forEach((track) => {
   track.addEventListener("pointermove", (event) => {
     if (!pointerDown) return;
     const delta = event.clientX - startX;
-    if (Math.abs(delta) > 7) moved = true;
+    const dragThreshold = track.classList.contains("deck-track") ? 18 : 7;
+    if (Math.abs(delta) > dragThreshold) moved = true;
     if (track.classList.contains("deck-track")) return;
     track.scrollLeft = startScroll - delta * 1.15;
   });
@@ -238,9 +257,12 @@ document.querySelectorAll("#identity-track,#social-track,#video-track,#print-tra
     if (!card || card.parentElement !== track) return;
     const cards = deckCards(track);
     const index = cards.indexOf(card);
-    if (index === Number(track.dataset.activeIndex || 0)) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    if (index === Number(track.dataset.activeIndex || 0)) {
+      openDeckPreview(card);
+      return;
+    }
     activateDeckCard(track, index);
   }, true);
   requestAnimationFrame(() => renderDeck(track));
@@ -289,13 +311,17 @@ if (window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
 
   document.querySelectorAll(".identity-card,.social-card,.print-card,.video-card,.service-list article,.feedback-card").forEach((card) => {
     card.addEventListener("pointermove", (event) => {
+      if (card.closest(".deck-track")) return;
       if (card.closest(".is-dragging")) return;
       const box = card.getBoundingClientRect();
       const x = (event.clientX - box.left) / box.width - .5;
       const y = (event.clientY - box.top) / box.height - .5;
       card.style.transform = `perspective(900px) rotateX(${-y * 3.2}deg) rotateY(${x * 4.5}deg) translateY(-3px)`;
     });
-    card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+    card.addEventListener("pointerleave", () => {
+      if (card.closest(".deck-track")) return;
+      card.style.transform = "";
+    });
   });
 }
 
