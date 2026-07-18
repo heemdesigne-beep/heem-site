@@ -257,10 +257,10 @@ main > * { position: relative; z-index: 1; }
 @keyframes cardBreathe { 50% { border-color: rgba(105,174,255,.3); box-shadow: 0 14px 45px rgba(7,26,65,.28),inset 0 0 25px rgba(40,120,255,.035); } }
 
 /* Cinematic hero — one immersive scene instead of a split layout */
-.hero { min-height: 100svh; display: flex; align-items: center; padding-top: 105px; padding-bottom: 105px; background-color: #071a3d; background-size: auto,108% !important; animation: heroBackgroundDrift 24s ease-in-out infinite alternate; will-change: background-position; }
+.hero { min-height: 100svh; display: flex; align-items: center; padding-top: 105px; padding-bottom: 105px; background-color: #071a3d; background-size: auto,128% !important; animation: heroBackgroundDrift 26s ease-in-out infinite alternate; will-change: background-position; }
 @keyframes heroBackgroundDrift {
-  from { background-position: 0 0,49.5% 50%; }
-  to { background-position: 0 0,50.5% 50%; }
+  from { background-position: 0 0,49.7% 48%; }
+  to { background-position: 0 0,50.3% 48%; }
 }
 .hero::after { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg,rgba(4,15,38,.3) 0%,rgba(4,15,38,.06) 48%,rgba(4,15,38,.05) 100%),linear-gradient(0deg,rgba(5,18,43,.7),transparent 30%); pointer-events: none; }
 .hero-grid,.hero-orbit,.hero-word { z-index: 2; }
