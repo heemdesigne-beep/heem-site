@@ -183,6 +183,20 @@ if (portraitWrap && portrait && window.matchMedia("(pointer: fine)").matches && 
   portraitWrap.addEventListener("pointerleave", () => { portrait.style.transform = ""; });
 }
 
+const cinematicScene = document.querySelector(".hero-cinematic-scene");
+if (cinematicScene && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
+  cinematicScene.addEventListener("pointermove", (event) => {
+    const x = (event.clientX / window.innerWidth - .5) * -16;
+    const y = (event.clientY / window.innerHeight - .5) * -10;
+    cinematicScene.style.setProperty("--hero-x", x.toFixed(2));
+    cinematicScene.style.setProperty("--hero-y", y.toFixed(2));
+  });
+  cinematicScene.addEventListener("pointerleave", () => {
+    cinematicScene.style.setProperty("--hero-x", "0");
+    cinematicScene.style.setProperty("--hero-y", "0");
+  });
+}
+
 if (window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
   document.querySelectorAll(".header-cta,.button,.text-link,.contact-content > a,.slider-controls button").forEach((item) => {
     item.addEventListener("pointermove", (event) => {
