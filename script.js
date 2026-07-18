@@ -5,16 +5,38 @@ if (year) year.textContent = new Date().getFullYear();
 
 const progress = document.querySelector(".scroll-progress");
 const header = document.querySelector(".site-header");
+const scrollRail = document.querySelector(".scroll-rail");
+let scrollTicking = false;
 
 function updateScrollUI() {
   const scrollable = document.documentElement.scrollHeight - window.innerHeight;
   const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
   if (progress) progress.style.width = `${Math.min(ratio * 100, 100)}%`;
+  if (scrollRail) scrollRail.style.setProperty("--rail-progress", `${Math.min(ratio * 100, 100)}%`);
   if (header) header.classList.toggle("scrolled", window.scrollY > 60);
+  document.documentElement.style.setProperty("--page-scroll", `${window.scrollY}px`);
+  scrollTicking = false;
 }
 
-window.addEventListener("scroll", updateScrollUI, { passive: true });
+window.addEventListener("scroll", () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(updateScrollUI);
+}, { passive: true });
 updateScrollUI();
+
+const railLinks = document.querySelectorAll(".scroll-rail a");
+if (railLinks.length && "IntersectionObserver" in window) {
+  const railObserver = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!visible) return;
+    railLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`));
+  }, { rootMargin: "-28% 0px -58%", threshold: [0, .05, .25] });
+
+  document.querySelectorAll("#home,#about,#identity,#services,#contact").forEach((section) => railObserver.observe(section));
+}
 
 const glow = document.querySelector(".cursor-glow");
 if (glow && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
@@ -22,6 +44,11 @@ if (glow && window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
     glow.style.left = `${event.clientX}px`;
     glow.style.top = `${event.clientY}px`;
   }, { passive: true });
+
+  document.querySelectorAll(".identity-card,.social-card,.print-card,.video-card,.feedback-card,.hero-showreel").forEach((item) => {
+    item.addEventListener("pointerenter", () => glow.classList.add("is-viewing"));
+    item.addEventListener("pointerleave", () => glow.classList.remove("is-viewing"));
+  });
 }
 
 const revealItems = document.querySelectorAll("[data-reveal]");
@@ -133,6 +160,29 @@ if (portraitWrap && portrait && window.matchMedia("(pointer: fine)").matches && 
   portraitWrap.addEventListener("pointerleave", () => { portrait.style.transform = ""; });
 }
 
+if (window.matchMedia("(pointer: fine)").matches && !reducedMotion) {
+  document.querySelectorAll(".header-cta,.button,.text-link,.contact-content > a,.slider-controls button").forEach((item) => {
+    item.addEventListener("pointermove", (event) => {
+      const box = item.getBoundingClientRect();
+      const x = event.clientX - box.left - box.width / 2;
+      const y = event.clientY - box.top - box.height / 2;
+      item.style.transform = `translate(${x * .12}px, ${y * .18}px)`;
+    });
+    item.addEventListener("pointerleave", () => { item.style.transform = ""; });
+  });
+
+  document.querySelectorAll(".identity-card,.social-card,.print-card,.video-card,.service-list article,.feedback-card").forEach((card) => {
+    card.addEventListener("pointermove", (event) => {
+      if (card.closest(".is-dragging")) return;
+      const box = card.getBoundingClientRect();
+      const x = (event.clientX - box.left) / box.width - .5;
+      const y = (event.clientY - box.top) / box.height - .5;
+      card.style.transform = `perspective(900px) rotateX(${-y * 3.2}deg) rotateY(${x * 4.5}deg) translateY(-3px)`;
+    });
+    card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+  });
+}
+
 const modal = document.getElementById("media-modal");
 const modalImage = modal?.querySelector(".modal-stage img");
 const modalIframe = modal?.querySelector(".modal-stage iframe");
@@ -221,6 +271,11 @@ document.querySelectorAll(".video-card[data-youtube-id]").forEach((card) => {
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project", card.dataset.videoDescription || "");
   });
+});
+
+document.querySelector(".hero-showreel[data-youtube-id]")?.addEventListener("click", (event) => {
+  const button = event.currentTarget;
+  openVideoModal(button.dataset.youtubeId, button.dataset.videoTitle || "Heem Showreel", "A selection of video editing and motion work by Mohamed Ibrahim — Heem.");
 });
 
 document.querySelectorAll("[data-lightbox]").forEach((button) => {
