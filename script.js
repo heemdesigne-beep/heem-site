@@ -343,6 +343,7 @@ function renderModalImage() {
   const current = activeImages[activeIndex];
   modalImage.src = current.src;
   modalImage.alt = current.alt || "Portfolio project";
+  modalImage.classList.remove("is-zoomed");
   if (modalCount) modalCount.textContent = `${activeIndex + 1} / ${activeImages.length}`;
   if (modalNav) modalNav.hidden = activeImages.length < 2;
 }
@@ -428,6 +429,10 @@ document.querySelectorAll("[data-lightbox]").forEach((button) => {
 });
 
 modal?.querySelector(".modal-close")?.addEventListener("click", closeModal);
+modalImage?.addEventListener("click", () => {
+  if (!modal?.classList.contains("open") || modal.classList.contains("video-mode")) return;
+  modalImage.classList.toggle("is-zoomed");
+});
 modal?.querySelector("[data-modal-next]")?.addEventListener("click", () => changeModalImage(1));
 modal?.querySelector("[data-modal-prev]")?.addEventListener("click", () => changeModalImage(-1));
 modal?.addEventListener("click", (event) => { if (event.target === modal) closeModal(); });
