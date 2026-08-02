@@ -128,17 +128,78 @@ function renderDeck(track) {
   meter?.style.setProperty("--slider-progress", `${((active + 1) / cards.length) * 100}%`);
 }
 
+function animateDeckTransition(track, previousIndex, nextIndex, direction = 1) {
+  if (reducedMotion || previousIndex === nextIndex) return;
+  const cards = deckCards(track);
+  const shell = track.closest(".slider-shell");
+  const stage = track.closest(".portfolio-stage");
+  const outgoing = cards[previousIndex];
+  const incoming = cards[nextIndex];
+  const outgoingTransform = "translate3d(calc(-50% + 0px),0,0) rotateY(0deg) scale(1)";
+  const outgoingDestination = outgoing?.style.transform || "none";
+  const incomingTransform = incoming?.style.transform || "none";
+  const travel = direction > 0 ? -1 : 1;
+
+  outgoing?.animate([
+    { transform: outgoingTransform, filter: "blur(0) saturate(1)", opacity: 1 },
+    { transform: `${outgoingDestination} translate3d(${travel * 120}px,-24px,120px) rotateZ(${travel * 5}deg) scale(.92)`, filter: "blur(9px) saturate(.55)", opacity: .15 }
+  ], { duration: 720, easing: "cubic-bezier(.55,0,1,.45)" });
+
+  incoming?.animate([
+    { transform: `${incomingTransform} translate3d(${travel * -190}px,54px,-240px) rotateZ(${travel * -7}deg) scale(.72)`, filter: "blur(16px) brightness(1.55)", opacity: 0 },
+    { offset: .62, filter: "blur(1px) brightness(1.18)", opacity: 1 },
+    { transform: incomingTransform, filter: "blur(0) brightness(1)", opacity: 1 }
+  ], { duration: 1050, easing: "cubic-bezier(.16,1,.3,1)" });
+
+  incoming?.querySelector("img")?.animate([
+    { transform: `scale(1.14) translateX(${travel * -18}px)`, filter: "brightness(1.32)" },
+    { transform: "scale(1)", filter: "brightness(1)" }
+  ], { duration: 1250, easing: "cubic-bezier(.16,1,.3,1)" });
+
+  if (stage) {
+    stage.animate([
+      { filter: "brightness(1)" },
+      { offset: .25, filter: "brightness(1.22) saturate(1.2)" },
+      { filter: "brightness(1)" }
+    ], { duration: 820, easing: "ease-out" });
+  }
+
+  if (shell && incoming) {
+    let fx = shell.querySelector(".deck-transition-fx");
+    if (!fx) {
+      fx = document.createElement("div");
+      fx.className = "deck-transition-fx";
+      fx.innerHTML = "<i></i><span></span><b></b>";
+      shell.appendChild(fx);
+    }
+    const label = incoming.dataset.projectTitle || incoming.dataset.videoTitle || incoming.querySelector("h3,span")?.textContent || "Selected work";
+    fx.querySelector("span").textContent = label;
+    fx.style.setProperty("--motion-direction", String(direction));
+    fx.getAnimations().forEach((animation) => animation.cancel());
+    fx.animate([
+      { clipPath: direction > 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)", opacity: 0 },
+      { offset: .28, clipPath: "inset(0)", opacity: 1 },
+      { offset: .72, clipPath: "inset(0)", opacity: 1 },
+      { clipPath: direction > 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)", opacity: 0 }
+    ], { duration: 980, easing: "cubic-bezier(.76,0,.24,1)" });
+  }
+}
+
 function moveDeck(track, direction) {
   const cards = deckCards(track);
   if (!cards.length) return;
   const active = Number(track.dataset.activeIndex || 0);
-  track.dataset.activeIndex = String((active + direction + cards.length) % cards.length);
+  const next = (active + direction + cards.length) % cards.length;
+  track.dataset.activeIndex = String(next);
   renderDeck(track);
+  animateDeckTransition(track, active, next, direction);
 }
 
 function activateDeckCard(track, index) {
+  const previous = Number(track.dataset.activeIndex || 0);
   track.dataset.activeIndex = String(index);
   renderDeck(track);
+  animateDeckTransition(track, previous, index, index >= previous ? 1 : -1);
 }
 
 function openDeckPreview(card) {
