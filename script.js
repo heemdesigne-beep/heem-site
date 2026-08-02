@@ -433,3 +433,50 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") changeModalImage(1);
   if (event.key === "ArrowLeft") changeModalImage(-1);
 });
+
+// Creative director cut: cinematic entry and scroll-linked composition.
+const loader = document.querySelector(".heem-loader");
+const loaderCount = loader?.querySelector(".loader-meta b");
+if (loader) {
+  let loaderValue = 0;
+  const loaderTimer = window.setInterval(() => {
+    loaderValue = Math.min(100, loaderValue + Math.ceil((100 - loaderValue) * .16));
+    if (loaderCount) loaderCount.textContent = String(loaderValue).padStart(2, "0");
+    if (loaderValue >= 100) window.clearInterval(loaderTimer);
+  }, 55);
+  window.addEventListener("load", () => {
+    window.setTimeout(() => {
+      if (loaderCount) loaderCount.textContent = "100";
+      document.body.classList.add("is-ready");
+    }, reducedMotion ? 0 : 520);
+  }, { once: true });
+  window.setTimeout(() => document.body.classList.add("is-ready"), 2600);
+}
+
+if (!reducedMotion) {
+  let motionFrame = 0;
+  window.addEventListener("pointermove", (event) => {
+    document.documentElement.style.setProperty("--mx", ((event.clientX / innerWidth) - .5).toFixed(3));
+    document.documentElement.style.setProperty("--my", ((event.clientY / innerHeight) - .5).toFixed(3));
+  }, { passive: true });
+
+  const overture = document.querySelector(".work-overture");
+  const motionSections = document.querySelectorAll(".portfolio-section");
+  const renderComposition = () => {
+    motionFrame = 0;
+    if (overture) {
+      const box = overture.getBoundingClientRect();
+      const progressValue = Math.max(-1, Math.min(1, (innerHeight * .5 - box.top) / innerHeight));
+      overture.style.setProperty("--overture-shift", (progressValue * 72).toFixed(1));
+    }
+    motionSections.forEach((section) => {
+      const box = section.getBoundingClientRect();
+      const progressValue = Math.max(-1, Math.min(1, (innerHeight - box.top) / (innerHeight + box.height)));
+      section.style.setProperty("--section-progress", progressValue.toFixed(3));
+    });
+  };
+  window.addEventListener("scroll", () => {
+    if (!motionFrame) motionFrame = requestAnimationFrame(renderComposition);
+  }, { passive: true });
+  renderComposition();
+}
