@@ -1,5 +1,11 @@
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+if (!window.location.hash) window.scrollTo(0, 0);
+window.addEventListener("pageshow", () => {
+  if (!window.location.hash) requestAnimationFrame(() => window.scrollTo(0, 0));
+});
+
 const year = document.getElementById("year");
 if (year) year.textContent = new Date().getFullYear();
 
@@ -454,52 +460,6 @@ document.querySelectorAll(".portfolio-section").forEach((section) => {
   children.forEach((child) => stage.appendChild(child));
   section.appendChild(stage);
 });
-
-// Full-screen chapter wipes belong between sections; the cards stay untouched.
-const chapterTransition = document.createElement("div");
-chapterTransition.className = "chapter-transition";
-chapterTransition.setAttribute("aria-hidden", "true");
-chapterTransition.innerHTML = "<i></i><div><small>NEXT CHAPTER</small><strong></strong><span></span></div><b></b>";
-document.body.appendChild(chapterTransition);
-
-const chapterSections = document.querySelectorAll(".hero,.about,.work-overture,.portfolio-section,.partners,.services,.feedback,.contact");
-let currentChapter = null;
-let chapterScrollY = window.scrollY;
-
-function playChapterTransition(section) {
-  if (reducedMotion || !currentChapter || currentChapter === section) {
-    currentChapter = section;
-    return;
-  }
-  const movingDown = window.scrollY >= chapterScrollY;
-  const indexText = section.querySelector(".section-index")?.textContent?.trim() || "SELECTED WORK";
-  const titleText = section.matches(".work-overture")
-    ? "IDEAS THAT MOVE"
-    : section.querySelector("h2")?.textContent?.replace(/\s+/g, " ").trim() || "HEEM";
-  chapterTransition.querySelector("strong").textContent = titleText;
-  chapterTransition.querySelector("span").textContent = indexText;
-  chapterTransition.getAnimations().forEach((animation) => animation.cancel());
-  chapterTransition.animate(movingDown ? [
-    { clipPath: "inset(100% 0 0)", visibility: "visible" },
-    { offset: .42, clipPath: "inset(0)", visibility: "visible" },
-    { offset: .58, clipPath: "inset(0)", visibility: "visible" },
-    { clipPath: "inset(0 0 100%)", visibility: "visible" }
-  ] : [
-    { clipPath: "inset(0 0 100%)", visibility: "visible" },
-    { offset: .42, clipPath: "inset(0)", visibility: "visible" },
-    { offset: .58, clipPath: "inset(0)", visibility: "visible" },
-    { clipPath: "inset(100% 0 0)", visibility: "visible" }
-  ], { duration: 920, easing: "cubic-bezier(.76,0,.24,1)" });
-  currentChapter = section;
-  chapterScrollY = window.scrollY;
-}
-
-if ("IntersectionObserver" in window) {
-  const chapterObserver = new IntersectionObserver((entries) => {
-    entries.filter((entry) => entry.isIntersecting).forEach((entry) => playChapterTransition(entry.target));
-  }, { rootMargin: "-43% 0px -43%", threshold: 0 });
-  chapterSections.forEach((section) => chapterObserver.observe(section));
-}
 
 // Creative director cut: cinematic entry and scroll-linked composition.
 const loader = document.querySelector(".heem-loader");
