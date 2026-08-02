@@ -644,6 +644,10 @@ h1,h2,.loader-mark,.overture-line,.portfolio-head h2,.services-title h2,.partner
 .modal-dialog { border-color:rgba(133,201,255,.34); background:linear-gradient(145deg,#081d42,#030b1b); box-shadow:0 40px 160px rgba(0,0,0,.8),0 0 90px rgba(22,139,255,.18); }
 .modal-close { z-index:120001; border-radius:50%; background:#eef7ff; color:#07162f; }
 .modal-stage { background:radial-gradient(circle at 50% 50%,#0e3372,#020713 68%); }
+.media-modal:not(.video-mode) .modal-dialog { height:min(92vh,920px); }
+.media-modal:not(.video-mode) .modal-stage { height:auto; min-height:0; padding:clamp(12px,2vw,28px); display:flex; align-items:center; justify-content:center; overflow:auto; }
+.media-modal:not(.video-mode) .modal-stage img { width:auto!important; height:auto!important; max-width:100%!important; max-height:100%!important; object-fit:contain!important; object-position:center!important; cursor:zoom-in; }
+.media-modal:not(.video-mode) .modal-stage img.is-zoomed { max-width:none!important; max-height:none!important; cursor:zoom-out; }
 .deck-active { cursor:zoom-in!important; }
 .deck-active::before { animation:activeCardScan 4.8s ease-in-out infinite; }
 @keyframes activeCardScan { 0%,35% { transform:translateX(-120%); } 75%,100% { transform:translateX(120%); } }
