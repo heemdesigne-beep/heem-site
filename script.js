@@ -190,14 +190,16 @@ document.querySelectorAll(".drag-track").forEach((track) => {
     startX = event.clientX;
     startScroll = track.scrollLeft;
     track.classList.add("is-dragging");
-    track.setPointerCapture(event.pointerId);
   });
 
   track.addEventListener("pointermove", (event) => {
     if (!pointerDown) return;
     const delta = event.clientX - startX;
     const dragThreshold = track.classList.contains("deck-track") ? 18 : 7;
-    if (Math.abs(delta) > dragThreshold) moved = true;
+    if (Math.abs(delta) > dragThreshold) {
+      moved = true;
+      if (!track.hasPointerCapture(event.pointerId)) track.setPointerCapture(event.pointerId);
+    }
     if (track.classList.contains("deck-track")) return;
     track.scrollLeft = startScroll - delta * 1.15;
   });
