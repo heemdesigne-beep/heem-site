@@ -258,13 +258,13 @@ document.querySelectorAll("#identity-track,#social-track,#video-track,#print-tra
     const cards = deckCards(track);
     const index = cards.indexOf(card);
     event.preventDefault();
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     if (index === Number(track.dataset.activeIndex || 0)) {
       openDeckPreview(card);
       return;
     }
     activateDeckCard(track, index);
-  }, true);
+  });
   requestAnimationFrame(() => renderDeck(track));
 });
 
@@ -393,6 +393,7 @@ function changeModalImage(direction) {
 
 document.querySelectorAll(".identity-card").forEach((card) => {
   card.addEventListener("click", () => {
+    if (card.closest(".deck-track")) return;
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     const images = Array.from(card.querySelectorAll(".gallery-source img")).map((image) => ({ src: image.getAttribute("src"), alt: image.getAttribute("alt") }));
     openImageModal(images, card.dataset.projectTitle || "Visual identity", card.dataset.projectCategory, card.dataset.projectDescription || "");
@@ -401,6 +402,7 @@ document.querySelectorAll(".identity-card").forEach((card) => {
 
 document.querySelectorAll(".social-card, .print-card").forEach((card) => {
   card.addEventListener("click", () => {
+    if (card.closest(".deck-track")) return;
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     const image = card.querySelector("img");
     if (!image) return;
@@ -410,6 +412,7 @@ document.querySelectorAll(".social-card, .print-card").forEach((card) => {
 
 document.querySelectorAll(".video-card[data-youtube-id]").forEach((card) => {
   card.addEventListener("click", () => {
+    if (card.closest(".deck-track")) return;
     if (card.closest(".drag-track")?.dataset.dragged === "true") return;
     openVideoModal(card.dataset.youtubeId, card.dataset.videoTitle || "Video project", card.dataset.videoDescription || "");
   });
@@ -432,6 +435,16 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeModal();
   if (event.key === "ArrowRight") changeModalImage(1);
   if (event.key === "ArrowLeft") changeModalImage(-1);
+});
+
+// Turn every portfolio chapter into one pinned, scroll-directed scene.
+document.querySelectorAll(".portfolio-section").forEach((section) => {
+  if (section.querySelector(":scope > .portfolio-stage")) return;
+  const stage = document.createElement("div");
+  stage.className = "portfolio-stage";
+  const children = Array.from(section.children);
+  children.forEach((child) => stage.appendChild(child));
+  section.appendChild(stage);
 });
 
 // Creative director cut: cinematic entry and scroll-linked composition.
@@ -467,12 +480,25 @@ if (!reducedMotion) {
     if (overture) {
       const box = overture.getBoundingClientRect();
       const progressValue = Math.max(-1, Math.min(1, (innerHeight * .5 - box.top) / innerHeight));
-      overture.style.setProperty("--overture-shift", (progressValue * 72).toFixed(1));
+      overture.style.setProperty("--overture-shift", `${(progressValue * -72).toFixed(1)}px`);
     }
     motionSections.forEach((section) => {
       const box = section.getBoundingClientRect();
-      const progressValue = Math.max(-1, Math.min(1, (innerHeight - box.top) / (innerHeight + box.height)));
+      const travel = Math.max(1, box.height - innerHeight);
+      const progressValue = Math.max(0, Math.min(1, -box.top / travel));
       section.style.setProperty("--section-progress", progressValue.toFixed(3));
+      section.style.setProperty("--section-head-y", `${((.5 - progressValue) * 65).toFixed(1)}px`);
+      section.style.setProperty("--section-shell-x", `${((.5 - progressValue) * 11).toFixed(2)}vw`);
+      section.style.setProperty("--section-orb-left", `${(52 + progressValue * 18).toFixed(2)}%`);
+      section.style.setProperty("--section-orb-scale", (.78 + progressValue * .45).toFixed(3));
+      section.style.setProperty("--section-grid-y", `${(progressValue * 90).toFixed(1)}px`);
+      section.style.setProperty("--section-ghost-x", `${(progressValue * -7).toFixed(2)}vw`);
+      const track = section.querySelector(".deck-track");
+      const cards = deckCards(track);
+      if (track && cards.length && box.top < innerHeight * .35 && box.bottom > innerHeight * .65) {
+        const nextIndex = Math.min(cards.length - 1, Math.floor(progressValue * cards.length));
+        if (Number(track.dataset.activeIndex || 0) !== nextIndex) activateDeckCard(track, nextIndex);
+      }
     });
   };
   window.addEventListener("scroll", () => {
