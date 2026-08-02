@@ -621,9 +621,10 @@ h1,h2,.loader-mark,.overture-line,.portfolio-head h2,.services-title h2,.partner
   .portfolio-head { width:auto; margin:0; padding:0 2vw 0 var(--pad); display:block; align-self:center; transform:translate3d(0,var(--section-head-y,32px),0); }
   .portfolio-head::before { top:-15vh; left:-3vw; font-size:clamp(10rem,24vw,27rem); transform:translateX(var(--section-ghost-x,0vw)); opacity:.45; }
   .portfolio-head h2 { font-size:clamp(6.8rem,10.8vw,12rem); line-height:.7; }
+  .portfolio-head h2 span { display:block; max-width:100%; margin-top:.08em; font-size:clamp(4.2rem,5.1vw,6.4rem); line-height:.88; white-space:normal; }
   .portfolio-sidecopy { max-width:460px; margin:40px 0 0; }
   .portfolio-sidecopy p { max-width:390px; color:#c2d2e6; }
-  .portfolio-stage>.slider-shell { align-self:center; min-width:0; overflow:visible; transform:translateX(var(--section-shell-x,5.5vw)); }
+  .portfolio-stage>.slider-shell { position:relative; z-index:2; align-self:center; min-width:0; overflow:visible; transform:translateX(var(--section-shell-x,5.5vw)); }
   .portfolio-stage>.drag-hint { position:absolute; right:var(--pad); bottom:28px; width:calc(58% - var(--pad)); margin:0; }
   .portfolio-stage .deck-track { perspective:1500px; }
   .portfolio-stage #identity-track { height:590px; }
