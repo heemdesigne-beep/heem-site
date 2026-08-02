@@ -652,6 +652,14 @@ h1,h2,.loader-mark,.overture-line,.portfolio-head h2,.services-title h2,.partner
 .deck-active { cursor:zoom-in!important; }
 .deck-active::before { animation:activeCardScan 4.8s ease-in-out infinite; }
 @keyframes activeCardScan { 0%,35% { transform:translateX(-120%); } 75%,100% { transform:translateX(120%); } }
+.deck-transition-fx { position:absolute; z-index:80; inset:10% 0 12%; display:grid; place-items:center; overflow:hidden; color:#061630; background:linear-gradient(110deg,rgba(222,244,255,.96),rgba(92,183,255,.94)); pointer-events:none; opacity:0; box-shadow:0 0 110px rgba(50,164,255,.48); }
+.deck-transition-fx::before,.deck-transition-fx::after { content:""; position:absolute; inset:-30%; background:repeating-linear-gradient(105deg,transparent 0 28px,rgba(255,255,255,.18) 29px 30px); transform:translateX(-12%); }
+.deck-transition-fx::after { background:radial-gradient(circle,rgba(255,255,255,.9),transparent 55%); filter:blur(24px); }
+.deck-transition-fx span { position:relative; z-index:2; max-width:88%; font-family:"Bebas Neue",Impact,sans-serif; font-size:clamp(3.6rem,7vw,8.5rem); line-height:.82; letter-spacing:-.02em; text-align:center; text-transform:uppercase; }
+.deck-transition-fx i,.deck-transition-fx b { position:absolute; z-index:3; top:28px; width:74px; height:2px; background:#071b3c; }
+.deck-transition-fx i { left:28px; }
+.deck-transition-fx b { right:28px; }
+.deck-track>article,.deck-track>button { backface-visibility:hidden; }
 
 [data-reveal] { clip-path:inset(0 0 100% 0); transform:translateY(45px); transition:clip-path 1.05s cubic-bezier(.76,0,.24,1),opacity .7s ease,transform 1.05s cubic-bezier(.2,.8,.2,1); }
 [data-reveal].revealed { clip-path:inset(-8%); }
