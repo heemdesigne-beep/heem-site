@@ -128,63 +128,6 @@ function renderDeck(track) {
   meter?.style.setProperty("--slider-progress", `${((active + 1) / cards.length) * 100}%`);
 }
 
-function animateDeckTransition(track, previousIndex, nextIndex, direction = 1) {
-  if (reducedMotion || previousIndex === nextIndex) return;
-  const cards = deckCards(track);
-  const shell = track.closest(".slider-shell");
-  const stage = track.closest(".portfolio-stage");
-  const outgoing = cards[previousIndex];
-  const incoming = cards[nextIndex];
-  const outgoingTransform = "translate3d(calc(-50% + 0px),0,0) rotateY(0deg) scale(1)";
-  const outgoingDestination = outgoing?.style.transform || "none";
-  const incomingTransform = incoming?.style.transform || "none";
-  const travel = direction > 0 ? -1 : 1;
-
-  outgoing?.animate([
-    { transform: outgoingTransform, filter: "blur(0) saturate(1)", opacity: 1 },
-    { transform: `${outgoingDestination} translate3d(${travel * 120}px,-24px,120px) rotateZ(${travel * 5}deg) scale(.92)`, filter: "blur(9px) saturate(.55)", opacity: .15 }
-  ], { duration: 720, easing: "cubic-bezier(.55,0,1,.45)" });
-
-  incoming?.animate([
-    { transform: `${incomingTransform} translate3d(${travel * -190}px,54px,-240px) rotateZ(${travel * -7}deg) scale(.72)`, filter: "blur(16px) brightness(1.55)", opacity: 0 },
-    { offset: .62, filter: "blur(1px) brightness(1.18)", opacity: 1 },
-    { transform: incomingTransform, filter: "blur(0) brightness(1)", opacity: 1 }
-  ], { duration: 1050, easing: "cubic-bezier(.16,1,.3,1)" });
-
-  incoming?.querySelector("img")?.animate([
-    { transform: `scale(1.14) translateX(${travel * -18}px)`, filter: "brightness(1.32)" },
-    { transform: "scale(1)", filter: "brightness(1)" }
-  ], { duration: 1250, easing: "cubic-bezier(.16,1,.3,1)" });
-
-  if (stage) {
-    stage.animate([
-      { filter: "brightness(1)" },
-      { offset: .25, filter: "brightness(1.22) saturate(1.2)" },
-      { filter: "brightness(1)" }
-    ], { duration: 820, easing: "ease-out" });
-  }
-
-  if (shell && incoming) {
-    let fx = shell.querySelector(".deck-transition-fx");
-    if (!fx) {
-      fx = document.createElement("div");
-      fx.className = "deck-transition-fx";
-      fx.innerHTML = "<i></i><span></span><b></b>";
-      shell.appendChild(fx);
-    }
-    const label = incoming.dataset.projectTitle || incoming.dataset.videoTitle || incoming.querySelector("h3,span")?.textContent || "Selected work";
-    fx.querySelector("span").textContent = label;
-    fx.style.setProperty("--motion-direction", String(direction));
-    fx.getAnimations().forEach((animation) => animation.cancel());
-    fx.animate([
-      { clipPath: direction > 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)", opacity: 0 },
-      { offset: .28, clipPath: "inset(0)", opacity: 1 },
-      { offset: .72, clipPath: "inset(0)", opacity: 1 },
-      { clipPath: direction > 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)", opacity: 0 }
-    ], { duration: 980, easing: "cubic-bezier(.76,0,.24,1)" });
-  }
-}
-
 function moveDeck(track, direction) {
   const cards = deckCards(track);
   if (!cards.length) return;
@@ -192,14 +135,11 @@ function moveDeck(track, direction) {
   const next = (active + direction + cards.length) % cards.length;
   track.dataset.activeIndex = String(next);
   renderDeck(track);
-  animateDeckTransition(track, active, next, direction);
 }
 
 function activateDeckCard(track, index) {
-  const previous = Number(track.dataset.activeIndex || 0);
   track.dataset.activeIndex = String(index);
   renderDeck(track);
-  animateDeckTransition(track, previous, index, index >= previous ? 1 : -1);
 }
 
 function openDeckPreview(card) {
@@ -514,6 +454,52 @@ document.querySelectorAll(".portfolio-section").forEach((section) => {
   children.forEach((child) => stage.appendChild(child));
   section.appendChild(stage);
 });
+
+// Full-screen chapter wipes belong between sections; the cards stay untouched.
+const chapterTransition = document.createElement("div");
+chapterTransition.className = "chapter-transition";
+chapterTransition.setAttribute("aria-hidden", "true");
+chapterTransition.innerHTML = "<i></i><div><small>NEXT CHAPTER</small><strong></strong><span></span></div><b></b>";
+document.body.appendChild(chapterTransition);
+
+const chapterSections = document.querySelectorAll(".hero,.about,.work-overture,.portfolio-section,.partners,.services,.feedback,.contact");
+let currentChapter = null;
+let chapterScrollY = window.scrollY;
+
+function playChapterTransition(section) {
+  if (reducedMotion || !currentChapter || currentChapter === section) {
+    currentChapter = section;
+    return;
+  }
+  const movingDown = window.scrollY >= chapterScrollY;
+  const indexText = section.querySelector(".section-index")?.textContent?.trim() || "SELECTED WORK";
+  const titleText = section.matches(".work-overture")
+    ? "IDEAS THAT MOVE"
+    : section.querySelector("h2")?.textContent?.replace(/\s+/g, " ").trim() || "HEEM";
+  chapterTransition.querySelector("strong").textContent = titleText;
+  chapterTransition.querySelector("span").textContent = indexText;
+  chapterTransition.getAnimations().forEach((animation) => animation.cancel());
+  chapterTransition.animate(movingDown ? [
+    { clipPath: "inset(100% 0 0)", visibility: "visible" },
+    { offset: .42, clipPath: "inset(0)", visibility: "visible" },
+    { offset: .58, clipPath: "inset(0)", visibility: "visible" },
+    { clipPath: "inset(0 0 100%)", visibility: "visible" }
+  ] : [
+    { clipPath: "inset(0 0 100%)", visibility: "visible" },
+    { offset: .42, clipPath: "inset(0)", visibility: "visible" },
+    { offset: .58, clipPath: "inset(0)", visibility: "visible" },
+    { clipPath: "inset(100% 0 0)", visibility: "visible" }
+  ], { duration: 920, easing: "cubic-bezier(.76,0,.24,1)" });
+  currentChapter = section;
+  chapterScrollY = window.scrollY;
+}
+
+if ("IntersectionObserver" in window) {
+  const chapterObserver = new IntersectionObserver((entries) => {
+    entries.filter((entry) => entry.isIntersecting).forEach((entry) => playChapterTransition(entry.target));
+  }, { rootMargin: "-43% 0px -43%", threshold: 0 });
+  chapterSections.forEach((section) => chapterObserver.observe(section));
+}
 
 // Creative director cut: cinematic entry and scroll-linked composition.
 const loader = document.querySelector(".heem-loader");
