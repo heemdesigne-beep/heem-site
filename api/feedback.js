@@ -1,5 +1,3 @@
-const { Client } = require("pg");
-
 function send(res, status, body) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -11,18 +9,32 @@ function clean(value, max) {
   return String(value || "").trim().slice(0, max);
 }
 
+function config() {
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+  return { url, key };
+}
+
 module.exports = async function handler(req, res) {
-  if (!process.env.POSTGRES_URL) return send(res, 500, { error: "Database is not configured." });
-  const client = new Client({ connectionString: process.env.POSTGRES_URL, ssl: { rejectUnauthorized: false } });
+  const { url, key } = config();
+  if (!url || !key) return send(res, 500, { error: "Database is not configured." });
+
+  const endpoint = `${url.replace(/\/$/, "")}/rest/v1/feedback`;
+  const headers = {
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    "Content-Type": "application/json"
+  };
 
   try {
-    await client.connect();
-
     if (req.method === "GET") {
-      const result = await client.query(
-        "SELECT id, name, role, message, rating, created_at FROM public.feedback WHERE approved = TRUE ORDER BY created_at DESC LIMIT 30"
-      );
-      return send(res, 200, { feedback: result.rows });
+      const response = await fetch(`${endpoint}?select=id,name,role,message,rating,created_at&approved=eq.true&order=created_at.desc&limit=30`, {
+        headers,
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error(`Supabase GET ${response.status}: ${await response.text()}`);
+      const rows = await response.json();
+      return send(res, 200, { feedback: rows });
     }
 
     if (req.method === "POST") {
@@ -35,11 +47,14 @@ module.exports = async function handler(req, res) {
       if (name.length < 2) return send(res, 400, { error: "Please add your name." });
       if (message.length < 10) return send(res, 400, { error: "Please write at least 10 characters." });
 
-      const result = await client.query(
-        "INSERT INTO public.feedback (name, role, message, rating, approved) VALUES ($1, $2, $3, $4, TRUE) RETURNING id, name, role, message, rating, created_at",
-        [name, role || null, message, rating]
-      );
-      return send(res, 201, { feedback: result.rows[0] });
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { ...headers, Prefer: "return=representation" },
+        body: JSON.stringify({ name, role: role || null, message, rating, approved: true })
+      });
+      if (!response.ok) throw new Error(`Supabase POST ${response.status}: ${await response.text()}`);
+      const rows = await response.json();
+      return send(res, 201, { feedback: rows[0] });
     }
 
     res.setHeader("Allow", "GET, POST");
@@ -47,7 +62,5 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error("feedback-api", error);
     return send(res, 500, { error: "Feedback service is temporarily unavailable." });
-  } finally {
-    try { await client.end(); } catch {}
   }
 };
