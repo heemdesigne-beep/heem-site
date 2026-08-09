@@ -2,63 +2,203 @@
   const track = document.getElementById("identity-track");
   if (!track) return;
 
-  const cards = () => Array.from(track.children).filter((el) => el.matches(".identity-card"));
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  track.classList.add("heem-coverflow");
+  const cards = Array.from(track.children).filter((el) => el.matches(".identity-card"));
+  if (!cards.length) return;
+
+  const rotate = 44;
+  const depth = 0.6;
+  const perspective = 3;
+  const falloff = 0.56;
+  const fade = 0.1;
+  const gap = 0.05;
+  const count = cards.length;
+
+  let pos = Number(track.dataset.activeIndex || 0);
+  let target = pos;
+  let raf = null;
+  let width = 0;
+  let drag = null;
+  let dragged = false;
+
+  track.classList.add("heem-coverflow-exact");
 
   const style = document.createElement("style");
   style.textContent = `
     #identity .slider-shell{overflow:hidden!important;background:transparent!important;box-shadow:none!important}
-    #identity-track.heem-coverflow{perspective:1450px;transform-style:preserve-3d;touch-action:pan-y;overflow:visible!important;isolation:isolate}
-    #identity-track.heem-coverflow::before,#identity-track.heem-coverflow::after{display:none!important;content:none!important}
-    #identity-track.heem-coverflow .identity-card{transform-origin:center center;backface-visibility:hidden;will-change:transform,opacity;filter:none!important;box-shadow:none!important;transition:${reduce ? "none" : "transform .58s cubic-bezier(.22,.72,.2,1),opacity .38s ease"}!important}
-    #identity-track.heem-coverflow .identity-card.deck-active{filter:none!important;box-shadow:none!important;outline:1px solid rgba(105,174,255,.38);outline-offset:0}
-    #identity-track.heem-coverflow .identity-card:not(.deck-active){filter:none!important;box-shadow:none!important}
-    @media(max-width:760px){#identity-track.heem-coverflow{perspective:1050px}}
+    #identity-track.heem-coverflow-exact{position:relative!important;overflow:hidden!important;touch-action:pan-y;outline:none!important;box-shadow:none!important;filter:none!important;perspective:calc(var(--cf-card,420px) * ${perspective});transform-style:preserve-3d}
+    #identity-track.heem-coverflow-exact::before,#identity-track.heem-coverflow-exact::after{display:none!important;content:none!important}
+    #identity-track.heem-coverflow-exact .identity-card{position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform-origin:center center!important;backface-visibility:hidden!important;box-shadow:none!important;filter:none!important;will-change:transform,opacity!important;transition:none!important}
+    #identity-track.heem-coverflow-exact .identity-card.deck-active{box-shadow:none!important;filter:none!important;outline:none!important}
+    #identity-track.heem-coverflow-exact .identity-card:not(.deck-active){box-shadow:none!important;filter:none!important}
+    #identity-track.heem-coverflow-exact.is-dragging{cursor:grabbing!important}
+    #identity-track.heem-coverflow-exact{cursor:grab!important}
+    #identity .slider-progress{display:none!important}
   `;
   document.head.appendChild(style);
 
-  function paint() {
-    const list = cards();
-    if (!list.length) return;
-    const active = Number(track.dataset.activeIndex || 0);
-    const activeCard = list[active];
-    const width = activeCard?.getBoundingClientRect().width || Math.min(innerWidth * .58, 420);
-    const mobile = innerWidth < 760;
-    const pitch = mobile ? width * .62 : width * .78;
+  const indexAt = (value) => ((Math.round(value) % count) + count) % count;
 
-    list.forEach((card, index) => {
-      let offset = index - active;
-      if (offset > list.length / 2) offset -= list.length;
-      if (offset < -list.length / 2) offset += list.length;
-      const distance = Math.abs(offset);
-      const visible = distance <= (mobile ? 1 : 2);
-      const side = Math.sign(offset);
-      const x = offset * pitch;
-      const z = distance === 0 ? 0 : -Math.min(155 + (distance - 1) * 95, 280);
-      const rotate = distance === 0 ? 0 : -side * Math.min(34 + (distance - 1) * 8, 44);
-      const scale = distance === 0 ? 1 : Math.max(.82, 1 - distance * .07);
-
-      card.style.transform = `translate3d(calc(-50% + ${x}px),0,${z}px) rotateY(${rotate}deg) scale(${scale})`;
-      card.style.opacity = visible ? String(distance === 0 ? 1 : Math.max(.52, 1 - distance * .2)) : "0";
-      card.style.zIndex = String(100 - distance * 10);
-      card.style.pointerEvents = visible ? "auto" : "none";
-      card.classList.toggle("deck-active", index === active);
-    });
+  function shortestOffset(index, center) {
+    let offset = index - center;
+    offset = ((offset % count) + count) % count;
+    if (offset > count / 2) offset -= count;
+    return offset;
   }
 
-  const observer = new MutationObserver((mutations) => {
-    if (mutations.some((m) => m.attributeName === "data-active-index")) requestAnimationFrame(paint);
-  });
-  observer.observe(track, { attributes: true, attributeFilter: ["data-active-index"] });
-
-  track.addEventListener("click", () => requestAnimationFrame(paint));
-  track.addEventListener("pointerup", () => requestAnimationFrame(paint));
-  window.addEventListener("resize", () => requestAnimationFrame(paint), { passive: true });
-
-  const boot = () => {
-    if (!track.classList.contains("deck-track")) return requestAnimationFrame(boot);
+  function measure() {
+    const sample = cards[0];
+    if (!sample) return;
+    const rect = sample.getBoundingClientRect();
+    width = rect.width || sample.offsetWidth || 320;
+    track.style.setProperty("--cf-card", `${width}px`);
+    const height = Math.max(...cards.map((card) => card.offsetHeight || card.getBoundingClientRect().height || width));
+    track.style.height = `${height + 80}px`;
     paint();
+  }
+
+  function paint() {
+    if (!width) return;
+    const pitch = width * (1 + gap);
+    const activeIndex = indexAt(pos);
+
+    cards.forEach((card, index) => {
+      const offset = shortestOffset(index, pos);
+      const distance = Math.abs(offset);
+      const ramp = Math.pow(distance, falloff);
+      const tilt = Math.min(rotate * ramp, 82) * Math.sign(offset);
+      const edge = Math.min(1, Math.max(0, count / 2 - distance));
+      const opacity = Math.max(0, 1 - fade * distance) * edge;
+
+      card.style.transform = `translate3d(calc(-50% + ${offset * pitch}px),-50%,${-depth * width * ramp}px) rotateY(${-tilt}deg)`;
+      card.style.opacity = String(opacity);
+      card.style.zIndex = String(100 - Math.round(distance));
+      card.style.pointerEvents = opacity > 0.05 ? "auto" : "none";
+      card.classList.toggle("deck-active", index === activeIndex);
+      card.setAttribute("aria-hidden", index === activeIndex ? "false" : "true");
+    });
+
+    track.dataset.activeIndex = String(activeIndex);
+  }
+
+  function settle(nextTarget) {
+    if (raf !== null) cancelAnimationFrame(raf);
+    target = nextTarget;
+    const step = () => {
+      const remaining = target - pos;
+      if (Math.abs(remaining) < 0.0004 || reduce) {
+        pos = target;
+        paint();
+        raf = null;
+        return;
+      }
+      pos += remaining * 0.16;
+      paint();
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  }
+
+  function goTo(index) {
+    const next = index + Math.round((target - index) / count) * count;
+    settle(next);
+  }
+
+  function nudge(by) {
+    settle(Math.round(target) + by);
+  }
+
+  track.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.stopImmediatePropagation();
+    if (raf !== null) {
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+    dragged = false;
+    target = pos;
+    drag = { id:event.pointerId, x:event.clientX, pos, v:0, t:performance.now(), captured:false };
+    track.classList.add("is-dragging");
+  }, true);
+
+  track.addEventListener("pointermove", (event) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    event.stopImmediatePropagation();
+    const pitch = width * (1 + gap);
+    if (!pitch) return;
+    const dx = event.clientX - drag.x;
+    if (!dragged && Math.abs(dx) > 8) {
+      dragged = true;
+      if (!drag.captured) {
+        try { track.setPointerCapture(event.pointerId); drag.captured = true; } catch {}
+      }
+    }
+    if (!dragged) return;
+    const now = performance.now();
+    const previous = pos;
+    pos = drag.pos - dx / pitch;
+    drag.v = ((pos - previous) / Math.max(now - drag.t, 1)) * 1000;
+    drag.t = now;
+    paint();
+  }, true);
+
+  const endDrag = (event) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    event.stopImmediatePropagation();
+    const wasDragged = dragged;
+    const velocity = drag.v;
+    if (drag.captured) {
+      try { track.releasePointerCapture(event.pointerId); } catch {}
+    }
+    drag = null;
+    track.classList.remove("is-dragging");
+    track.dataset.dragged = wasDragged ? "true" : "false";
+    if (wasDragged) {
+      const carried = Math.max(-2, Math.min(2, velocity * 0.18));
+      settle(Math.round(pos + carried));
+    }
+    setTimeout(() => { track.dataset.dragged = "false"; }, 80);
   };
-  requestAnimationFrame(boot);
+
+  track.addEventListener("pointerup", endDrag, true);
+  track.addEventListener("pointercancel", endDrag, true);
+  track.addEventListener("dragstart", (event) => event.preventDefault(), true);
+
+  track.addEventListener("click", (event) => {
+    const card = event.target.closest(".identity-card");
+    if (!card || card.parentElement !== track) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (track.dataset.dragged === "true") return;
+    const index = cards.indexOf(card);
+    if (index === indexAt(pos)) {
+      if (typeof window.openDeckPreview === "function") window.openDeckPreview(card);
+      else card.dispatchEvent(new MouseEvent("click", { bubbles:true }));
+      return;
+    }
+    goTo(index);
+  }, true);
+
+  track.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    nudge(event.key === "ArrowRight" ? 1 : -1);
+  }, true);
+
+  const controls = document.querySelector(`.slider-controls[data-controls="${track.id}"]`);
+  controls?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-direction]");
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    nudge(button.dataset.direction === "next" ? 1 : -1);
+  }, true);
+
+  const observer = new ResizeObserver(measure);
+  observer.observe(track);
+  window.addEventListener("resize", measure, { passive:true });
+
+  track.setAttribute("tabindex", "0");
+  requestAnimationFrame(measure);
 })();
