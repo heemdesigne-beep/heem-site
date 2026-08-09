@@ -3,8 +3,6 @@
   const originalTrack = document.getElementById("identity-track");
   if (!section || !originalTrack) return;
 
-  // script-core has already wired the old deck/drag system. Clone the track so
-  // Visual Identity gets a clean event surface and cannot be pulled around by it.
   const track = originalTrack.cloneNode(true);
   originalTrack.replaceWith(track);
   track.classList.remove("deck-track", "is-dragging");
@@ -43,7 +41,6 @@
   const shell = track.closest(".slider-shell");
   if (!shell) return;
 
-  // Remove extras previously injected by older coverflow trials.
   stage.querySelectorAll(":scope > .cf-demo-caption,:scope > .cf-caption,:scope > .cf-dots,:scope > .cf-exact-caption").forEach((el) => el.remove());
 
   const style = document.createElement("style");
@@ -134,9 +131,9 @@
       padding:0!important;
       display:block!important;
       overflow:hidden!important;
-      border:0!important;
+      border:1px solid rgba(145,190,255,.14)!important;
       border-radius:16px!important;
-      background:#102956!important;
+      background:#071a3d!important;
       box-shadow:0 20px 40px rgba(0,0,0,.22)!important;
       filter:none!important;
       transform-origin:center!important;
@@ -154,16 +151,22 @@
       height:100%!important;
       min-height:0!important;
       margin:0!important;
+      padding:0!important;
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
       border:0!important;
       border-radius:0!important;
       overflow:hidden!important;
+      background:#071a3d!important;
     }
     #identity-track.cf-exact-track>.identity-card .identity-image img{
       width:100%!important;
       height:100%!important;
-      max-width:none!important;
+      max-width:100%!important;
+      max-height:100%!important;
       display:block!important;
-      object-fit:cover!important;
+      object-fit:contain!important;
       object-position:center!important;
       pointer-events:none!important;
       user-select:none!important;
