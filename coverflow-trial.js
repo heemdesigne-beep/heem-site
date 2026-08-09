@@ -22,49 +22,28 @@
   let drag = null;
   let moved = false;
 
-  section.classList.add("identity-coverflow-original");
-  track.classList.add("heem-coverflow-original");
+  section.classList.add("cf-demo-section");
+  track.classList.add("cf-demo-track");
 
   const style = document.createElement("style");
   style.textContent = `
-    #identity.identity-coverflow-original{
+    #identity.cf-demo-section{
       min-height:100svh!important;
-      padding:clamp(92px,11vh,125px) 0 64px!important;
-      display:flex!important;
-      flex-direction:column!important;
-      justify-content:center!important;
+      padding:70px 0 80px!important;
+      display:block!important;
       overflow:hidden!important;
       background:#091a3b!important;
-      isolation:isolate!important;
     }
-    #identity.identity-coverflow-original::before,
-    #identity.identity-coverflow-original::after{display:none!important;content:none!important}
-    #identity.identity-coverflow-original .portfolio-head{
-      width:100%!important;
-      margin:0!important;
-      padding:0 var(--pad) 18px!important;
-      display:block!important;
-      text-align:center!important;
-    }
-    #identity.identity-coverflow-original .portfolio-head .section-index{
-      margin:0 0 9px!important;
-      text-align:center!important;
-    }
-    #identity.identity-coverflow-original .portfolio-head h2{
-      margin:0!important;
-      font-family:"Manrope",sans-serif!important;
-      font-size:clamp(1.4rem,2.35vw,2rem)!important;
-      line-height:1.1!important;
-      letter-spacing:-.035em!important;
-      text-transform:none!important;
-      color:#f5f7fb!important;
-    }
-    #identity.identity-coverflow-original .portfolio-head h2 br{display:none!important}
-    #identity.identity-coverflow-original .portfolio-head h2 span{color:#69aeff!important;font-style:normal!important}
-    #identity.identity-coverflow-original .portfolio-sidecopy{display:none!important}
-    #identity.identity-coverflow-original .slider-shell{
+    #identity.cf-demo-section::before,#identity.cf-demo-section::after{display:none!important;content:none!important}
+    #identity.cf-demo-section .portfolio-head,
+    #identity.cf-demo-section .portfolio-sidecopy,
+    #identity.cf-demo-section .slider-controls,
+    #identity.cf-demo-section .drag-hint,
+    #identity.cf-demo-section .slider-progress{display:none!important}
+    #identity.cf-demo-section .slider-shell{
       position:relative!important;
       width:100%!important;
+      max-width:none!important;
       margin:0!important;
       padding:0!important;
       overflow:hidden!important;
@@ -72,7 +51,7 @@
       border:0!important;
       box-shadow:none!important;
     }
-    #identity-track.heem-coverflow-original{
+    #identity-track.cf-demo-track{
       --cf-card:clamp(148px,22vw,260px);
       position:relative!important;
       width:100%!important;
@@ -89,10 +68,9 @@
       box-shadow:none!important;
       filter:none!important;
     }
-    #identity-track.heem-coverflow-original.is-dragging{cursor:grabbing!important}
-    #identity-track.heem-coverflow-original::before,
-    #identity-track.heem-coverflow-original::after{display:none!important;content:none!important}
-    #identity-track.heem-coverflow-original .identity-card{
+    #identity-track.cf-demo-track.is-dragging{cursor:grabbing!important}
+    #identity-track.cf-demo-track::before,#identity-track.cf-demo-track::after{display:none!important;content:none!important}
+    #identity-track.cf-demo-track .identity-card{
       position:absolute!important;
       left:50%!important;
       top:40px!important;
@@ -105,7 +83,7 @@
       border:0!important;
       border-radius:16px!important;
       background:#102956!important;
-      box-shadow:0 14px 28px rgba(0,0,0,.24)!important;
+      box-shadow:0 20px 45px rgba(0,0,0,.24)!important;
       filter:none!important;
       transform-origin:center!important;
       backface-visibility:hidden!important;
@@ -113,118 +91,59 @@
       transition:none!important;
       user-select:none!important;
     }
-    #identity-track.heem-coverflow-original .identity-image{
-      position:absolute!important;
-      inset:0!important;
+    #identity-track.cf-demo-track .identity-image{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;border:0!important;border-radius:0!important;overflow:hidden!important}
+    #identity-track.cf-demo-track .identity-image img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center!important;pointer-events:none!important;user-select:none!important}
+    #identity-track.cf-demo-track .identity-copy,#identity-track.cf-demo-track .card-number{display:none!important}
+    #identity.cf-demo-section .cf-demo-caption{
       width:100%!important;
-      height:100%!important;
-      margin:0!important;
-      border:0!important;
-      border-radius:0!important;
-      overflow:hidden!important;
+      margin:2px auto 0!important;
+      padding:0 24px!important;
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:center!important;
+      text-align:center!important;
     }
-    #identity-track.heem-coverflow-original .identity-image img{
-      width:100%!important;
-      height:100%!important;
-      object-fit:cover!important;
-      object-position:center!important;
-      display:block!important;
-      pointer-events:none!important;
-      user-select:none!important;
-    }
-    #identity-track.heem-coverflow-original .identity-copy,
-    #identity-track.heem-coverflow-original .card-number{display:none!important}
-    #identity.identity-coverflow-original .drag-hint,
-    #identity.identity-coverflow-original .slider-progress{display:none!important}
-    #identity.identity-coverflow-original .cf-info{
-      width:min(100%,330px);
-      margin:0 auto;
-      padding:0 22px;
-      text-align:center;
-      position:relative;
-      z-index:3;
-    }
-    #identity.identity-coverflow-original .cf-info h3{
-      margin:0;
-      color:#f5f7fb;
-      font-size:15px;
-      font-weight:700;
-      letter-spacing:-.02em;
-      line-height:1.25;
-    }
-    #identity.identity-coverflow-original .cf-info .cf-subtitle{
-      margin:5px 0 0;
-      color:#aabbd5;
-      font-size:13px;
-      line-height:1.4;
-    }
-    #identity.identity-coverflow-original .cf-meta{
-      width:230px;
-      margin:38px auto 0;
-      display:grid;
-      gap:0;
-      font-size:12px;
-      text-align:left;
-    }
-    #identity.identity-coverflow-original .cf-meta div{
-      display:flex;
-      justify-content:space-between;
-      gap:22px;
-      padding:5px 0;
-    }
-    #identity.identity-coverflow-original .cf-meta dt{color:#aabbd5}
-    #identity.identity-coverflow-original .cf-meta dd{
-      margin:0;
-      max-width:140px;
-      color:#f5f7fb;
-      font-weight:700;
-      text-align:right;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    @media(max-width:760px){
-      #identity.identity-coverflow-original{padding-top:86px!important}
-      #identity-track.heem-coverflow-original{--cf-card:clamp(148px,56vw,235px)}
-      #identity.identity-coverflow-original .cf-meta{margin-top:28px}
-    }
+    #identity.cf-demo-section .cf-demo-caption h3{margin:0!important;color:#f5f7fb!important;font-size:15px!important;font-weight:700!important;letter-spacing:-.02em!important;line-height:1.25!important}
+    #identity.cf-demo-section .cf-demo-caption .cf-subtitle{margin:6px 0 0!important;color:#aabbd5!important;font-size:13px!important;line-height:1.4!important}
+    #identity.cf-demo-section .cf-demo-meta{width:100%!important;max-width:230px!important;margin:38px auto 0!important;font-size:12px!important}
+    #identity.cf-demo-section .cf-demo-meta div{display:flex!important;justify-content:space-between!important;gap:24px!important;padding:5px 0!important}
+    #identity.cf-demo-section .cf-demo-meta dt{color:#8fa1bc!important;font-weight:500!important}
+    #identity.cf-demo-section .cf-demo-meta dd{margin:0!important;color:#f5f7fb!important;font-weight:700!important;text-align:right!important}
+    @media(max-width:700px){#identity.cf-demo-section{padding-top:56px!important}#identity-track.cf-demo-track{--cf-card:clamp(148px,58vw,230px)}}
   `;
   document.head.appendChild(style);
 
-  const info = document.createElement("div");
-  info.className = "cf-info";
-  info.innerHTML = `
+  const caption = document.createElement("div");
+  caption.className = "cf-demo-caption";
+  caption.innerHTML = `
     <h3></h3>
     <p class="cf-subtitle"></p>
-    <dl class="cf-meta">
+    <dl class="cf-demo-meta">
       <div><dt>Type</dt><dd data-meta="type"></dd></div>
       <div><dt>Gallery</dt><dd data-meta="gallery"></dd></div>
       <div><dt>Project</dt><dd data-meta="project"></dd></div>
-    </dl>
-  `;
-  section.querySelector(".slider-shell")?.after(info);
+    </dl>`;
+  section.querySelector(".slider-shell")?.after(caption);
 
-  const indexAt = (value) => ((Math.round(value) % count) + count) % count;
-
-  function shortestOffset(index, center) {
+  const indexAt = (v) => ((Math.round(v) % count) + count) % count;
+  const shortest = (index, center) => {
     let offset = index - center;
     offset = ((offset % count) + count) % count;
     if (offset > count / 2) offset -= count;
     return offset;
-  }
+  };
 
-  function updateInfo(index) {
+  function updateCaption(index) {
     const card = cards[index];
     const title = card?.dataset.projectTitle || card?.querySelector("h3")?.textContent || "";
-    const category = card?.dataset.projectCategory || card?.querySelector(".identity-copy p")?.textContent || "Visual Identity";
-    const shortType = category.split("/")[0].trim();
+    const subtitle = card?.querySelector(".identity-copy p")?.textContent || card?.dataset.projectCategory || "";
     const galleryCount = card?.querySelectorAll(".gallery-source img").length || 1;
-
-    info.querySelector("h3").textContent = title;
-    info.querySelector(".cf-subtitle").textContent = shortType;
-    info.querySelector('[data-meta="type"]').textContent = shortType;
-    info.querySelector('[data-meta="gallery"]').textContent = `${galleryCount} slides`;
-    info.querySelector('[data-meta="project"]').textContent = String(index + 1).padStart(2,"0");
+    const projectNo = card?.querySelector(".card-number")?.textContent?.trim() || String(index + 1).padStart(2,"0");
+    caption.querySelector("h3").textContent = title;
+    caption.querySelector(".cf-subtitle").textContent = subtitle;
+    caption.querySelector('[data-meta="type"]').textContent = subtitle;
+    caption.querySelector('[data-meta="gallery"]').textContent = `${galleryCount} slides`;
+    caption.querySelector('[data-meta="project"]').textContent = projectNo;
   }
 
   function measure() {
@@ -235,31 +154,25 @@
   function paint() {
     if (!width) return;
     const pitch = width * (1 + gap);
-
     cards.forEach((card, index) => {
-      const offset = shortestOffset(index, pos);
+      const offset = shortest(index, pos);
       const distance = Math.abs(offset);
       const ramp = Math.pow(distance, falloff);
       const tilt = Math.min(rotate * ramp, 82) * Math.sign(offset);
       const edge = Math.min(1, Math.max(0, count / 2 - distance));
-
-      card.style.transform =
-        `translateX(calc(-50% + ${offset * pitch}px)) ` +
-        `translateZ(${-depth * width * ramp}px) rotateY(${-tilt}deg)`;
+      card.style.transform = `translateX(calc(-50% + ${offset * pitch}px)) translateZ(${-depth * width * ramp}px) rotateY(${-tilt}deg)`;
       card.style.opacity = String(Math.max(0, 1 - fade * distance) * edge);
       card.style.zIndex = String(100 - Math.round(distance));
-      card.style.pointerEvents = distance < .48 ? "auto" : "none";
+      card.style.pointerEvents = distance < .5 ? "auto" : "none";
     });
-
     const active = indexAt(pos);
     track.dataset.activeIndex = String(active);
-    updateInfo(active);
+    updateCaption(active);
   }
 
-  function settle(nextTarget) {
+  function settle(next) {
     if (raf !== null) cancelAnimationFrame(raf);
-    target = nextTarget;
-
+    target = next;
     const step = () => {
       const remaining = target - pos;
       if (reduce || Math.abs(remaining) < .0004) {
@@ -272,7 +185,6 @@
       paint();
       raf = requestAnimationFrame(step);
     };
-
     raf = requestAnimationFrame(step);
   }
 
@@ -280,46 +192,27 @@
     settle(index + Math.round((target - index) / count) * count);
   }
 
-  function nudge(by) {
-    settle(Math.round(target) + by);
-  }
-
-  track.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    event.stopImmediatePropagation();
-    if (raf !== null) {
-      cancelAnimationFrame(raf);
-      raf = null;
-    }
+  track.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    e.stopImmediatePropagation();
+    if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
     target = pos;
     moved = false;
-    drag = {
-      id: event.pointerId,
-      x: event.clientX,
-      pos,
-      v: 0,
-      t: performance.now(),
-      captured: false
-    };
+    drag = { id:e.pointerId, x:e.clientX, pos, v:0, t:performance.now(), captured:false };
     track.classList.add("is-dragging");
   }, true);
 
-  track.addEventListener("pointermove", (event) => {
-    if (!drag || drag.id !== event.pointerId) return;
-    event.stopImmediatePropagation();
+  track.addEventListener("pointermove", (e) => {
+    if (!drag || drag.id !== e.pointerId) return;
+    e.stopImmediatePropagation();
     const pitch = width * (1 + gap);
     if (!pitch) return;
-
-    const dx = event.clientX - drag.x;
+    const dx = e.clientX - drag.x;
     if (!moved && Math.abs(dx) > 8) {
       moved = true;
-      try {
-        track.setPointerCapture(event.pointerId);
-        drag.captured = true;
-      } catch {}
+      try { track.setPointerCapture(e.pointerId); drag.captured = true; } catch {}
     }
     if (!moved) return;
-
     const now = performance.now();
     const previous = pos;
     pos = drag.pos - dx / pitch;
@@ -328,50 +221,40 @@
     paint();
   }, true);
 
-  const endDrag = (event) => {
-    if (!drag || drag.id !== event.pointerId) return;
-    event.stopImmediatePropagation();
+  const endDrag = (e) => {
+    if (!drag || drag.id !== e.pointerId) return;
+    e.stopImmediatePropagation();
     const didMove = moved;
     const velocity = drag.v;
-
-    if (drag.captured) {
-      try { track.releasePointerCapture(event.pointerId); } catch {}
-    }
-
+    if (drag.captured) { try { track.releasePointerCapture(e.pointerId); } catch {} }
     drag = null;
     track.classList.remove("is-dragging");
-
     if (didMove) {
       track.dataset.dragged = "true";
       const carried = Math.max(-2, Math.min(2, velocity * .18));
       settle(Math.round(pos + carried));
-      setTimeout(() => { track.dataset.dragged = "false"; }, 90);
+      setTimeout(() => track.dataset.dragged = "false", 100);
     }
   };
 
   track.addEventListener("pointerup", endDrag, true);
   track.addEventListener("pointercancel", endDrag, true);
-  track.addEventListener("dragstart", (event) => event.preventDefault(), true);
-
-  track.addEventListener("click", (event) => {
-    const card = event.target.closest(".identity-card");
-    if (!card || card.parentElement !== track || track.dataset.dragged === "true") return;
-    const index = cards.indexOf(card);
-
-    if (index !== indexAt(pos)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      goTo(index);
-    }
-    // Active-card clicks intentionally continue to the site's existing
-    // preview handler, preserving the approved modal behavior.
+  track.addEventListener("dragstart", (e) => e.preventDefault(), true);
+  track.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    settle(Math.round(target) + (e.key === "ArrowRight" ? 1 : -1));
   }, true);
 
-  track.addEventListener("keydown", (event) => {
-    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    nudge(event.key === "ArrowRight" ? 1 : -1);
+  track.addEventListener("click", (e) => {
+    const card = e.target.closest(".identity-card");
+    if (!card || track.dataset.dragged === "true") return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const index = cards.indexOf(card);
+    if (index !== indexAt(pos)) return goTo(index);
+    if (typeof window.openDeckPreview === "function") window.openDeckPreview(card);
   }, true);
 
   track.setAttribute("tabindex", "0");
