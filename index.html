@@ -211,12 +211,12 @@ dialog.petra-dialog{width:min(1120px,96vw);background:#111c50;color:#edf0ff} .pe
 @font-face{font-family:Handwritten;src:url(assets/fonts/Handwritten.otf) format('opentype');font-display:swap}
 @font-face{font-family:Piper;src:url(assets/fonts/Piper.ttf) format('truetype');font-display:swap}
 html[lang=en] body,html[lang=en] button,html[lang=en] input,html[lang=en] textarea,html[lang=en] a,html[lang=en] dialog,html[lang=en] h1,html[lang=en] h2,html[lang=en] h3,html[lang=en] .ribbon,html[lang=en] .logo{font-family:Piper,Palestine}
-html[lang=en] body{direction:rtl}
+html[lang=en] body{direction:ltr}
 html[lang=en] .hero h1{font-family:Handwritten;font-size:clamp(76px,8.8vw,140px);line-height:1.02;margin-bottom:28px;letter-spacing:0}
 html[lang=en] .hero h1>span{line-height:1.02}
 html[lang=en] .hero h1>span+span{margin-top:0}
 html[lang=en] .herocopy,html[lang=en] .aboutcopy,html[lang=en] .sectionhead,html[lang=en] .section>.index,html[lang=en] .project,html[lang=en] .services article,html[lang=en] .feedbackcard,html[lang=en] .contactsection,html[lang=en] .case-intro,html[lang=en] .case-copy,html[lang=en] .case-contact,html[lang=en] .case-closing,html[lang=en] .description{direction:ltr;text-align:left}
-html[lang=en] .about-stats,html[lang=en] .case-image-grid,html[lang=en] .vertex-pair{direction:rtl}
+html[lang=en] .about-stats,html[lang=en] .case-image-grid,html[lang=en] .vertex-pair{direction:ltr}
 html[lang=en] .about-stats>div{direction:ltr;text-align:center}
 html[lang=en] .case-image figcaption{direction:ltr;text-align:left}
 html[lang=en] .links a,html[lang=en] .work-tabs button,html[lang=en] .tools .tool-item{direction:ltr}
@@ -233,6 +233,19 @@ html[lang=en] .section-rail a,html[lang=en] .contact-welcome{direction:ltr;text-
  html[lang=en] .aboutcopy p,html[lang=en] .section p{font-size:19px;line-height:1.8}
  html[lang=en] .work-tabs button{font-size:15px}
  html[lang=en] .section h2,html[lang=en] .worksection h2{font-size:clamp(30px,8vw,42px)}
+}
+
+/* English composition follows the reading direction; Arabic remains unchanged. */
+html[lang=en] .herocopy{left:6%;right:auto;top:48%;text-align:left}
+html[lang=en] .heroart{transform:scaleX(-1)}
+html[lang=en] .hero h1{font-size:clamp(72px,8vw,125px);line-height:1.3;margin-bottom:22px}
+html[lang=en] .hero h1>span{line-height:1.3}
+html[lang=en] .hero h1>span+span{margin-top:0}
+html[lang=en] .about-stats,html[lang=en] .case-image-grid,html[lang=en] .vertex-pair{direction:ltr}
+@media(max-width:760px){
+html[lang=en] .herocopy{left:auto;right:auto;top:auto;margin-inline-start:0;margin-inline-end:auto;padding:145px 8px 0 18px}
+html[lang=en] .hero h1{font-size:clamp(38px,10.2vw,65px);line-height:1.3;margin-bottom:20px}
+html[lang=en] .hero h1>span{line-height:1.3}
 }
 </style>
 <style>/* Continuous hero transition: preserve the approved fade. */
@@ -308,7 +321,7 @@ ${asset('store-home','الصفحة الرئيسية / لقطة فعلية من �
 <div class="case-copy"><h3>${label('صور المنتجات','Product imagery')}</h3></div><div class="case-image-grid">${asset('product-900','تصميم صورة كورس الصحة والجمال','Health and beauty course imagery')}${asset('product-1800','صورة المنتج ضمن حملة اليوم الوطني','Product imagery for the National Day campaign')}${asset('product-2700','تكييف العرض مع حجم المنتج','Adapting the presentation to product size')}</div>
 <div class="case-copy"><h3>${label('تعاون يمتد إلى المحتوى','A collaboration extending into content')}</h3><p>${label('واصلت العمل على تصميمات وفيديوهات السوشيال ميديا، وتكييف الهوية مع طبيعة كل محتوى وحملة. كان التحدي هو إتاحة التنوع في الأفكار والعرض، مع بقاء العلامة قابلة للتعرّف عبر المنصات.','I continued working on social media designs and videos, adapting the identity to each piece of content and campaign. The challenge was to allow variety in ideas and presentation while keeping the brand recognisable across platforms.')}</p></div><div class="case-image-grid">${social.images.map((src,i)=>image(src,'تصميم سوشيال ميديا / '+(i+1),'Social media design / '+(i+1))).join('')}</div>
 <div class="case-copy"><h3>${label('حصيلة التعاون','The outcome of the collaboration')}</h3><p>${label('هوية بدأت بالشعار ودليل الاستخدام، ثم امتدت إلى المتجر والمحتوى الثابت والمتحرك؛ لتظهر كولاجينا بشخصية مترابطة في نقاط تواصلها مع الجمهور.','An identity that began with a logo and usage guidelines expanded into the store and static and moving content, giving Kollagena a coherent personality across its audience touchpoints.')}</p></div>${caseContact('kollagena')}</article>`;dlg.showModal();dlg.scrollTop=0;document.body.style.overflow='hidden';}
-document.querySelector('.close').onclick=()=>dlg.close();dlg.addEventListener('close',()=>{dlg.classList.remove('petra-dialog');document.body.style.overflow='';document.querySelector('.gallery').replaceChildren()});document.querySelectorAll('[data-feedback]').forEach(bt=>bt.onclick=()=>openProject({title:text('رأي العميل','Client feedback'),images:[bt.dataset.feedback]}));function balance(){if(language!=='ar')return;document.querySelectorAll('[data-stretch]').forEach(el=>{const [a,c]=el.dataset.stretch.split('|');el.textContent=a+c;const target=el.parentElement.clientWidth;const m=document.createElement('span');m.style.cssText='position:absolute;visibility:hidden;white-space:nowrap;font:inherit';el.append(m);let n=0;while(n<24){m.textContent=a+'ـ'.repeat(n+1)+c;if(m.getBoundingClientRect().width>target)break;n++}el.textContent=a+'ـ'.repeat(n)+c})}document.querySelector('#language').onclick=()=>{language=language==='ar'?'en':'ar';document.documentElement.lang=language;document.documentElement.dir='rtl';document.querySelectorAll('[data-ar]').forEach(el=>el.innerHTML=el.dataset[language]);document.querySelectorAll('.ar-only').forEach(el=>el.hidden=language!=='ar');document.querySelector('#language').textContent=language==='ar'?'EN':'عربي';document.querySelector('#language').setAttribute('aria-label',language==='ar'?'Switch to English':'التبديل إلى العربية');render();syncContact();document.fonts.ready.then(balance)};document.fonts.ready.then(balance);window.addEventListener('resize',balance);render();openWorkHash();
+document.querySelector('.close').onclick=()=>dlg.close();dlg.addEventListener('close',()=>{dlg.classList.remove('petra-dialog');document.body.style.overflow='';document.querySelector('.gallery').replaceChildren()});document.querySelectorAll('[data-feedback]').forEach(bt=>bt.onclick=()=>openProject({title:text('رأي العميل','Client feedback'),images:[bt.dataset.feedback]}));function balance(){if(language!=='ar')return;document.querySelectorAll('[data-stretch]').forEach(el=>{const [a,c]=el.dataset.stretch.split('|');el.textContent=a+c;const target=el.parentElement.clientWidth;const m=document.createElement('span');m.style.cssText='position:absolute;visibility:hidden;white-space:nowrap;font:inherit';el.append(m);let n=0;while(n<24){m.textContent=a+'ـ'.repeat(n+1)+c;if(m.getBoundingClientRect().width>target)break;n++}el.textContent=a+'ـ'.repeat(n)+c})}document.querySelector('#language').onclick=()=>{language=language==='ar'?'en':'ar';document.documentElement.lang=language;document.documentElement.dir=language==='ar'?'rtl':'ltr';document.querySelectorAll('[data-ar]').forEach(el=>el.innerHTML=el.dataset[language]);document.querySelectorAll('.ar-only').forEach(el=>el.hidden=language!=='ar');document.querySelector('#language').textContent=language==='ar'?'EN':'عربي';document.querySelector('#language').setAttribute('aria-label',language==='ar'?'Switch to English':'التبديل إلى العربية');render();syncContact();document.fonts.ready.then(balance)};document.fonts.ready.then(balance);window.addEventListener('resize',balance);render();openWorkHash();
 const whatsappNumber='201013528544';
 function whatsappLink(ar,en){return 'https://wa.me/'+whatsappNumber+'?text='+encodeURIComponent(text(ar,en))}
 function caseContact(key){
