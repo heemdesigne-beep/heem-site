@@ -291,6 +291,7 @@ function syncContact(){
  document.querySelectorAll('[data-contact-source]').forEach(a=>{a.href=whatsappLink('مرحبًا محمد، أرغب في مناقشة مشروع معك.','Hi Mohamed, I would like to discuss a project with you.');a.setAttribute('aria-label',a.classList.contains('whatsapp-float')?text('تواصل على واتساب','Contact me on WhatsApp'):text('ناقش مشروعك معي على واتساب','Discuss your project on WhatsApp'))});
  document.querySelector('#welcome-close').setAttribute('aria-label',text('إغلاق الترحيب','Dismiss welcome'));
  document.querySelector('#section-navigation').setAttribute('aria-label',text('التنقل بين الأقسام','Section navigation'));
+ document.querySelectorAll('[data-section-link]').forEach(a=>{const label=a.querySelector('[data-ar]');a.setAttribute('aria-label',label.dataset[language])});
 }
 let welcomeSeen=false,welcomePending=false;
 try{welcomeSeen=sessionStorage.getItem('heem-contact-welcome')==='1'}catch{}
