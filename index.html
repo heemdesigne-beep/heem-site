@@ -133,6 +133,37 @@ dialog.petra-dialog{width:min(1120px,96vw);background:#111c50;color:#edf0ff} .pe
  .tools{padding-inline:18px;font-size:15px}
 }
 
+
+/* Mobile composition corrections from the supplied phone screenshots. */
+@media(max-width:760px){
+ .hero{display:block;height:780px;min-height:780px;background:#eaf0ff;isolation:isolate}
+ .heroart{position:absolute;inset:auto 0 0;top:auto;width:100%;height:600px;object-fit:cover;object-position:30% center;z-index:-2;mask-image:linear-gradient(180deg,transparent,#000 24%);-webkit-mask-image:linear-gradient(180deg,transparent,#000 24%)}
+ .herocopy{position:relative;inset:auto;width:62%;margin-inline-start:0;margin-inline-end:auto;padding:126px 18px 0 8px;z-index:2}
+ html[dir=ltr] .herocopy{margin-left:auto;margin-right:0;padding:126px 8px 0 18px}
+ .hero h1{font-size:clamp(106px,31vw,190px);line-height:.56;margin-bottom:24px}
+ .hero h1>span{line-height:.56}
+ .hero .tagline{font-size:clamp(20px,5.2vw,25px);line-height:1.55;margin-bottom:12px}
+ .hero .subtitle{font-size:18px;line-height:1.6;margin-bottom:16px}
+ .hero .actions{flex-direction:column;align-items:flex-start;gap:4px;font-size:18px}
+ .hero .actions a{min-height:44px;gap:7px}
+ .hero .button{font-size:18px;padding:10px 14px}
+ .hero:after{height:240px;z-index:1}
+ html[lang=en] .hero h1{font-size:clamp(34px,8.6vw,54px);line-height:1.1;margin-bottom:20px}
+ .tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:26px 22px 30px}
+ .tools>span:first-child{margin-bottom:6px;line-height:1.6}
+ .tools .tool-item{width:100%;height:58px;display:flex;align-items:center;justify-content:center;gap:0;font-size:0;line-height:0}
+ .tools .tool-item img{width:44px;height:44px;margin:0}
+ .portraitblend{height:clamp(340px,115vw,540px);margin:0 -22px;overflow:hidden}
+ .aboutpicture{object-position:left center;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+ .portraitblend:after{background:linear-gradient(180deg,#111c50 0%,transparent 12%,transparent 73%,#111c50 100%)}
+ .aboutlayout{gap:0}
+}
+@media(max-width:360px){
+ .herocopy{padding-inline-start:18px;padding-inline-end:6px}
+ .portraitblend{margin-inline:-18px}
+ .hero{height:800px;min-height:800px}
+}
+
 </style>
 <style>/* Continuous hero transition: preserve the approved fade. */
 .tools{border:0!important;box-shadow:none}
