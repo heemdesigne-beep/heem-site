@@ -247,6 +247,16 @@ html[lang=en] .herocopy{left:auto;right:auto;top:auto;margin-inline-start:0;marg
 html[lang=en] .hero h1{font-size:clamp(38px,10.2vw,65px);line-height:1.3;margin-bottom:20px}
 html[lang=en] .hero h1>span{line-height:1.3}
 }
+
+/* Clear contact target and readable section labels. */
+.hero .hero-contact{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:11px 20px;border:1px solid #303fc580;border-radius:6px;background:#ffffff14;line-height:1.4}
+.hero .hero-contact:hover,.hero .hero-contact:focus-visible{background:#ffffff50;border-color:#303fc5}
+@media(min-width:1301px){
+.section-rail a>span{left:48px;padding:10px 15px;border:1px solid #657bc3;border-radius:8px;box-shadow:0 6px 20px #050b2c55;font-size:19px;line-height:1.4;z-index:2}
+.section-rail a:hover,.section-rail a:focus-visible{background:#303fc5;color:#fff}
+.section-rail a:hover>span,.section-rail a:focus-visible>span{opacity:1;visibility:visible}
+}
+@media(max-width:760px){.hero .hero-contact{padding:10px 15px;min-height:48px}}
 </style>
 <style>/* Continuous hero transition: preserve the approved fade. */
 .tools{border:0!important;box-shadow:none}
