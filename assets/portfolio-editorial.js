@@ -21,9 +21,11 @@ enhancePortfolioImages();new MutationObserver(enhancePortfolioImages).observe(do
  const groups=[[],[],[]];items.forEach(b=>{const im=b.querySelector('img'),r=im.naturalWidth/im.naturalHeight;groups[r<.7?0:r>1.8?2:1].push(b);b.style.gridRowEnd='';});
  const en=document.documentElement.lang==='en';
  groups.forEach((list,i)=>{if(!list.length)return;const section=document.createElement('section');section.className='portfolio-format-section';
- const heading=document.createElement('h3');heading.textContent=(en?['Stories','Instagram posts','Banners']:['تصميمات الاستوري','بوستات الإنستجرام','البنرات'])[i];section.append(heading);
+ 
  const row=document.createElement('div');row.className='portfolio-format-row format-'+i;
- list.forEach(b=>row.append(b));section.append(row);grid.append(section);});
+ const count=i===0?5:i===1?3:1;
+ for(let start=0;start<list.length;start+=count){const line=document.createElement('div');line.className='portfolio-format-line';list.slice(start,start+count).forEach(b=>{const im=b.querySelector('img');b.style.flexGrow=String(im.naturalWidth/im.naturalHeight||1);line.append(b)});row.append(line)}
+ section.append(row);grid.append(section);});
  return;
  }
  }
