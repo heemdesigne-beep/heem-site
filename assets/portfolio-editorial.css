@@ -31,3 +31,5 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 .portfolio-format-line>.cg-image{flex-basis:0;flex-shrink:1;min-width:0;width:0;grid-column:auto;line-height:0}
 .portfolio-format-line>.cg-image img,.portfolio-page .portfolio-format-line>.cg-image img{display:block;width:100%;height:auto;max-height:none;margin:0;padding:0}
 @media(max-width:760px){.portfolio-format-line{flex-wrap:wrap}.portfolio-format-line>.cg-image{flex-basis:calc(50% - 3px);flex-grow:1!important}.format-2 .portfolio-format-line>.cg-image{flex-basis:100%}}
+
+.portfolio-format-row{align-items:stretch}.portfolio-format-line{width:100%}
