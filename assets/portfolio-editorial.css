@@ -8,3 +8,5 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 .portfolio-art-grid.portfolio-packed,.portfolio-page>.gallery.portfolio-static-grid.portfolio-packed{grid-auto-rows:1px;grid-auto-flow:row dense;align-items:start}
 .portfolio-packed>.cg-image.portfolio-wide,.portfolio-packed>.cg-image.portfolio-landscape{grid-column:auto}
 .portfolio-packed>.cg-image{align-self:start;min-height:0}
+
+@media(min-width:1000px){dialog.cg-dialog:has(.portfolio-five){width:min(1800px,96vw);max-width:96vw}.project-document.portfolio-page:has(.portfolio-five){max-width:1800px}.portfolio-art-grid.portfolio-five,.portfolio-page>.gallery.portfolio-static-grid.portfolio-five{grid-template-columns:repeat(5,minmax(0,1fr))}}

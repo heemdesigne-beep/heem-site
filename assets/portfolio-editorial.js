@@ -13,6 +13,7 @@ enhancePortfolioImages();new MutationObserver(enhancePortfolioImages).observe(do
  function layout(){document.querySelectorAll(selector).forEach(grid=>{
  if(!grid.getBoundingClientRect().width)return;
  grid.classList.add('portfolio-packed');
+ grid.classList.toggle('portfolio-five',!!grid.querySelector('img[src*="/bahri-lamma-rules/"]'));
  const gap=parseFloat(getComputedStyle(grid).rowGap)||0;
  [...grid.children].forEach(item=>{
  if(!watched.has(item)){watched.add(item);observer.observe(item);item.querySelectorAll('img').forEach(im=>im.addEventListener('load',schedule))}
