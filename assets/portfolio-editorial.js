@@ -5,43 +5,38 @@ cgViewerInit();
 function enhancePortfolioImages(){const scope=document.querySelector('.project-document>.gallery')||document.querySelector('dialog[open]:not(.cg-viewer)>.gallery');if(!scope)return;const page=scope.closest('.project-document');const simple=page&&!scope.querySelector('article,section,figure,.cg-editorial');if(simple){page.classList.add('portfolio-page');scope.classList.add('portfolio-static-grid')}scope.querySelectorAll('img').forEach((im,i)=>{if(im.closest('[data-cg-src]'))return;const button=document.createElement('button');button.type='button';button.className='portfolio-image-button cg-image';button.dataset.cgSrc=im.getAttribute('src');button.dataset.cgAlt=im.alt;button.setAttribute('aria-label',(document.documentElement.lang==='en'?'Enlarge artwork ':'تكبير التصميم ')+(i+1));im.replaceWith(button);button.append(im);const size=()=>{if(im.naturalWidth/im.naturalHeight>1.8)button.classList.add('portfolio-wide');else if(im.naturalWidth/im.naturalHeight>1.2)button.classList.add('portfolio-landscape')};im.addEventListener('load',size,{once:true});if(im.complete)size()})}
 
 enhancePortfolioImages();new MutationObserver(enhancePortfolioImages).observe(document.querySelector('.project-document')||document.querySelector('dialog:not(.cg-viewer)'),{childList:true,subtree:true});
-(function initPackedGalleries(){
- const selector='.portfolio-art-grid,.portfolio-static-grid';
- const watched=new WeakSet();let queued=false;
- function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;layout()})}
- const observer=new ResizeObserver(schedule);
- function layout(){document.querySelectorAll(selector).forEach(grid=>{
- if(!grid.getBoundingClientRect().width)return;
- if(grid.classList.contains('portfolio-formats'))return;
- if(grid.querySelector('img[src*="/bahri-lamma-rules/"]')){
- const items=[...grid.children].filter(x=>x.matches('.cg-image'));
- items.forEach(b=>{const im=b.querySelector('img');im.loading='eager';if(!watched.has(im)){watched.add(im);im.addEventListener('load',schedule);im.addEventListener('error',schedule)}});
- if(items.every(b=>b.querySelector('img').complete)){
- grid.classList.remove('portfolio-packed','portfolio-five');grid.classList.add('portfolio-formats');
- const groups=[[],[],[]];items.forEach(b=>{const im=b.querySelector('img'),r=im.naturalWidth/im.naturalHeight;groups[r<.7?0:r>1.8?2:1].push(b);b.style.gridRowEnd='';});
- const en=document.documentElement.lang==='en';
- groups.forEach((list,i)=>{if(!list.length)return;const section=document.createElement('section');section.className='portfolio-format-section';
- 
- const row=document.createElement('div');row.className='portfolio-format-row format-'+i;
- const count=i===0?5:i===1?3:1;
- for(let start=0;start<list.length;start+=count){const line=document.createElement('div');line.className='portfolio-format-line';list.slice(start,start+count).forEach(b=>{const im=b.querySelector('img');b.style.flexGrow=String(im.naturalWidth/im.naturalHeight||1);line.append(b)});row.append(line)}
- section.append(row);grid.append(section);});
- return;
- }
- }
 
- grid.classList.add('portfolio-packed');
- grid.classList.toggle('portfolio-five',!!grid.querySelector('img[src*="/bahri-lamma-rules/"]'));
- const gap=parseFloat(getComputedStyle(grid).rowGap)||0;
- [...grid.children].forEach(item=>{
- if(!watched.has(item)){watched.add(item);observer.observe(item);item.querySelectorAll('img').forEach(im=>im.addEventListener('load',schedule))}
- const image=item.querySelector('img');
- let height=image?.naturalWidth?item.getBoundingClientRect().width*image.naturalHeight/image.naturalWidth:item.getBoundingClientRect().height;
- if(!height)height=item.getBoundingClientRect().width;
- const span=Math.max(1,Math.ceil((height+gap)/(1+gap)));
- const value='span '+span;if(item.style.gridRowEnd!==value)item.style.gridRowEnd=value;
+(function initPortfolioRows(){
+ const selector='.portfolio-art-grid,.portfolio-static-grid,.cg-grid,.case-image-grid';
+ const observed=new WeakSet();let queued=false;
+ function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;layout()})}
+ const sizes=new ResizeObserver(schedule);
+ function layout(){document.querySelectorAll(selector).forEach(grid=>{
+ if(!grid.getBoundingClientRect().width||grid.classList.contains('portfolio-formats'))return;
+ const items=[...grid.children].filter(b=>b.querySelector('img'));
+ if(!items.length)return;
+ items.forEach(b=>{const im=b.querySelector('img');im.loading='eager';if(!observed.has(im)){observed.add(im);im.addEventListener('load',schedule);im.addEventListener('error',schedule)}});
+ if(!items.every(b=>b.querySelector('img').complete))return;
+ grid.classList.remove('portfolio-packed','portfolio-five');grid.classList.add('portfolio-formats');
+ const narrative=grid.matches('.cg-grid,.case-image-grid');
+ const groups=narrative?[items]:[[],[],[]];
+ if(!narrative)items.forEach(b=>{const im=b.querySelector('img'),r=im.naturalWidth/im.naturalHeight;groups[r<.7?0:r>1.8?2:1].push(b)});
+ groups.forEach((list,i)=>{
+ if(!list.length)return;
+ const section=document.createElement('section');section.className='portfolio-format-section';
+ const row=document.createElement('div');row.className='portfolio-format-row format-'+(narrative?'case':i);
+ let start=0;
+ while(start<list.length){
+ const first=list[start].querySelector('img'),ratio=first.naturalWidth/first.naturalHeight;
+ let count=narrative?(grid.classList.contains('cg-wide')||ratio>1.8?1:grid.classList.contains('cg-pair')?2:3):i===0?5:i===1?3:1;
+ if(narrative&&count>1){for(let n=1;n<count&&start+n<list.length;n++){const im=list[start+n].querySelector('img');if(im.naturalWidth/im.naturalHeight>1.8){count=n;break}}}
+ const line=document.createElement('div');line.className='portfolio-format-line';
+ list.slice(start,start+count).forEach(b=>{const im=b.querySelector('img');b.style.gridRowEnd='';b.style.flexGrow=String(im.naturalWidth/im.naturalHeight||1);b.classList.add('portfolio-row-item');line.append(b)});
+ row.append(line);start+=count;
+ }
+ section.append(row);grid.append(section);
  });
- if(!watched.has(grid)){watched.add(grid);observer.observe(grid)}
+ if(!observed.has(grid)){observed.add(grid);sizes.observe(grid)}
  })}
  new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});
  window.addEventListener('resize',schedule);schedule();

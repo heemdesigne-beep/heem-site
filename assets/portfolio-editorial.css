@@ -33,3 +33,11 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 @media(max-width:760px){.portfolio-format-line{flex-wrap:wrap}.portfolio-format-line>.cg-image{flex-basis:calc(50% - 3px);flex-grow:1!important}.format-2 .portfolio-format-line>.cg-image{flex-basis:100%}}
 
 .portfolio-format-row{align-items:stretch}.portfolio-format-line{width:100%}
+
+/* Shared full-width, uncropped artwork rows in all portfolio galleries. */
+.cg-grid.portfolio-formats,.case-image-grid.portfolio-formats{display:block}
+.portfolio-format-line>.portfolio-row-item{flex-basis:0;flex-shrink:1;min-width:0;width:0;grid-column:auto;margin:0;align-self:flex-start}
+.portfolio-format-line>.portfolio-row-item img,.project-document .portfolio-format-line>.portfolio-row-item img{width:100%;height:auto;max-height:none;display:block;margin:0;padding:0;object-fit:contain}
+.portfolio-format-line>.portfolio-row-item.portfolio-wide,.portfolio-format-line>.portfolio-row-item.portfolio-landscape{grid-column:auto}
+@media(min-width:1000px){dialog.cg-dialog:has(.portfolio-formats){width:min(1800px,96vw);max-width:96vw}.project-document.portfolio-page:has(.portfolio-formats){width:min(1800px,96vw);max-width:1800px}}
+@media(max-width:760px){.portfolio-format-line>.portfolio-row-item{flex-basis:calc(50% - 3px);flex-grow:1!important}.format-2 .portfolio-format-line>.portfolio-row-item{flex-basis:100%}}
