@@ -12,6 +12,22 @@ enhancePortfolioImages();new MutationObserver(enhancePortfolioImages).observe(do
  const observer=new ResizeObserver(schedule);
  function layout(){document.querySelectorAll(selector).forEach(grid=>{
  if(!grid.getBoundingClientRect().width)return;
+ if(grid.classList.contains('portfolio-formats'))return;
+ if(grid.querySelector('img[src*="/bahri-lamma-rules/"]')){
+ const items=[...grid.children].filter(x=>x.matches('.cg-image'));
+ items.forEach(b=>{const im=b.querySelector('img');im.loading='eager';if(!watched.has(im)){watched.add(im);im.addEventListener('load',schedule);im.addEventListener('error',schedule)}});
+ if(items.every(b=>b.querySelector('img').complete)){
+ grid.classList.remove('portfolio-packed','portfolio-five');grid.classList.add('portfolio-formats');
+ const groups=[[],[],[]];items.forEach(b=>{const im=b.querySelector('img'),r=im.naturalWidth/im.naturalHeight;groups[r<.7?0:r>1.8?2:1].push(b);b.style.gridRowEnd='';});
+ const en=document.documentElement.lang==='en';
+ groups.forEach((list,i)=>{if(!list.length)return;const section=document.createElement('section');section.className='portfolio-format-section';
+ const heading=document.createElement('h3');heading.textContent=(en?['Stories','Instagram posts','Banners']:['تصميمات الاستوري','بوستات الإنستجرام','البنرات'])[i];section.append(heading);
+ const row=document.createElement('div');row.className='portfolio-format-row format-'+i;
+ list.forEach(b=>row.append(b));section.append(row);grid.append(section);});
+ return;
+ }
+ }
+
  grid.classList.add('portfolio-packed');
  grid.classList.toggle('portfolio-five',!!grid.querySelector('img[src*="/bahri-lamma-rules/"]'));
  const gap=parseFloat(getComputedStyle(grid).rowGap)||0;

@@ -13,3 +13,14 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 
 .portfolio-packed>.cg-image{line-height:0}.portfolio-packed>.cg-image img,.portfolio-page>.gallery.portfolio-packed .cg-image img{margin:0;padding:0;border:0;display:block;width:100%;height:auto}
 @media(min-width:1000px){.project-document.portfolio-page:has(.portfolio-five){width:min(1800px,96vw)}}
+
+.portfolio-art-grid.portfolio-formats,.portfolio-page>.gallery.portfolio-static-grid.portfolio-formats{display:block}
+.portfolio-format-section{margin:0 0 36px}
+.portfolio-format-section>h3{font:inherit;font-size:24px;margin:0 0 16px;color:#eef2ff}
+.portfolio-format-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start}
+.portfolio-format-row.format-0{grid-template-columns:repeat(5,minmax(0,1fr))}
+.portfolio-format-row.format-2{grid-template-columns:minmax(0,1fr);gap:16px}
+.portfolio-format-row>.cg-image{grid-column:auto;width:100%;min-width:0;line-height:0}
+.portfolio-format-row>.cg-image img,.portfolio-page .portfolio-format-row>.cg-image img{width:100%;height:auto;max-height:none;margin:0;padding:0;display:block}
+@media(min-width:1000px){dialog.cg-dialog:has(.portfolio-formats){width:min(1800px,96vw);max-width:96vw}.project-document.portfolio-page:has(.portfolio-formats){width:min(1800px,96vw);max-width:1800px}}
+@media(max-width:760px){.portfolio-format-row.format-0,.portfolio-format-row{grid-template-columns:repeat(2,minmax(0,1fr))}.portfolio-format-row.format-2{grid-template-columns:minmax(0,1fr)}.portfolio-format-section>h3{font-size:22px}}
