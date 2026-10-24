@@ -3,3 +3,8 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 .portfolio-static-grid>.portfolio-wide{grid-column:1/-1}.portfolio-static-grid>.portfolio-landscape{grid-column:span 2}@media(prefers-reduced-motion:reduce){.project .project-cover img{transition:none}}
 #gallery-projects:has(.portfolio-mosaic){grid-template-columns:repeat(2,minmax(0,1fr))}.project .project-cover.portfolio-mosaic{aspect-ratio:2.4}.project .portfolio-mosaic img{object-fit:contain;object-position:center}@media(max-width:760px){#gallery-projects:has(.portfolio-mosaic){grid-template-columns:1fr}.project .project-cover.portfolio-mosaic{aspect-ratio:2.4}}
 .project .project-cover.portfolio-mosaic{grid-template-rows:minmax(0,1fr)}.project .portfolio-mosaic img{min-height:0;max-height:100%}
+
+/* Pack mixed artwork ratios without reserving the tallest image's row. */
+.portfolio-art-grid.portfolio-packed,.portfolio-page>.gallery.portfolio-static-grid.portfolio-packed{grid-auto-rows:1px;grid-auto-flow:row dense;align-items:start}
+.portfolio-packed>.cg-image.portfolio-wide,.portfolio-packed>.cg-image.portfolio-landscape{grid-column:auto}
+.portfolio-packed>.cg-image{align-self:start;min-height:0}
