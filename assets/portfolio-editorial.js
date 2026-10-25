@@ -48,7 +48,7 @@ function restorePortfolioImages(){
  let count=narrative?(grid.classList.contains('cg-wide')||ratio>1.8?1:grid.classList.contains('cg-pair')?2:3):i===0?5:i===1?3:1;
  if(narrative&&count>1){for(let n=1;n<count&&start+n<list.length;n++){const im=list[start+n].querySelector('img');if(im.naturalWidth/im.naturalHeight>1.8){count=n;break}}}
  const line=document.createElement('div');line.className='portfolio-format-line';
- list.slice(start,start+count).forEach(b=>{const im=b.querySelector('img');b.style.gridRowEnd='';b.style.flexGrow=String(im.naturalWidth/im.naturalHeight||1);b.classList.add('portfolio-row-item');line.append(b)});
+ list.slice(start,start+count).forEach(b=>{const im=b.querySelector('img');b.style.gridRowEnd='';b.style.flexGrow=String((im.naturalWidth/im.naturalHeight||1)*100);b.classList.add('portfolio-row-item');line.append(b)});
  row.append(line);start+=count;
  }
  section.append(row);grid.append(section);
