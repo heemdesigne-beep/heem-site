@@ -44,3 +44,14 @@ dialog.cg-dialog{width:min(1200px,96vw);background:#111c50;color:#eef2ff;border-
 
 /* Keep restored transparent artwork visible. */
 .portfolio-row-item img[src$="/nawa-logo-black.png"],.portfolio-row-item img[src$="/pulse-brand-board.png"]{background:#eef2ff}
+
+/* Consistent single-artwork project covers. Full galleries remain unchanged. */
+#gallery-projects{gap:40px 26px}
+#gallery-projects .project .project-cover.portfolio-mosaic{display:block;position:relative;isolation:isolate;aspect-ratio:4/3;overflow:hidden;border-radius:16px;background:#0b153f;border:1px solid #ffffff12;box-shadow:0 12px 30px #04091a22}
+#gallery-projects .portfolio-mosaic img{display:none;position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:contain;object-position:center;padding:14px;z-index:1}
+#gallery-projects .portfolio-mosaic:not([data-cover-ready]) img:first-of-type,#gallery-projects .portfolio-mosaic img.is-project-cover{display:block}
+.portfolio-cover-backdrop{position:absolute;inset:-24px;background-size:cover;background-position:center;filter:blur(22px);opacity:.38;transform:scale(1.12);z-index:-1}
+#gallery-projects .project h3{font-size:27px;line-height:1.35;margin:18px 0 7px}
+#gallery-projects .project .project-summary{font-size:17px;line-height:1.65;margin:0;color:#b8c5ed}
+#gallery-projects .project .projectlink{margin-top:13px}
+@media(max-width:760px){#gallery-projects{gap:30px}#gallery-projects .project .project-cover.portfolio-mosaic{aspect-ratio:4/3;border-radius:13px}#gallery-projects .portfolio-mosaic img{padding:10px}#gallery-projects .project h3{font-size:24px}}

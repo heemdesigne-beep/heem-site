@@ -58,3 +58,20 @@ function restorePortfolioImages(){
  new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});
  window.addEventListener('resize',schedule);schedule();
 })();
+
+(function initProjectCoverPreviews(){
+ const seen=new WeakSet();
+ function update(){document.querySelectorAll('#gallery-projects .portfolio-mosaic').forEach(cover=>{
+ if(seen.has(cover))return;seen.add(cover);
+ const images=[...cover.querySelectorAll('img')];if(!images.length)return;
+ const backdrop=document.createElement('span');backdrop.className='portfolio-cover-backdrop';backdrop.setAttribute('aria-hidden','true');cover.prepend(backdrop);
+ function select(){
+ const ready=images.filter(im=>im.complete&&im.naturalWidth);if(!ready.length)return;
+ const chosen=ready.reduce((a,b)=>Math.abs(Math.log((a.naturalWidth/a.naturalHeight)/(4/3)))<=Math.abs(Math.log((b.naturalWidth/b.naturalHeight)/(4/3)))?a:b);
+ images.forEach(im=>im.classList.toggle('is-project-cover',im===chosen));
+ backdrop.style.backgroundImage='url("'+chosen.getAttribute('src')+'")';cover.dataset.coverReady='true';
+ }
+ images.forEach(im=>im.addEventListener('load',select));select();
+ })}
+ new MutationObserver(update).observe(document.querySelector('#gallery-projects')||document.body,{childList:true,subtree:true});update();
+})();
