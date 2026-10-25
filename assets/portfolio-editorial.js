@@ -6,12 +6,29 @@ function enhancePortfolioImages(){const scope=document.querySelector('.project-d
 
 enhancePortfolioImages();new MutationObserver(enhancePortfolioImages).observe(document.querySelector('.project-document')||document.querySelector('dialog:not(.cg-viewer)'),{childList:true,subtree:true});
 
+
+const restoredPortfolioAssets={"label-system":["/assets/projects/bahri-print/bahri-label-broast.png","/assets/projects/bahri-print/bahri-label-dynamite.png","/assets/projects/bahri-print/bahri-label-grilled-fish.png","/assets/projects/bahri-print/bahri-label-qalbi.png","/assets/projects/bahri-print/bahri-label-tahina.png","/assets/projects/bahri-print/bahri-plate-label.jpg","/assets/projects/bahri-print/kollagena-qr-sticker.png"],"meal-box":["/assets/projects/bahri-print/bahri-meal-box-02.jpg","/assets/projects/bahri-print/bahri-meal-box-03.jpg","/assets/projects/bahri-print/bahri-meal-box-04.jpg"],"menu-board":["/assets/projects/bahri-print/bahri-menu-board-02.jpg"],"sandwich-box":["/assets/projects/bahri-print/bahri-sandwich-box-black-01.jpg"],"business-card":["/assets/projects/bahri-print/kollagena-business-card-back.jpg"],"kollagena":["/assets/projects/kollagena-identity/kollagena-cover-card.jpg","/assets/projects/kollagena-identity/kollagena-logo-main.jpg"],"nawa-visual-identity":["/assets/projects/nawa-identity/nawa-logo-black.png","/assets/projects/nawa-identity/nawa-logo-white.png"],"petra":["/assets/projects/petra-logo/petra-logo.png"],"pulse-visual-identity":["/assets/projects/pulse-identity/pulse-brand-board.png"],"rakayez-advanced-solutions":["/assets/projects/rakayez-identity/rakayez-logo.png"],"kollagena-social-media":["/assets/projects/social-media/kollagena-social-cooked-72h-product-banner.jpg","/assets/projects/social-media/kollagena-social-cow-ghee-banner.jpg","/assets/projects/social-media/kollagena-social-health-and-beauty-course.jpg"]};
+function restorePortfolioImages(){
+ const slug=location.pathname.match(/\/projects\/([^/]+)\//)?.[1];
+ const sources=restoredPortfolioAssets[slug];if(!sources)return;
+ const scope=document.querySelector('dialog[open]:not(.cg-viewer)>.gallery')||document.querySelector('.project-document>.gallery')||document.querySelector('.project-document .cg-editorial');
+ if(!scope)return;
+ const label=(document.querySelector('dialog[open]:not(.cg-viewer) #modal-title')||document.querySelector('.project-document h1'))?.textContent?.trim()||slug;
+ sources.forEach((src,i)=>{scope.querySelectorAll('img').forEach(im=>{if(im.getAttribute('src')!==src)return;im.alt=label+' — '+(i+1);const b=im.closest('[data-cg-src]');if(b)b.dataset.cgAlt=im.alt})});
+ const present=new Set([...scope.querySelectorAll('img')].map(im=>im.getAttribute('src')));
+ const missing=sources.filter(src=>!present.has(src));if(!missing.length)return;
+ const target=scope.querySelector('.portfolio-art-grid')||scope.querySelector('.cg-editorial')||scope.querySelector('article')||scope;
+ const grid=document.createElement('div');grid.className='cg-grid cg-wide portfolio-restored-assets';
+ missing.forEach((src,i)=>{const b=document.createElement('button');b.type='button';b.className='cg-image';b.dataset.cgSrc=src;b.dataset.cgAlt=label+' — '+(i+1);b.setAttribute('aria-label',(document.documentElement.lang==='en'?'Enlarge restored artwork ':'تكبير تصميم إضافي ')+(i+1));const im=document.createElement('img');im.src=src;im.alt=b.dataset.cgAlt;im.loading='lazy';b.append(im);grid.append(b)});
+ target.append(grid);
+}
+
 (function initPortfolioRows(){
  const selector='.portfolio-art-grid,.portfolio-static-grid,.cg-grid,.case-image-grid';
  const observed=new WeakSet();let queued=false;
  function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;layout()})}
  const sizes=new ResizeObserver(schedule);
- function layout(){document.querySelectorAll(selector).forEach(grid=>{
+ function layout(){restorePortfolioImages();document.querySelectorAll(selector).forEach(grid=>{
  if(!grid.getBoundingClientRect().width||grid.classList.contains('portfolio-formats'))return;
  const items=[...grid.children].filter(b=>b.querySelector('img'));
  if(!items.length)return;
