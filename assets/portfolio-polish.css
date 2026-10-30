@@ -1,0 +1,29 @@
+/* Portfolio polish: uncropped covers, quiet interaction, readable client feedback. */
+#featured-projects .project .project-cover.polished-cover,
+#gallery-projects .project .project-cover.polished-cover{display:block;position:relative;isolation:isolate;aspect-ratio:4/3;overflow:hidden;border-radius:16px;background:#0b153f;border:1px solid #ffffff18;box-shadow:0 12px 32px #04091a26}
+#featured-projects .polished-cover>img,#gallery-projects .polished-cover>img{display:block;position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:contain;object-position:center;padding:12px;background:transparent;transform:none;filter:none;transition:filter .25s ease}
+.polished-cover .polish-backdrop{position:absolute;inset:-24px;background-position:center;background-size:cover;filter:blur(24px);opacity:.26;z-index:-1;pointer-events:none}
+.polished-cover:after{content:'';position:absolute;inset:auto 14px 0;height:3px;border-radius:3px;background:linear-gradient(90deg,#4355ff,#93bdff);transform:scaleX(0);transform-origin:right;transition:transform .32s ease;z-index:3}
+html[dir=ltr] .polished-cover:after{transform-origin:left}
+.project .project-insight{display:block;font-size:16px;line-height:1.65;color:#c8d4ff;margin:7px 0 0;max-width:100%}
+.project .project-insight:before{content:'↳';display:inline-block;color:#91b6ff;margin-inline-end:8px}
+html[dir=rtl] .project .project-insight:before{content:'↲'}
+.project:focus-visible .polished-cover:after{transform:scaleX(1)}
+.project:focus-visible .project-insight{color:#fff}
+@media(hover:hover) and (pointer:fine){.project .project-insight{opacity:.72;transition:color .25s,opacity .25s}.project:hover .polished-cover:after{transform:scaleX(1)}.project:hover .project-insight{opacity:1;color:#fff}}
+#gallery-projects.reel-slider .project .project-cover.polished-cover{aspect-ratio:9/16}
+#gallery-projects.reel-slider .polished-cover>img{padding:0}
+.services .service-example{display:inline-flex;align-items:center;gap:12px;font-size:18px;line-height:1.6;color:#d4ddff;border-bottom:1px solid #748dce66;padding:8px 0;margin-top:4px;min-height:44px;transition:color .2s,border-color .2s}
+.service-example:hover{color:white;border-color:#a7c7ff}
+.service-example .example-arrow{color:#9ab9ff}
+#feedback .feedback{align-items:stretch}
+#feedback .feedbackcard{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:25px;border:1px solid #8298dc38;border-radius:18px;background:linear-gradient(145deg,#1b2a65,#101940);color:#eef2ff;transition:border-color .25s;text-align:start}
+#feedback .feedbackcard:hover{border-color:#91b6ff99}
+#feedback .feedback-quote-mark{color:#91b6ff;font:48px/1 Georgia,serif}
+#feedback .feedback-quote{display:block;font:inherit;font-size:23px;line-height:1.8;margin:0 0 20px;color:#eef2ff}
+#feedback .feedback-person{display:block;font-size:18px;color:#c4d1f6;margin-top:auto;margin-bottom:14px}
+#feedback .feedbackcard>img{height:76px;width:100%;object-fit:contain;border-radius:8px;background:#090f28;margin:0 0 16px;opacity:.8}
+#feedback .feedback-source{display:block;font-size:14px;color:#aebee9;margin-bottom:8px}
+#feedback .feedback-action{font-size:17px;color:#d6e2ff}
+@media(max-width:699px){#feedback .feedbackcard{padding:21px}#feedback .feedback-quote{font-size:21px}.project .project-insight{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.polished-cover:after,.project .project-insight,.services .service-example,#feedback .feedbackcard{transition:none}}
