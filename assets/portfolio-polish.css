@@ -75,3 +75,6 @@ html.flashlight-mode a,html.flashlight-mode button{cursor:pointer!important}
 .pointer-brush-dot{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,#d2e8ff99 0%,#76adff55 30%,#4967ff22 55%,transparent 72%);pointer-events:none;mix-blend-mode:screen;animation:brush-fade .65s ease-out forwards}
 @keyframes brush-fade{from{opacity:.8;scale:1}to{opacity:0;scale:.15}}
 @media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.pointer-brush{display:none}}
+
+canvas.pointer-brush{width:100vw;height:100vh;display:block;mix-blend-mode:screen}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){canvas.pointer-brush{display:none}}
