@@ -81,14 +81,14 @@ document.querySelectorAll('[data-service-project]').forEach(link=>{
  function clear(){cancelAnimationFrame(frame);frame=0;points=[];ctx.clearRect(0,0,innerWidth,innerHeight);}
  function draw(now){
   frame=0;ctx.clearRect(0,0,innerWidth,innerHeight);
-  points=points.filter(p=>now-p.t<420);if(points.length<2){if(points.length)frame=requestAnimationFrame(draw);return;}
+  points=points.filter(p=>now-p.t<650);if(points.length<2){if(points.length)frame=requestAnimationFrame(draw);return;}
   ctx.lineCap='round';ctx.lineJoin='round';ctx.globalCompositeOperation='lighter';
   for(let i=1;i<points.length;i++){
    const p=points[i-1],q=points[i],next=points[i+1]||q;
    const prev=points[i-2]||p;
-   const age=Math.max(0,1-(now-q.t)/420),strength=age*age;
+   const age=Math.max(0,1-(now-q.t)/650),strength=age*age;
    const sx=(prev.x+p.x)/2,sy=(prev.y+p.y)/2,ex=(p.x+q.x)/2,ey=(p.y+q.y)/2;
-   for(const [width,alpha] of [[18,.035],[8,.10],[2.2,.34]]){
+   for(const [width,alpha] of [[80,.045],[42,.09],[18,.22],[5,.65]]){
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(p.x,p.y,ex,ey);ctx.lineWidth=width*(.35+.65*age);ctx.strokeStyle='rgba(105,167,255,'+(alpha*strength)+')';ctx.stroke();
    }
   }
@@ -98,7 +98,7 @@ document.querySelectorAll('[data-service-project]').forEach(link=>{
   if(!media.matches||e.pointerType==='touch')return;
   const samples=e.getCoalescedEvents?.()||[];const now=performance.now();
   for(const p of samples.length?samples:[e])points.push({x:p.clientX,y:p.clientY,t:now});
-  if(points.length>220)points.splice(0,points.length-220);
+  if(points.length>360)points.splice(0,points.length-360);
   if(!frame)frame=requestAnimationFrame(draw);
  },{passive:true});
  document.addEventListener('pointerout',e=>{if(!e.relatedTarget)clear();},{passive:true});window.addEventListener('blur',clear);window.addEventListener('resize',resize,{passive:true});document.addEventListener('scroll',clear,{passive:true,capture:true});media.addEventListener('change',clear);resize();
