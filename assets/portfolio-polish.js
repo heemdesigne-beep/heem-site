@@ -67,3 +67,8 @@ document.querySelectorAll('[data-service-project]').forEach(link=>{
  document.addEventListener('pointermove',e=>{if(!media.matches||e.pointerType==='touch'){hide();return;}point={x:e.clientX,y:e.clientY};if(!frame)frame=requestAnimationFrame(()=>{frame=0;halo.style.setProperty('--pointer-x',point.x+'px');halo.style.setProperty('--pointer-y',point.y+'px');halo.style.setProperty('--pointer-visible','1');});},{passive:true});
  document.addEventListener('pointerout',e=>{if(!e.relatedTarget)hide();},{passive:true});window.addEventListener('blur',hide);media.addEventListener('change',hide);
 })();
+(function flashlightCursor(){
+ const media=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ const sync=()=>document.documentElement.classList.toggle('flashlight-mode',media.matches);
+ media.addEventListener('change',sync);sync();
+})();

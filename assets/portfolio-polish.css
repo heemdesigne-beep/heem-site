@@ -55,3 +55,10 @@ html[dir=rtl] .project .project-insight:before{content:'↲'}
  .links a,.work-tabs button,.print-filters button,.foot a{transition:color .2s,text-shadow .2s}
  .links a:hover,.work-tabs button:hover,.print-filters button:hover,.foot a:hover{color:#a9c8ff;text-shadow:0 0 18px #7b9fff66}
 }
+/* Experimental flashlight: a dim veil with a clear, feathered opening. */
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .site-pointer-light{inset:0;width:100%;height:100%;border-radius:0;translate:none;z-index:9998;transition:opacity .3s;background:radial-gradient(circle 230px at var(--pointer-x,50%) var(--pointer-y,45%),transparent 0%,transparent 36%,#02061918 55%,#02061965 80%,#020619a6 100%)}
+ html.flashlight-mode,html.flashlight-mode *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M8 5L21 18' stroke='%23d9e9ff' stroke-width='7' stroke-linecap='round'/%3E%3Cpath d='M17 16L23 11L30 18L24 24Z' fill='%232c42bb' stroke='white' stroke-width='1.5'/%3E%3Cpath d='M26 22L33 29M29 19L35 22M23 25L26 33' stroke='%23e9f5ff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 27 23,auto!important}
+ html.flashlight-mode a,html.flashlight-mode button{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M8 5L21 18' stroke='%23d9e9ff' stroke-width='7' stroke-linecap='round'/%3E%3Cpath d='M17 16L23 11L30 18L24 24Z' fill='%232c42bb' stroke='white' stroke-width='1.5'/%3E%3Cpath d='M26 22L33 29M29 19L35 22M23 25L26 33' stroke='%23e9f5ff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 27 23,pointer!important}
+ .hero-motion-light{display:none}
+}
