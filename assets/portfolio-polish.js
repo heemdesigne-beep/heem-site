@@ -58,3 +58,12 @@ document.querySelectorAll('[data-service-project]').forEach(link=>{
   document.addEventListener('visibilitychange',()=>{if(document.hidden)reset();});
   enabled.addEventListener('change',reset);desktop.addEventListener('change',reset);
 })();
+
+(function siteWidePointer(){
+ const media=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ const halo=document.createElement('span');halo.className='site-pointer-light';halo.setAttribute('aria-hidden','true');document.body.append(halo);
+ let frame=0,point=null;
+ const hide=()=>{cancelAnimationFrame(frame);frame=0;halo.style.setProperty('--pointer-visible','0');};
+ document.addEventListener('pointermove',e=>{if(!media.matches||e.pointerType==='touch'){hide();return;}point={x:e.clientX,y:e.clientY};if(!frame)frame=requestAnimationFrame(()=>{frame=0;halo.style.setProperty('--pointer-x',point.x+'px');halo.style.setProperty('--pointer-y',point.y+'px');halo.style.setProperty('--pointer-visible','1');});},{passive:true});
+ document.addEventListener('pointerout',e=>{if(!e.relatedTarget)hide();},{passive:true});window.addEventListener('blur',hide);media.addEventListener('change',hide);
+})();

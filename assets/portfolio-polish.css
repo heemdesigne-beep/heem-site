@@ -45,3 +45,13 @@ html[dir=rtl] .project .project-insight:before{content:'↲'}
  .hero-motion-light{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(420px circle at var(--hero-spot-x,50%) var(--hero-spot-y,40%),#88b8ff32,transparent 70%);opacity:var(--hero-light,0);transition:opacity .4s}
 }
 @media(prefers-reduced-motion:reduce){.project .polished-cover,.motion-button,.hero.motion-ready .heroart,.hero.motion-ready h1{transition:none;translate:none;scale:1}.hero-motion-light{display:none}}
+/* Keep Arabic letter overhangs clear of the moving title's paint boundary. */
+@media(min-width:1000px){html[lang=ar] .hero h1{padding-inline:24px;margin-inline:-24px;overflow:visible}html[lang=ar] .hero h1>span{overflow:visible} .hero.motion-ready h1{translate:none!important}}
+.site-pointer-light{display:none;pointer-events:none}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .site-pointer-light{display:block;position:fixed;left:0;top:0;width:340px;height:340px;border-radius:50%;z-index:7;pointer-events:none;background:radial-gradient(circle,#779fff18,transparent 68%);translate:calc(var(--pointer-x,-500px) - 170px) calc(var(--pointer-y,-500px) - 170px);opacity:var(--pointer-visible,0);transition:opacity .25s}
+ .services article,.contact-card,.feedbackcard,.contact-choice,.collaboration-steps li{position:relative;transition:box-shadow .22s,background-color .22s}
+ .services article:hover,.contact-card:hover,.feedbackcard:hover,.contact-choice:hover,.collaboration-steps li:hover{box-shadow:0 8px 28px #050b292b;background-color:#6b8cff0b}
+ .links a,.work-tabs button,.print-filters button,.foot a{transition:color .2s,text-shadow .2s}
+ .links a:hover,.work-tabs button:hover,.print-filters button:hover,.foot a:hover{color:#a9c8ff;text-shadow:0 0 18px #7b9fff66}
+}
