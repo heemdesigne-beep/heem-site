@@ -72,3 +72,23 @@ document.querySelectorAll('[data-service-project]').forEach(link=>{
  const sync=()=>document.documentElement.classList.toggle('flashlight-mode',media.matches);
  media.addEventListener('change',sync);sync();
 })();
+(function lightBrush(){
+ const media=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ const layer=document.createElement('span');layer.className='pointer-brush';layer.setAttribute('aria-hidden','true');document.body.append(layer);
+ let last=0,previous=null;
+ const clear=()=>{layer.replaceChildren();previous=null;};
+ document.addEventListener('pointermove',e=>{
+  if(!media.matches||e.pointerType==='touch')return;
+  const now=performance.now();if(now-last<22)return;last=now;
+  const dx=previous?e.clientX-previous.x:0,dy=previous?e.clientY-previous.y:0;
+  const count=Math.min(5,Math.max(1,Math.ceil(Math.hypot(dx,dy)/14)));
+  for(let i=1;i<=count;i++){
+   const dot=document.createElement('span');dot.className='pointer-brush-dot';
+   const x=previous?previous.x+dx*i/count:e.clientX,y=previous?previous.y+dy*i/count:e.clientY;
+   dot.style.translate=(x-16)+'px '+(y-16)+'px';layer.append(dot);dot.addEventListener('animationend',()=>dot.remove(),{once:true});
+  }
+  previous={x:e.clientX,y:e.clientY};
+ },{passive:true});
+ document.addEventListener('pointerout',e=>{if(!e.relatedTarget)clear();},{passive:true});
+ window.addEventListener('blur',clear);document.addEventListener('scroll',clear,{passive:true,capture:true});media.addEventListener('change',clear);
+})();

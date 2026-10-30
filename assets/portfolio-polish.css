@@ -67,3 +67,11 @@ html[dir=rtl] .project .project-insight:before{content:'↲'}
  .site-pointer-light{background:radial-gradient(circle 370px at var(--pointer-x,50%) var(--pointer-y,45%),transparent 0%,transparent 40%,#01031120 57%,#01031199 80%,#010311e6 100%)}
  html.flashlight-mode,html.flashlight-mode *,html.flashlight-mode a,html.flashlight-mode button{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='m' x2='1' y2='1'%3E%3Cstop stop-color='%239eb4d5'/%3E%3Cstop offset='.5' stop-color='%232c4163'/%3E%3Cstop offset='1' stop-color='%2310192d'/%3E%3C/linearGradient%3E%3ClinearGradient id='b'%3E%3Cstop stop-color='%23e8f6ff' stop-opacity='.8'/%3E%3Cstop offset='1' stop-color='%238cc9ff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='rotate(-38 24 24)'%3E%3Cpath d='M28 17L47 10V38L28 31Z' fill='url(%23b)'/%3E%3Crect x='4' y='19' width='21' height='11' rx='4' fill='url(%23m)' stroke='%23d5e3f5' stroke-width='1'/%3E%3Cpath d='M20 19L27 15H31V34H27L20 30Z' fill='url(%23m)' stroke='%23d5e3f5' stroke-width='1'/%3E%3Crect x='29' y='16' width='4' height='17' rx='2' fill='%23dcf4ff' stroke='%2388c9ff'/%3E%3Cpath d='M9 21V28M13 21V28M17 21V28' stroke='%23101c33' stroke-width='1.5'/%3E%3Crect x='17' y='17' width='5' height='3' rx='1.5' fill='%2359bdff'/%3E%3C/g%3E%3C/svg%3E") 32 18,auto!important}
 }
+/* Light-paint experiment: clear content, a short fading blue brush trail. */
+html.flashlight-mode,html.flashlight-mode *,html.flashlight-mode a,html.flashlight-mode button{cursor:auto!important}
+html.flashlight-mode a,html.flashlight-mode button{cursor:pointer!important}
+.site-pointer-light{display:none!important}
+.pointer-brush{position:fixed;inset:0;pointer-events:none;z-index:9997;overflow:hidden}
+.pointer-brush-dot{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,#d2e8ff99 0%,#76adff55 30%,#4967ff22 55%,transparent 72%);pointer-events:none;mix-blend-mode:screen;animation:brush-fade .65s ease-out forwards}
+@keyframes brush-fade{from{opacity:.8;scale:1}to{opacity:0;scale:.15}}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.pointer-brush{display:none}}
