@@ -75,3 +75,17 @@ function restorePortfolioImages(){
  })}
  new MutationObserver(update).observe(document.querySelector('#gallery-projects')||document.body,{childList:true,subtree:true});update();
 })();
+
+/* Muloha: original six-design social campaign, in its supplied narrative order. */
+(function addMulohaSocialCampaign(){
+ const project={"title": "Muloha", "titleAr": "ملوحة", "titleEn": "Muloha", "slug": "muloha-social-media", "category": "social", "images": ["/assets/projects/muloha-social-media/campaign-01.webp", "/assets/projects/muloha-social-media/campaign-02.webp", "/assets/projects/muloha-social-media/campaign-03.webp", "/assets/projects/muloha-social-media/campaign-04.webp", "/assets/projects/muloha-social-media/campaign-05.webp", "/assets/projects/muloha-social-media/campaign-06.webp"], "imageLabelsAr": ["قرّب كرسيك — بداية الحملة", "دي لقمة عايزة ترتيب", "المشطشط له ناسه", "عصرة الليمون عليه كلام تاني", "سفرة واحدة وكل واحد له مزاج", "آخر حتة بتكشف النوايا"], "imageLabelsEn": ["Pull up a chair — campaign opening", "A bite worth preparing", "Spicy sardines have their fans", "A squeeze of lemon changes the bite", "One table, different tastes", "The last bite reveals intentions"], "video": null, "description": "A six-design sardine campaign about the rituals of the bite and sharing a table.", "typeAr": "حملة سوشيال ميديا · ٦ تصميمات", "typeEn": "Social media campaign · 6 designs"};
+ const english=document.documentElement.lang==='en';
+ const href=(english?'/en':'')+'/projects/muloha-social-media/';
+ const section=()=>{const block=document.createElement('section');block.className='muloha-social-campaign';block.style.cssText='padding:32px 24px;text-align:start';const h=document.createElement('h2');h.textContent=english?'From the brand to the table':'من الهوية إلى المائدة';const p=document.createElement('p');p.textContent=english?'Explore the six-design sardine social campaign.':'شاهد حملة السردين على السوشيال ميديا، في ستة تصميمات متتابعة.';const a=document.createElement('a');a.href=href;a.textContent=english?'View the social campaign ←':'شاهد حملة السوشيال ميديا ←';a.style.cssText='display:inline-block;padding:12px 20px;background:#303fc5;color:white;border-radius:12px;margin-top:12px';block.append(h,p,a);return block;};
+ if(typeof datasets!=='undefined'&&document.querySelector('#gallery-projects')){
+  if(!datasets.social.some(p=>p.slug===project.slug))datasets.social.unshift(project);
+  if(typeof mulohaStories!=='undefined')for(const lang of ['ar','en']){const title=lang==='en'?'The social media campaign':'حملة السوشيال ميديا';const label=lang==='en'?'View the six campaign designs':'شاهد تصميمات الحملة الستة';const url=(lang==='en'?'/en':'')+'/projects/muloha-social-media/';mulohaStories[lang]=mulohaStories[lang].replace('</article>','<section style="padding:32px 24px"><h2>'+title+'</h2><a href="'+url+'" style="display:inline-block;padding:12px 20px;background:#303fc5;color:white;border-radius:12px">'+label+' ←</a></section></article>');}
+  render();
+ }
+ if(/^\/(en\/)?projects\/muloha\/$/.test(location.pathname)&&document.querySelector('.project-document'))document.querySelector('.project-document').append(section());
+})();
