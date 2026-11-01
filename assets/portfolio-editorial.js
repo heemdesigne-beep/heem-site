@@ -89,3 +89,27 @@ function restorePortfolioImages(){
  }
  if(/^\/(en\/)?projects\/muloha\/$/.test(location.pathname)&&document.querySelector('.project-document'))document.querySelector('.project-document').append(section());
 })();
+
+/* Real estate video: externally hosted, loaded only when the project opens. */
+(function addRealEstateVideo(){
+ if(typeof datasets==='undefined'||!document.querySelector('#gallery-projects'))return;
+ const project={"title":"Real Estate Video Editing","titleAr":"مونتاج عقاري","titleEn":"Real Estate Video Editing","slug":"real-estate-video-editing","category":"video","images":["/assets/projects/real-estate-video-editing/cover.svg"],"video":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","driveFileId":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","typeAr":"مونتاج فيديو عقاري","typeEn":"Real estate video editing","description":"Real estate video editing."};
+ const originalOpenProjectContent=openProjectContent;
+ openProjectContent=function(p){
+  if(p.slug!==project.slug)return originalOpenProjectContent(p);
+  const english=document.documentElement.lang==='en';
+  dlg.classList.add('cg-dialog');
+  document.querySelector('#modal-title').textContent=english?p.titleEn:p.titleAr;
+  const article=document.createElement('article');article.className='cg-editorial portfolio-editorial';article.dir=english?'ltr':'rtl';
+  const intro=document.createElement('div');intro.className='cg-intro';
+  const heading=document.createElement('h2');heading.textContent=english?p.titleEn:p.titleAr;
+  const description=document.createElement('p');description.textContent=english?p.typeEn:p.typeAr;intro.append(heading,description);
+  const stage=document.createElement('div');stage.style.cssText='padding:0 clamp(16px,4vw,40px) 32px';
+  const frame=document.createElement('iframe');frame.src='https://drive.google.com/file/d/'+p.driveFileId+'/preview';frame.title=english?p.titleEn:p.titleAr;frame.allow='autoplay; fullscreen';frame.allowFullscreen=true;frame.style.cssText='display:block;width:min(100%,420px);aspect-ratio:9/16;margin:0 auto;border:0;border-radius:16px;background:#080d20';
+  const fallback=document.createElement('a');fallback.href='https://drive.google.com/file/d/'+p.driveFileId+'/view';fallback.target='_blank';fallback.rel='noopener noreferrer';fallback.textContent=english?'Open video in a new tab':'فتح الفيديو في نافذة جديدة';fallback.style.cssText='display:block;width:fit-content;margin:20px auto 0;text-decoration:underline;font-size:18px';
+  stage.append(frame,fallback);article.append(intro,stage);document.querySelector('.gallery').replaceChildren(article);
+  if(!dlg.open)dlg.showModal();document.body.style.overflow='hidden';dlg.scrollTop=0;
+ };
+ if(!datasets.video.some(p=>p.slug===project.slug))datasets.video.unshift(project);
+ render();
+})();
