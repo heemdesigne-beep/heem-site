@@ -93,7 +93,7 @@ function restorePortfolioImages(){
 /* Real estate video: externally hosted, loaded only when the project opens. */
 (function addRealEstateVideo(){
  if(typeof datasets==='undefined'||!document.querySelector('#gallery-projects'))return;
- const project={"title":"Real Estate Video Editing","titleAr":"مونتاج عقاري","titleEn":"Real Estate Video Editing","slug":"real-estate-video-editing","category":"video","images":["/assets/projects/real-estate-video-editing/cover.svg"],"video":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","driveFileId":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","typeAr":"مونتاج فيديو عقاري","typeEn":"Real estate video editing","description":"Real estate video editing."};
+ const project={"title":"Real Estate Video Editing","titleAr":"مونتاج عقاري","titleEn":"Real Estate Video Editing","slug":"real-estate-video-editing","category":"video","images":["/assets/projects/real-estate-video-editing/cover.webp"],"video":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","driveFileId":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","typeAr":"مونتاج فيديو عقاري","typeEn":"Real estate video editing","description":"Real estate video editing."};
  const originalOpenProjectContent=openProjectContent;
  openProjectContent=function(p){
   if(p.slug!==project.slug)return originalOpenProjectContent(p);
