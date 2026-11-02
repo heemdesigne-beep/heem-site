@@ -1,9 +1,11 @@
-/* Video gallery redesign. Local review version; production is unchanged. */
+/* Video portfolio: categories, featured film, and on-demand player. */
 (()=>{
  if(typeof datasets==='undefined')return;
  const en=document.documentElement.lang==='en',t=(a,b)=>en?b:a;
- const categories=[['all','الكل','All'],['realestate','عقاري','Real estate'],['product','إعلانات منتجات','Product ads'],['medical','طبي','Medical'],['motion','موشن جرافيك','Motion graphics']];
- const group=p=>p.slug?.startsWith('real-estate')?'realestate':/medical|dental|pharmacy/.test(p.slug)?'medical':/kollagena|ai-ad/.test(p.slug)?'product':'motion';
+ const categories=[['all','الكل','All'],['realestate','عقاري','Real estate'],['product','إعلانات منتجات','Product ads'],['medical','طبي','Medical'],['ai','مونتاج بالذكاء الاصطناعي','AI Video Editing'],['motion','موشن جرافيك','Motion graphics']];
+ const aiProjects=new Set(['vertex-platform-video-enhancement','vertex','vertex-rspi-course-video-transformation']);
+ datasets.video.filter(p=>aiProjects.has(p.slug)).forEach(p=>{p.typeAr='مونتاج ومعالجة بصرية بالذكاء الاصطناعي';p.typeEn='AI video editing and visual transformation';p.description='AI-assisted transformation of existing footage, including clothing, locations, lighting, and additional camera angles.'});
+ const group=p=>aiProjects.has(p.slug)?'ai':p.slug?.startsWith('real-estate')?'realestate':/medical|dental|pharmacy/.test(p.slug)?'medical':/kollagena|ai-ad/.test(p.slug)?'product':'motion';
  const title=p=>en?(p.titleEn||p.title):(p.titleAr||p.title);
  const play='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4.7v14.6L20 12z" fill="currentColor"/></svg>';
  let filter='all',current=0,queue=[];
