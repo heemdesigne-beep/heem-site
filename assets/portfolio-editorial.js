@@ -93,10 +93,10 @@ function restorePortfolioImages(){
 /* Real estate video: externally hosted, loaded only when the project opens. */
 (function addRealEstateVideo(){
  if(typeof datasets==='undefined'||!document.querySelector('#gallery-projects'))return;
- const project={"title":"Real Estate Video Editing","titleAr":"مونتاج عقاري","titleEn":"Real Estate Video Editing","slug":"real-estate-video-editing","category":"video","images":["/assets/projects/real-estate-video-editing/cover.webp"],"video":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","driveFileId":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","typeAr":"مونتاج فيديو عقاري","typeEn":"Real estate video editing","description":"Real estate video editing."};
+ const projects=[{"title":"Real Estate Video Editing","titleAr":"مونتاج عقاري","titleEn":"Real Estate Video Editing","slug":"real-estate-video-editing","category":"video","images":["/assets/projects/real-estate-video-editing/cover.webp"],"video":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","driveFileId":"1_fky4hYW4QhWHgOXsbR3jYV4mUzEouUp","typeAr":"مونتاج فيديو عقاري","typeEn":"Real estate video editing","description":"Real estate video editing."},{"title":"Real Estate Project Showcase","titleAr":"مونتاج عقاري — عرض مشروع","titleEn":"Real Estate Project Showcase","slug":"real-estate-project-showcase","category":"video","images":["/assets/projects/real-estate-project-showcase/cover.webp"],"video":"1l7FRXYHPVowx1Pm4EM8P6EAuvxFw6_8f","driveFileId":"1l7FRXYHPVowx1Pm4EM8P6EAuvxFw6_8f","typeAr":"مونتاج وموشن عقاري","typeEn":"Real estate editing and motion","description":"A real estate project showcase with architectural plan, site footage and visual transitions."}];
  const originalOpenProjectContent=openProjectContent;
  openProjectContent=function(p){
-  if(p.slug!==project.slug)return originalOpenProjectContent(p);
+  if(!projects.some(item=>item.slug===p.slug))return originalOpenProjectContent(p);
   const english=document.documentElement.lang==='en';
   dlg.classList.add('cg-dialog');
   document.querySelector('#modal-title').textContent=english?p.titleEn:p.titleAr;
@@ -110,6 +110,6 @@ function restorePortfolioImages(){
   stage.append(frame,fallback);article.append(intro,stage);document.querySelector('.gallery').replaceChildren(article);
   if(!dlg.open)dlg.showModal();document.body.style.overflow='hidden';dlg.scrollTop=0;
  };
- if(!datasets.video.some(p=>p.slug===project.slug))datasets.video.unshift(project);
+ projects.forEach(project=>{if(!datasets.video.some(p=>p.slug===project.slug))datasets.video.unshift(project)});
  render();
 })();
