@@ -2,7 +2,7 @@
 (()=>{
  if(typeof datasets==='undefined')return;
  const en=document.documentElement.lang==='en',t=(a,b)=>en?b:a;
- const categories=[['all','الكل','All'],['advertising','مونتاج إعلاني','Advertising editing'],['engineering','وثائقي هندسي','Engineering Documentary'],['realestate','عقاري','Real estate'],['product','إعلانات منتجات','Product ads'],['medical','طبي','Medical'],['ai','مونتاج بالذكاء الاصطناعي','AI Video Editing'],['motion','موشن جرافيك','Motion graphics']];
+ const categories=[['all','الكل','All'],['engineering','وثائقي هندسي','Engineering Documentary'],['realestate','عقاري','Real estate'],['product','إعلانات منتجات','Product ads'],['medical','طبي','Medical'],['ai','مونتاج بالذكاء الاصطناعي','AI Video Editing'],['motion','موشن جرافيك','Motion graphics']];
  const aiProjects=new Set(['vertex-platform-video-enhancement','vertex','vertex-rspi-course-video-transformation']);
  datasets.video.filter(p=>aiProjects.has(p.slug)).forEach(p=>{p.typeAr='مونتاج ومعالجة بصرية بالذكاء الاصطناعي';p.typeEn='AI video editing and visual transformation';p.description='AI-assisted transformation of existing footage, including clothing, locations, lighting, and additional camera angles.'});
  const group=p=>p.videoGroup || (aiProjects.has(p.slug)?'ai':p.slug?.startsWith('real-estate')?'realestate':/medical|dental|pharmacy/.test(p.slug)?'medical':/kollagena|ai-ad/.test(p.slug)?'product':'motion');
