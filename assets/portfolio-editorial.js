@@ -121,7 +121,7 @@ function restorePortfolioImages(){
  if (!container) return;
  const english = document.documentElement.lang === 'en';
  const fragment = document.createDocumentFragment();
- for (let index = 1; index <= 11; index++) {
+ for (let index = 1; index <= 12; index++) {
   const source = '/assets/feedback/client-feedback-2026-11-' + String(index).padStart(2, '0') + '.webp';
   if (container.querySelector('[data-feedback="' + source + '"]')) continue;
   const button = document.createElement('button');
