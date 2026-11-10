@@ -113,3 +113,38 @@ function restorePortfolioImages(){
  projects.forEach(project=>{if(!datasets.video.some(p=>p.slug===project.slug))datasets.video.unshift(project)});
  render();
 })();
+
+
+// Original client messages from November 2026, shown without rewriting.
+(function addClientFeedbackScreenshots() {
+ const container = document.querySelector('#feedback .feedback');
+ if (!container) return;
+ const english = document.documentElement.lang === 'en';
+ const fragment = document.createDocumentFragment();
+ for (let index = 1; index <= 11; index++) {
+  const source = '/assets/feedback/client-feedback-2026-11-' + String(index).padStart(2, '0') + '.webp';
+  if (container.querySelector('[data-feedback="' + source + '"]')) continue;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'feedbackcard';
+  button.dataset.feedback = source;
+  const image = document.createElement('img');
+  image.src = source;
+  image.alt = english ? 'Original client feedback message ' + index : 'رسالة أصلية من أحد العملاء — ' + index;
+  image.loading = 'lazy';
+  image.style.height = 'auto';
+  image.style.aspectRatio = 'auto';
+  image.style.background = 'transparent';
+  const caption = document.createElement('span');
+  caption.dataset.ar = 'عرض الرسالة ↗';
+  caption.dataset.en = 'View message ↗';
+  caption.textContent = english ? caption.dataset.en : caption.dataset.ar;
+  button.append(image, caption);
+  button.onclick = () => openProject({
+   title: english ? 'Client feedback' : 'رأي العميل',
+   images: [source]
+  });
+  fragment.append(button);
+ }
+ container.prepend(fragment);
+})();
