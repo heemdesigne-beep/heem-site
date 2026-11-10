@@ -148,3 +148,75 @@ function restorePortfolioImages(){
  }
  container.prepend(fragment);
 })();
+
+(function compactClientFeedback() {
+ const section = document.querySelector('#feedback');
+ const track = section?.querySelector('.feedback');
+ if (!track) return;
+ const english = document.documentElement.lang === 'en';
+ const style = document.createElement('style');
+ style.textContent = `
+  #feedback { padding-top: 40px; padding-bottom: 40px; }
+  #feedback h2 { margin-bottom: 12px; }
+  #feedback > p { margin-top: 0; margin-bottom: 18px; }
+  #feedback .feedback {
+   display: flex; gap: 18px; overflow-x: auto; overflow-y: hidden;
+   align-items: stretch; padding: 4px 2px 14px;
+   scroll-snap-type: x mandatory; scrollbar-width: thin;
+   scrollbar-color: #6474c8 transparent;
+  }
+  #feedback .feedbackcard {
+   flex: 0 0 min(440px, 85vw); min-width: 0;
+   display: flex; flex-direction: column; justify-content: space-between;
+   scroll-snap-align: start; border-radius: 12px;
+   padding: 10px; background: #0c1745; border: 1px solid #344377;
+  }
+  #feedback .feedbackcard img {
+   width: 100%; height: 140px !important; aspect-ratio: auto !important;
+   object-fit: contain; background: transparent; margin: 0 0 8px;
+  }
+  #feedback .feedbackcard > span { font-size: 17px; }
+  #feedback .feedbackcard:focus-visible, #feedback .feedback-controls button:focus-visible {
+   outline: 2px solid #a6b9ff; outline-offset: 3px;
+  }
+  #feedback .feedback-controls {
+   display: flex; align-items: center; justify-content: space-between;
+   gap: 16px; margin-bottom: 12px; color: #bbc7f2; font-size: 17px;
+  }
+  #feedback .feedback-arrows { display: flex; gap: 8px; }
+  #feedback .feedback-controls button {
+   width: 40px; height: 40px; padding: 0; border-radius: 50%;
+   border: 1px solid #6474a6; background: #1c2b63; color: #edf0ff;
+   font: inherit; font-family: Arial, sans-serif; cursor: pointer;
+  }
+  @media (max-width: 600px) {
+   #feedback .feedbackcard { flex-basis: 85%; }
+   #feedback .feedbackcard img { height: 120px !important; }
+  }
+ `;
+ document.head.append(style);
+ track.tabIndex = 0;
+ track.setAttribute('role', 'region');
+ track.setAttribute('aria-label', english ? 'Client messages — scroll horizontally' : 'رسائل العملاء — اسحب للتنقّل');
+ const controls = document.createElement('div');
+ controls.className = 'feedback-controls';
+ const hint = document.createElement('span');
+ hint.textContent = english ? 'Scroll to browse · Click to enlarge' : 'اسحب لاستعراض الآراء · اضغط لتكبير الرسالة';
+ const arrows = document.createElement('div');
+ arrows.className = 'feedback-arrows';
+ const rtl = getComputedStyle(track).direction === 'rtl';
+ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+ for (const step of [-1, 1]) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = (step === 1) === rtl ? '←' : '→';
+  button.setAttribute('aria-label', step === 1 ? (english ? 'Next messages' : 'الرسائل التالية') : (english ? 'Previous messages' : 'الرسائل السابقة'));
+  button.onclick = () => track.scrollBy({
+   left: (rtl ? -1 : 1) * step * track.clientWidth * 0.8,
+   behavior: reduced ? 'instant' : 'smooth'
+  });
+  arrows.append(button);
+ }
+ controls.append(hint, arrows);
+ track.before(controls);
+})();
