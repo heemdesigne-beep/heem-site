@@ -135,7 +135,7 @@ function socials(){
 
 function init(){
   try{projectPage()}catch(e){}
-  if(document.getElementById('home')){[stats,compare,faq,brief].forEach(function(f){try{f()}catch(e){console.warn('[HEEM]',e)}})}
+  if(document.getElementById('home')){[compare,faq,brief].forEach(function(f){try{f()}catch(e){console.warn('[HEEM]',e)}})}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
