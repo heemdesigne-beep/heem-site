@@ -110,3 +110,18 @@ header{background:transparent}
 #partners .partner-tile:hover,#partners .partner-tile:focus-visible{background:transparent!important;box-shadow:none!important}
 #partners .partner-tile:hover img,#partners .partner-tile:focus-visible img{filter:none!important}
 .eg-faq .eg-kicker{color:#303fc5!important}
+.hero::after{background:linear-gradient(0deg,#f4f6ff 0%,rgba(244,246,255,.92) 7%,rgba(244,246,255,.55) 16%,rgba(244,246,255,0) 34%)!important}
+/* about: balanced two columns now that the portrait is gone */
+@media(min-width:901px){
+ .aboutlayout{grid-template-columns:1fr!important}
+ .aboutcopy{display:grid!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);column-gap:clamp(40px,6vw,96px);align-items:start;max-width:none!important}
+ .aboutcopy>h2{grid-column:1;grid-row:1;margin:0 0 24px}
+ .aboutcopy>p{grid-column:2;margin:0 0 18px!important}
+ .aboutcopy>.stats{grid-column:1;grid-row:2/span 3;align-self:start;margin-top:8px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+}
+/* FAQ smaller */
+.eg-faq summary{padding:11px 4px!important;font-size:16px!important}
+.eg-faq details p{font-size:14.5px!important;padding:0 4px 12px!important}
+.eg-faq .eg-title{font-size:clamp(26px,2.6vw,36px)!important}
+.eg-faq{padding:0 0 36px!important}
+@media(min-width:901px){.aboutcopy{padding-left:96px!important;box-sizing:border-box}}
