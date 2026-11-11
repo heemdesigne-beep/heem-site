@@ -4,7 +4,7 @@
  function unlock(){root.classList.remove('hi-lock')}
  if(intro&&!root.classList.contains('hi-off')){
   var P=[].slice.call(intro.querySelectorAll('p')),timers=[],ended=false;
-  var finish=function(){if(ended)return;ended=true;timers.forEach(clearTimeout);intro.classList.add('done');unlock();try{localStorage.setItem('heem_intro_t',String(Date.now()))}catch(e){}};
+  var finish=function(){if(ended)return;ended=true;timers.forEach(clearTimeout);intro.classList.add('done');unlock();try{sessionStorage.setItem('heem_intro_t',String(Date.now()))}catch(e){}};
   P.forEach(function(el,i){
    var t=300+i*2100;
    timers.push(setTimeout(function(){el.classList.add('on')},t));
@@ -28,7 +28,7 @@
  /* gallery overlay */
  var work=document.getElementById('work');
  if(work){
-  var close=document.createElement('button');close.type='button';close.className='hw-close';close.setAttribute('aria-label',en?'Close':'إغلاق');close.textContent='×';
+  var close=document.createElement('button');close.type='button';close.className='hw-close';close.setAttribute('aria-label',en?'Close':'إغلاق');close.innerHTML='<span aria-hidden="true">×</span> <b>'+(en?'Back to site':'العودة للموقع')+'</b>';
   document.body.appendChild(close);
   var lastFocus=null;
   var openGal=function(cat,from){var tab=work.querySelector('[data-work-tab="'+cat+'"]');if(tab)tab.click();lastFocus=from||null;root.classList.add('hw-gal');work.scrollTop=0;close.focus({preventScroll:true})};
