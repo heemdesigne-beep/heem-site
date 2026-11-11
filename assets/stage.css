@@ -1,15 +1,15 @@
 /* HEEM — intro + "what I make" decks (scoped, prefix hi- / hw-) */
 .hi-intro{position:fixed;inset:0;z-index:99999;background:#f4f6ff;color:#111c50;display:grid;place-items:center;text-align:center;padding:0 6vw;transition:opacity .9s cubic-bezier(.2,.8,.2,1),visibility .9s;animation:hiForce 0s 8s forwards}
 .hi-intro.done{opacity:0;visibility:hidden;pointer-events:none}
-html.hi-skip .hi-intro{display:none}
-html.hi-lock,html.hi-lock body{overflow:hidden}
+html.hi-off .hi-intro{display:none}
+html.hi-lock body{overflow:hidden}
 @keyframes hiForce{to{opacity:0;visibility:hidden;pointer-events:none}}
 .hi-intro p{margin:0;font-family:Palestine,Piper,sans-serif;font-size:clamp(30px,5vw,72px);line-height:1.4;position:absolute;left:6vw;right:6vw;opacity:0;transform:translateY(18px);filter:blur(8px);transition:opacity 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1),filter 1s cubic-bezier(.2,.8,.2,1)}
 .hi-intro p.on{opacity:1;transform:none;filter:none}
 .hi-intro p.off{opacity:0;transform:translateY(-18px);filter:blur(8px)}
 .hi-intro p b{font-weight:400;color:#303fc5}
-.hi-skip{position:absolute;inset-inline-start:5vw;bottom:5vh;font-family:Palestine,Piper,sans-serif;font-size:17px;color:#5a67b0;letter-spacing:.04em;cursor:pointer;background:none;border:0;padding:8px}
-.hi-skip:hover{color:#111c50}
+button.hi-skip{position:absolute;inset-inline-start:5vw;bottom:5vh;font-family:Palestine,Piper,sans-serif;font-size:17px;color:#5a67b0;letter-spacing:.04em;cursor:pointer;background:none;border:0;padding:8px}
+button.hi-skip:hover{color:#111c50}
 
 .hw{position:relative;padding:clamp(80px,13vh,150px) var(--pad,5vw) clamp(70px,10vh,120px);overflow:hidden}
 .hw::before{content:"";position:absolute;inset:auto -10% 0 -10%;height:60%;background:radial-gradient(ellipse at 50% 100%,rgba(40,120,255,.22),transparent 66%);pointer-events:none}

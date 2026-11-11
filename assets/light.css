@@ -202,3 +202,10 @@ header{background:transparent}
 .about-stats>div,.stats>div{border-radius:28px!important;display:flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:6px;text-align:center}
 .about-stats b{line-height:1!important;margin:0!important}
 .about-stats b,.stats b{direction:ltr;unicode-bidi:isolate}
+/* stability: never allow sideways overflow; lighter compositing */
+html,body{overflow-x:clip}
+main{overflow-x:clip}
+.hw-sheet{will-change:auto!important}
+.hero{animation:none!important}
+
+.tools-window,.partner-row{overflow:hidden}
