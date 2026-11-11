@@ -85,7 +85,7 @@
   }
  }
  /* videos & reels rows: scroll drift + pointer-side steering + drag */
- var rows=[].slice.call(document.querySelectorAll('.rr-row'));
+ var rows=[].slice.call(document.querySelectorAll('.rr-row,#feedback .feedback'));
  if(rows.length&&!reduce&&matchMedia('(hover:hover) and (pointer:fine)').matches){
   var rsec=document.getElementById('reels'),n2=rows.length;
   var base=[],off=[],cur=[],vel=[],hov=[],dragging=[];
@@ -94,8 +94,7 @@
   function maxOf(r){return Math.max(0,r.scrollWidth-r.clientWidth)}
   function clamp(v,m){return Math.max(0,Math.min(m,v))}
   function calc(){
-   var r=rsec.getBoundingClientRect(),p=Math.max(0,Math.min(1,(innerHeight-r.top)/(innerHeight+r.height)));
-   rows.forEach(function(row,i){base[i]=(i%2?1-p:p)*maxOf(row)});
+   rows.forEach(function(row,i){var r=row.getBoundingClientRect(),p=Math.max(0,Math.min(1,(innerHeight-r.top)/(innerHeight+r.height)));base[i]=(i%2?1-p:p)*maxOf(row)});
    kick();
   }
   function kick(){if(!running){running=true;requestAnimationFrame(tick)}}
