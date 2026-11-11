@@ -47,3 +47,63 @@ html[dir=ltr] .hw-sheet.c{right:auto;left:44%}
 @media (min-width:900px){.hw{padding-left:max(var(--pad,5vw),104px)}}
 @media (max-width:860px){.hw-decks{grid-template-columns:1fr}.hw-sheet{width:44%}}
 @media (prefers-reduced-motion:reduce){.hi-intro{display:none}.hw-rv{opacity:1;transform:none}.hw-sheet,.hw-card{transition:none}}
+
+/* ===== gallery overlay (decks open the categories) ===== */
+#work{display:none}
+html.hw-gal,html.hw-gal body{overflow:hidden}
+html.hw-gal #work{display:block;position:fixed;inset:0;z-index:9500;overflow:auto;background:#f4f6ff;padding:84px var(--pad,5vw) 70px}
+.hw-close{position:fixed;top:22px;inset-inline-start:var(--pad,5vw);z-index:9600;width:48px;height:48px;border-radius:50%;border:1px solid rgba(17,28,80,.3);background:#fff;color:#111c50;font-size:26px;line-height:1;cursor:pointer;display:none}
+html.hw-gal .hw-close{display:block}
+
+/* ===== selected work: pinned horizontal reel ===== */
+.sr-wrap{position:relative}
+.sr-sticky{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden}
+.sr-side{flex:0 0 min(30vw,430px);padding-inline:var(--pad,5vw);position:relative;z-index:3}
+.sr-side .sectionhead{padding:0!important;margin:0!important;border:0!important;display:block}
+.sr-side h2{font-size:clamp(46px,6vw,96px)!important;line-height:1.12!important;margin:12px 0 18px!important}
+.sr-side .work-intro{font-size:clamp(18px,1.6vw,24px)!important}
+.sr-viewport{flex:1;min-width:0;position:relative}
+.sr-track{display:flex;gap:2.4vw;will-change:transform}
+.sr-track>.project{flex:0 0 min(30vw,440px)!important;width:min(30vw,440px)!important;opacity:.35;transform:scale(.93);transform-origin:center bottom;transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.sr-track>.project.on{opacity:1;transform:none}
+.sr-track .project-cover{aspect-ratio:4/5!important;border-radius:18px!important;box-shadow:0 30px 60px -30px rgba(17,28,80,.55)}
+.sr-track .project-cover img{object-fit:cover!important}
+.sr-track .project h3{font-size:clamp(24px,2.2vw,34px)!important}
+.sr-foot{position:absolute;left:var(--pad,5vw);right:var(--pad,5vw);bottom:34px;display:flex;align-items:center;gap:18px;color:#4a5694;font-size:18px;z-index:3}
+.sr-count b{color:#111c50;font-weight:400;font-size:22px}
+.sr-line{flex:1;height:2px;background:rgba(17,28,80,.15);position:relative;overflow:hidden;border-radius:2px}
+.sr-line i{position:absolute;inset:0;background:#303fc5;transform-origin:var(--sr-origin,right);transform:scaleX(var(--sr-p,0))}
+html[dir=ltr] .sr-line i{--sr-origin:left}
+.sr-wrap.sr-row .sr-sticky{position:static;height:auto;display:block;overflow:visible}
+.sr-wrap.sr-row .sr-side{padding-bottom:20px}
+.sr-wrap.sr-row .sr-viewport{overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--pad,5vw) 20px;scrollbar-width:none}
+.sr-wrap.sr-row .sr-viewport::-webkit-scrollbar{display:none}
+.sr-wrap.sr-row .sr-track>.project{flex:0 0 78vw!important;width:78vw!important;opacity:1;transform:none;scroll-snap-align:center}
+.sr-wrap.sr-row .sr-foot{display:none}
+
+/* ===== videos & reels rows ===== */
+.rr{padding:clamp(70px,11vh,130px) 0 clamp(60px,9vh,110px);overflow:hidden}
+.rr-head{padding:0 var(--pad,5vw);margin-bottom:clamp(28px,5vh,50px)}
+.rr-head h2{margin:10px 0 14px;font-size:clamp(44px,7vw,110px);line-height:1.12;font-weight:400}
+.rr-head p{margin:0 0 18px;font-size:clamp(18px,1.8vw,24px);color:#4a5694}
+.rr-all{display:inline-flex;align-items:center;gap:10px;font-size:19px;color:#303fc5;border:0;background:none;border-bottom:1px solid currentColor;padding:4px 0;cursor:pointer;font-family:inherit}
+.rr-row{display:flex;gap:clamp(14px,1.6vw,24px);overflow-x:auto;padding:6px var(--pad,5vw) 22px;scrollbar-width:none}
+.rr-row::-webkit-scrollbar{display:none}
+.rr-row+.rr-row{margin-top:clamp(24px,4vh,40px)}
+.rr-card{flex:0 0 auto;display:block;color:inherit;text-decoration:none}
+.rr-card .rr-media{position:relative;border-radius:18px;overflow:hidden;background:#dfe5ff;box-shadow:0 24px 50px -30px rgba(17,28,80,.6);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.rr-card:hover .rr-media{transform:translateY(-6px)}
+.rr-card img{display:block;width:100%;height:100%;object-fit:cover}
+.rr-card.w{width:min(36vw,480px)}.rr-card.w .rr-media{aspect-ratio:16/9}
+.rr-card.v{width:min(19vw,250px)}.rr-card.v .rr-media{aspect-ratio:9/16}
+.rr-play{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);color:#111c50;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.rr-play svg{width:22px;height:22px;margin-inline-start:3px}
+.rr-card h3{margin:12px 2px 0;font-size:clamp(16px,1.3vw,20px);font-weight:400;line-height:1.5;color:#111c50}
+@media (max-width:860px){.rr-card.w{width:74vw}.rr-card.v{width:44vw}}
+/* gallery overlay: hide the rest of the page; fade side title as the reel advances */
+html.hw-gal body>*:not(#work):not(script){visibility:hidden}
+html.hw-gal main>*:not(#work),html.hw-gal section:not(#work){visibility:hidden}
+html.hw-gal #work{visibility:visible}
+html.hw-gal #work *{visibility:visible}
+.sr-wrap:not(.sr-row) .sr-side{opacity:clamp(0,calc(1 - var(--sr-p,0)*9),1);transition:opacity .2s}
+html.hw-gal .hw-close{visibility:visible}

@@ -1,0 +1,87 @@
+/* HEEM light theme (home pages). Contact + footer stay as a deep-blue closing band; dialogs stay dark. */
+:root{--bg:#f4f6ff;--bg-soft:#e9edff;--panel:#ffffff;--panel-2:#eef1ff;--text:#111c50;--muted:#4a5694;--line:rgba(17,28,80,.13)}
+html,body{background:#f4f6ff!important;color:#111c50}
+body::selection{background:#303fc5;color:#fff}
+body{--ink:#111c50}
+
+/* header */
+header{background:transparent}
+.nav{background:rgba(244,246,255,.82)!important;backdrop-filter:blur(14px);border-bottom:1px solid rgba(17,28,80,.08)!important;box-shadow:none!important}
+.nav .links a,.nav .links a span,.lang{color:#111c50!important}
+.lang{border-color:rgba(17,28,80,.3)!important;background:rgba(255,255,255,.6)!important}
+.logo-mark{background:#111c50!important}
+
+/* section rail */
+.section-rail{background:rgba(255,255,255,.85)!important;border:1px solid rgba(17,28,80,.12)!important;box-shadow:0 14px 40px -16px rgba(17,28,80,.35)!important;backdrop-filter:blur(12px)}
+
+/* tools marquee */
+.tools,.tools.moving-tools{background:transparent!important;color:#111c50}
+.tools-heading{color:#4a5694!important}
+.tool-item{background:#fff!important;border:1px solid rgba(17,28,80,.1)!important;color:#111c50!important;box-shadow:0 10px 26px -18px rgba(17,28,80,.5)}
+.tool-item span{color:#111c50!important}
+
+/* generic sections */
+.section,.worksection{background:transparent!important;color:#111c50}
+.section h2,.worksection h2,.sectionhead h2,.section h3{color:#111c50}
+.index{color:#303fc5!important}
+.work-intro,.section p,.lead,.muted{color:#4a5694!important}
+.sectionhead{border-color:rgba(17,28,80,.12)!important}
+
+/* about */
+#about p{color:#34407f!important}
+.stats>div,.stats .stat,.about-stats>div{background:#fff!important;border:1px solid rgba(17,28,80,.1)!important;box-shadow:0 14px 34px -22px rgba(17,28,80,.5);color:#111c50!important}
+.stats b,.about-stats b{color:#111c50!important}
+.stats span,.about-stats span{color:#4a5694!important}
+.portraitblend{-webkit-mask-image:none!important;mask-image:none!important;border-radius:28px;overflow:hidden;box-shadow:0 40px 80px -36px rgba(17,28,80,.6);background:#0b1d52}
+.aboutpicture{-webkit-mask-image:none!important;mask-image:none!important}
+.ribbon{display:none!important}
+
+/* project cards (shared) */
+.project h3{color:#111c50!important}
+.project .project-summary,.project p{color:#4a5694!important}
+.project .projectlink,.projectlink{color:#303fc5!important}
+.project-cover,.project .project-cover img{background:#e6eaff!important}
+.project{background:transparent!important}
+
+/* work tabs / filters */
+.work-tabs{border-color:rgba(17,28,80,.2)!important;background:#fff}
+.work-tabs button{color:#34407f!important}
+.work-tabs button[aria-selected=true]{background:#303fc5!important;color:#fff!important}
+.print-filters button{background:#fff!important;color:#111c50!important;border:1px solid rgba(17,28,80,.2)!important}
+.print-filters button[aria-pressed=true]{background:#111c50!important;color:#fff!important}
+
+/* partners */
+.partners img{filter:none}
+.partners img[src*="white"]{filter:invert(1) brightness(.4)!important}
+#partners .partners{background:transparent}
+.partners .partner,.partner-logo{background:#fff!important;border:1px solid rgba(17,28,80,.08)!important}
+
+/* services */
+#services .service,#services .service-item,#services article,#services li{background:#fff!important;border:1px solid rgba(17,28,80,.1)!important;color:#111c50!important;box-shadow:0 18px 40px -28px rgba(17,28,80,.5)}
+#services h3,#services strong{color:#111c50!important}
+.services .service-deliverables,#services p,#services span{color:#4a5694!important}
+
+/* feedback / how we work / faq / compare (engagement + legacy) */
+#feedback .feedback>*,.feedback-card,.feedback article{background:#fff!important;border:1px solid rgba(17,28,80,.1)!important;color:#111c50!important}
+.collaboration-section .steps>*,.collaboration-section article,.collaboration-section li,.collaboration-section .step{background:#fff!important;border:1px solid rgba(17,28,80,.1)!important;color:#111c50!important}
+.collaboration-section h3,.collaboration-section strong{color:#111c50!important}
+.collaboration-section p{color:#4a5694!important}
+.eg-faq-item,.eg-faq details,#faq details{background:#fff!important;border:1px solid rgba(17,28,80,.12)!important;color:#111c50!important}
+#faq summary,#faq h2,#faq h3,#faq p{color:#111c50!important}
+#faq p{color:#4a5694!important}
+.eg-compare,.eg-compare *{color:#111c50}
+
+/* floating contact popup keeps white; whatsapp stays green */
+
+/* contact + footer: deliberate deep-blue closing band */
+.contactsection{background:linear-gradient(180deg,#111c50 0,#2a38b8 100%)!important;color:#fff}
+.contactsection h2,.contactsection h3,.contactsection p,.contactsection label,.contactsection legend,.contactsection span,.contactsection a{color:inherit}
+.foot{background:#0b1240!important;color:#cfd8ff}
+
+/* my decks section */
+.hw::before{background:radial-gradient(ellipse at 50% 100%,rgba(48,63,197,.12),transparent 66%)}
+.hw-big{color:#111c50}
+.hw-big em{color:#303fc5}
+.hw-lead{color:#4a5694}
+.hw-sheet{box-shadow:0 18px 40px -14px rgba(17,28,80,.45)}
+.hw-card{background:linear-gradient(145deg,#111c50,#2a38b8);box-shadow:0 30px 60px -28px rgba(17,28,80,.7),inset 0 1px 0 rgba(255,255,255,.2)}
