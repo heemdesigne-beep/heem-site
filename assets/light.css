@@ -226,3 +226,5 @@ main{overflow-x:clip}
 .sr-track .project h3{font-size:clamp(28px,2.6vw,44px)!important}
 .sr-track .project .project-summary,.sr-track .project p{font-size:clamp(16px,1.2vw,20px)!important;line-height:1.7!important}
 }
+
+.seo-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
