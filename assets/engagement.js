@@ -85,7 +85,7 @@ function faq(){
     ['ما الملفات التي أستلمها في النهاية؟','تستلم الملفات النهائية بالصيغ التي نتفق عليها حسب طبيعة العمل واستخدامه، سواء للطباعة أو للنشر الرقمي.','What files do I receive?','You receive the final files in the formats we agree on, depending on how the work will be used, whether for print or digital.']
   ];
   var html='<section class="eg-faq" id="faq"><div class="eg-wrap"><div class="eg-kicker">'+t('أسئلة شائعة','FAQ')+'</div><h2 class="eg-title">'+t('قبل أن نبدأ','Before we start')+'</h2><div class="eg-faq-list">';
-  qa.forEach(function(q,i){html+='<details'+(i===0?' open':'')+'><summary>'+(isEn?q[2]:q[0])+'</summary><p>'+(isEn?q[3]:q[1])+'</p></details>'});
+  qa.forEach(function(q,i){html+='<details'+''+'><summary>'+(isEn?q[2]:q[0])+'</summary><p>'+(isEn?q[3]:q[1])+'</p></details>'});
   html+='</div></div></section>';
   how.after(el(html));
 }

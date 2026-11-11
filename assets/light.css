@@ -85,3 +85,28 @@ header{background:transparent}
 .hw-lead{color:#4a5694}
 .hw-sheet{box-shadow:0 18px 40px -14px rgba(17,28,80,.45)}
 .hw-card{background:linear-gradient(145deg,#111c50,#2a38b8);box-shadow:0 30px 60px -28px rgba(17,28,80,.7),inset 0 1px 0 rgba(255,255,255,.2)}
+/* ---- round 2 ---- */
+/* hero dissolves into the page */
+.hero::after{background:linear-gradient(0deg,#f4f6ff 0%,rgba(244,246,255,.92) 7%,rgba(244,246,255,.55) 16%,rgba(244,246,255,0) 34%),linear-gradient(90deg,rgba(4,15,38,.3) 0%,rgba(4,15,38,.06) 48%,rgba(4,15,38,.05) 100%)!important}
+@media(max-width:760px){.hero::after{background:linear-gradient(0deg,#f4f6ff 0%,rgba(244,246,255,.9) 9%,rgba(244,246,255,.4) 20%,rgba(244,246,255,0) 38%),linear-gradient(0deg,rgba(5,18,43,.55) 0%,rgba(5,18,43,0) 60%)!important}}
+/* about: no second portrait */
+.portraitblend,.aboutpicture{display:none!important}
+.aboutlayout{grid-template-columns:minmax(0,820px)!important;justify-content:start}
+/* partners: logos straight on the page */
+.partner-tile,.partners .partner,.partner-logo{background:transparent!important;border:0!important;box-shadow:none!important}
+.partner-tile img{filter:none!important}
+/* tools + services: no boxes */
+.tool-item{background:transparent!important;border:0!important;box-shadow:none!important}
+#services .service,#services .service-item,#services article,#services li{background:transparent!important;box-shadow:none!important;border:0!important;border-top:1px solid rgba(17,28,80,.14)!important;border-radius:0!important}
+/* FAQ: compact, side-by-side */
+.eg-faq{padding:10px 0 50px}
+@media(min-width:900px){.eg-faq .eg-wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr);gap:50px;align-items:start}.eg-faq .eg-kicker{grid-column:1}.eg-faq .eg-title{grid-column:1;font-size:clamp(30px,3.2vw,44px);margin:0}.eg-faq .eg-faq-list{grid-column:2;grid-row:1/span 2}}
+.eg-faq-list{gap:0!important;max-width:none!important}
+.eg-faq details,#faq details{background:transparent!important;border:0!important;border-top:1px solid rgba(17,28,80,.14)!important;border-radius:0!important}
+.eg-faq summary{padding:16px 4px!important;font-size:18px!important;color:#111c50!important}
+.eg-faq details p{padding:0 4px 16px!important;margin:0;font-size:16px;color:#4a5694}
+.eg-faq summary:after{filter:hue-rotate(0deg) brightness(.5)}
+#partners .partner-track .partner-tile,#partners .partner-tile{background:transparent!important;border:0!important;box-shadow:none!important}
+#partners .partner-tile:hover,#partners .partner-tile:focus-visible{background:transparent!important;box-shadow:none!important}
+#partners .partner-tile:hover img,#partners .partner-tile:focus-visible img{filter:none!important}
+.eg-faq .eg-kicker{color:#303fc5!important}
