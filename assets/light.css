@@ -228,13 +228,3 @@ main{overflow-x:clip}
 }
 
 .seo-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-
-/* homepage reels: horizontal scroller with arrows + drag */
-.rr-wrap{position:relative}
-.rr-row{cursor:grab;scrollbar-width:thin!important;scrollbar-color:#7186ca transparent}
-.rr-row::-webkit-scrollbar{display:block!important;height:6px}
-.rr-row::-webkit-scrollbar-thumb{background:#7186ca;border-radius:6px}
-.rr-row.rr-drag{cursor:grabbing;scroll-snap-type:none}.rr-row.rr-drag a{pointer-events:none}
-.rr-arrow{position:absolute;top:42%;z-index:5;width:52px;height:52px;border-radius:50%;border:0;background:#111c50;color:#fff;font:26px/1 sans-serif;cursor:pointer;box-shadow:0 8px 24px #0004;display:grid;place-items:center}
-.rr-arrow:hover{background:#303fc5}.rr-arrow.l{left:12px}.rr-arrow.r{right:12px}
-@media(max-width:700px){.rr-arrow{display:none}}
