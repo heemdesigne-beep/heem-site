@@ -228,3 +228,12 @@ main{overflow-x:clip}
 }
 
 .seo-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* homepage reels: show every video, no hidden horizontal scroll */
+.rr-row{display:grid!important;overflow:visible!important;gap:clamp(18px,2vw,28px)!important;padding:6px var(--pad,5vw) 22px!important}
+.rr-row[aria-label="أفلام"],.rr-row[aria-label="Films"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rr-row:not([aria-label="أفلام"]):not([aria-label="Films"]){grid-template-columns:repeat(6,minmax(0,1fr))}
+.rr-row .rr-card.w,.rr-row .rr-card.v{width:auto!important;min-width:0}
+.rr-row .rr-card h3{font-size:clamp(14px,1.2vw,18px);line-height:1.5}
+@media(max-width:1000px){.rr-row[aria-label="أفلام"],.rr-row[aria-label="Films"]{grid-template-columns:repeat(2,minmax(0,1fr))}.rr-row:not([aria-label="أفلام"]):not([aria-label="Films"]){grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){.rr-row[aria-label="أفلام"],.rr-row[aria-label="Films"]{grid-template-columns:1fr}.rr-row:not([aria-label="أفلام"]):not([aria-label="Films"]){grid-template-columns:repeat(2,minmax(0,1fr))}}
