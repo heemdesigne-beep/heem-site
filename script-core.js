@@ -20,7 +20,6 @@ function updateScrollUI() {
   if (progress) progress.style.width = `${Math.min(ratio * 100, 100)}%`;
   if (scrollRail) scrollRail.style.setProperty("--rail-progress", `${Math.min(ratio * 100, 100)}%`);
   if (header) header.classList.toggle("scrolled", window.scrollY > 60);
-  document.documentElement.style.setProperty("--page-scroll", `${window.scrollY}px`);
   scrollTicking = false;
 }
 
@@ -482,10 +481,20 @@ if (loader) {
 
 if (!reducedMotion) {
   let motionFrame = 0;
-  window.addEventListener("pointermove", (event) => {
-    document.documentElement.style.setProperty("--mx", ((event.clientX / innerWidth) - .5).toFixed(3));
-    document.documentElement.style.setProperty("--my", ((event.clientY / innerHeight) - .5).toFixed(3));
-  }, { passive: true });
+  // --mx/--my only drive .ambient-stage; skip the document-wide style invalidation when it is absent
+  const ambientStage = document.querySelector(".ambient-stage");
+  if (ambientStage) {
+    let pmFrame = 0, pmx = 0, pmy = 0;
+    window.addEventListener("pointermove", (event) => {
+      pmx = event.clientX; pmy = event.clientY;
+      if (pmFrame) return;
+      pmFrame = requestAnimationFrame(() => {
+        pmFrame = 0;
+        ambientStage.style.setProperty("--mx", ((pmx / innerWidth) - .5).toFixed(3));
+        ambientStage.style.setProperty("--my", ((pmy / innerHeight) - .5).toFixed(3));
+      });
+    }, { passive: true });
+  }
 
   const overture = document.querySelector(".work-overture");
   const motionSections = document.querySelectorAll(".portfolio-section");
