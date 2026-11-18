@@ -124,3 +124,6 @@ html.hw-gal .hw-close{visibility:visible}
 
 html.hw-gal .hw-close{visibility:visible!important;display:flex!important;align-items:center;gap:10px;width:auto;height:48px;padding:0 20px 0 16px;border-radius:30px;font-size:17px;font-family:Palestine,Piper,sans-serif;box-shadow:0 6px 22px rgba(17,28,80,.2);top:max(14px,env(safe-area-inset-top))}
 .hw-close span{font-size:28px;line-height:1}
+
+/* project dialog opened from the gallery overlay must stay visible */
+html.hw-gal dialog[open],html.hw-gal dialog[open] *{visibility:visible!important}
